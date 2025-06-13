@@ -1,11 +1,13 @@
+<div class="container">
 <?php
+
 require_once(__DIR__ . '/vues/header.php');
 require_once(__DIR__ . '/outils/utils.php');
 $uc = lireDonneeUrl('uc');
 switch ($uc) {
     case 'selec':
         include(__DIR__ . '/vues/navbar.php');
-        include(__DIR__ . '/vues/searchBar.php');
+        // include(__DIR__ . '/vues/searchBar.php');
         include(__DIR__ . '/vues/selection.php');
         break;
     case 'crea':
@@ -37,3 +39,5 @@ switch ($uc) {
         break;
 }
 include(__DIR__ . '/vues/footer.php');
+?>
+</div>

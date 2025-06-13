@@ -1,9 +1,9 @@
-<nav class="navbar navbar-expand-xxxl bg-body-tertiary">
-  <div class="container-fluid d-flex justify-content-between align-items-center">
+<nav class="navbar navbar-expand-xxxl  fixed-top">
+  <div class="container-fluid d-flex justify-content-between align-items-center" style="background-color:#eeeeed">
     
     <!-- Logo à gauche -->
     <a class="navbar-brand" href="#">
-      <img src="./images/favicon.png" alt="Logo" width="30" height="30">
+      <img src="./images/logo-bandeau-blanc.jpg" alt="Logo" width="200" height="auto">
     </a>
 
     <!-- Bouton Menu à droite -->
@@ -20,13 +20,13 @@
 </nav>
 <!-- Offcanvas -->
 <div
-  class="offcanvas offcanvas-end"
+  class="offcanvas offcanvas-start"
   tabindex="-1"
   id="offcanvass"
   aria-labelledby="offcanvassLabel"
 >
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvassLabel">Offcanvas</h5>
+    <h5 class="offcanvas-title" id="offcanvassLabel" style="color:#d07d29">CC Rennes</h5>
     <button
       type="button"
       class="btn-close"
@@ -35,6 +35,7 @@
     ></button>
   </div>
   <div class="offcanvas-body">
+<hr/>
     <ul class="list-unstyled">
       <li><a class="dropdown-item" href="index.php?uc=selec">Sélection</a></li>
       <li><a class="dropdown-item" href="index.php?uc=crea">Création</a></li>
