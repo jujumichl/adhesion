@@ -48,7 +48,7 @@
             </thead>
             <tbody>
                 <tr>
-                <td scope="row"><a href="http://localhost/adhesion/index.php?uc=crea" style="color:black"/>Michelin Julien</a></td>
+                <td scope="row"><a href="index.php?uc=crea" style="color:black">Michelin Julien</a></td>
                 <td>julien@free.fr</td>
                 <td>0656453423</td>
                 <td>Adhérent</td>
@@ -56,7 +56,7 @@
                 <td>Musique irl., Astour, Autres</td>
                 </tr>
                 <tr>
-                <td scope="row"><a href="http://localhost/adhesion/index.php?uc=crea" style="color:black"/>Hardy Juliette</a></td>
+                <td scope="row"><a href="index.php?uc=crea" style="color:black">Hardy Juliette</a></td>
                 <td>Juliet@free.fr</td>
                 <td>0656423423</td>
                 <td>Adhérent, animateur</td>
@@ -64,7 +64,7 @@
                 <td>Chorale, Astour</td>
                 </tr>
                 <tr>
-                <td scope="row"><a href="http://localhost/adhesion/index.php?uc=crea" style="color:black"/>Kenan Guernalec</a></td>
+                <td scope="row"><a href="index.php?uc=crea" style="color:black">Kenan Guernalec</a></td>
                 <td>kenan@free.fr</td>
                 <td>0656453423</td>
                 <td>Animateur, répétitions, autres</td>
