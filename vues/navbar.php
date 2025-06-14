@@ -37,13 +37,18 @@
   <div class="offcanvas-body">
 <hr/>
     <ul class="list-unstyled">
-      <li><a class="dropdown-item" href="index.php?uc=selec">Sélection</a></li>
-      <li><a class="dropdown-item" href="index.php?uc=crea">Création</a></li>
-      <li><a class="dropdown-item" href="index.php?uc=integ">Intégration</a></li>
-      <li><a class="dropdown-item" href="index.php?uc=log">Historique</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=selec">Sélection personnes</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=crea">Création personne</a></li>
+      <hr/>
       <li><a class="dropdown-item" href="index.php?uc=TB">Tableau de bord</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=mooc">horaires animateurs</a></li>
+      <hr/>
+      <li><a class="dropdown-item" href="index.php?uc=YB">Intégration fichierYB</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=integ">IntégrationHelloAsso</a></li>
+      <hr/>
       <li><a class="dropdown-item" href="index.php?uc=mooc">MOOC</a></li>
-      <li><a class="dropdown-item" href="index.php?uc=YB">YB</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=log">Historique</a></li>
+      <hr/>
     </ul>
   </div>
 </div>
