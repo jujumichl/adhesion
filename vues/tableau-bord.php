@@ -24,7 +24,8 @@
                     <li><a class="dropdown-item" href="#">Participants par activité</a></li>
                     <li><a class="dropdown-item" href="#">Répartition Homme/Femme</a></li>
                     <li><a class="dropdown-item" href="#">Répartition par age</a></li>
-
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Tarifs de l'année par activité</a></li>
                     <li><a class="dropdown-item" href="#"></a></li>
                 </ul>
             </div>
