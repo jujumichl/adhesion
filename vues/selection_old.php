@@ -1,53 +1,5 @@
-<div style="margin-top:100px">
+<?php
 
-   <!-- Recherche -->
-    <div class="row">
-        
-        <div class="h5" style="color:#d07d29">Sélection</div>
-
-        <hr/>
-        <div class="col-4">
-            <div class="input-group w-100 float-end">
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Recherche"
-                />
-                <span class="input-group-text" id="basic-addon2">
-                    <img src="./images/search.svg" alt="Search">
-                </span>
-            </div>
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-2" style="margin-right:30px">
-          <div class="dropdown" >
-                <a class="btn btn-outline-secondary dropdown-toggle"  href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    Recherches définies
-                </a>
-
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="#">Adhésions</a></li>
-                    <li><a class="dropdown-item" href="#">Atelier musique irlandaise</a></li>
-                    <li><a class="dropdown-item" href="#">Astour</a></li>
-               </ul>
-            </div>
-        </div>
-        <div class="col-1">
-           <div class="dropdown">
-                <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    Année
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li><a class="dropdown-item" href="#">Par défaut - année en cours</a></li>
-                    <li><a class="dropdown-item" href="#">2024-2025</a></li>
-                    <li><a class="dropdown-item" href="#">2023-2024</a></li>
-                    <li><a class="dropdown-item" href="#">Tout</a></li>
-               </ul>
-            </div>
-
-         </div>
-    </div>
 
    <!-- Resultats -->
     <div class="row" style="margin-top:30px">
