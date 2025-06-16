@@ -160,7 +160,7 @@ function displayPersonList($personList) {
 function getSearch($searchString) {
  
     $host = 'localhost';
-    $db   = 'adhesion';
+    $db   = 'gestionccr';
     $user = 'root';
     $pass = '';
     $port = "3306";

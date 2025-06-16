@@ -1,0 +1,1 @@
+- [] Valider le modèle de connées avec YB
