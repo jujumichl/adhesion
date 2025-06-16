@@ -163,16 +163,16 @@ INSERT INTO `typeactivite` (`tyac_id`, `tyac_libelle`) VALUES
 	(11, 'Autres'),
 	(12, 'Réduction-supplément');
 
--- Dumping structure for table adhesion.type_role
-CREATE TABLE IF NOT EXISTS `type_role` (
+-- Dumping structure for table adhesion.typerole
+CREATE TABLE IF NOT EXISTS `typerole` (
   `tyro_id` int(11) NOT NULL AUTO_INCREMENT,
   `tyro_libelle` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`tyro_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- Dumping data for table adhesion.type_role: ~2 rows (approximately)
-DELETE FROM `type_role`;
-INSERT INTO `type_role` (`tyro_id`, `tyro_libelle`) VALUES
+-- Dumping data for table adhesion.typerole: ~2 rows (approximately)
+DELETE FROM `typerole`;
+INSERT INTO `typerole` (`tyro_id`, `tyro_libelle`) VALUES
 	(1, 'Animateur'),
 	(2, 'Référent');
 
