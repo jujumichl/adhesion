@@ -1,4 +1,18 @@
-<div style="margin-top:100px">
+<?php
+
+
+
+
+
+
+
+/**************** VIEW ****************************** */
+/**
+ * Display integration form of the integration page
+ */
+function displayIntegrationCsv(){
+    return '
+    <div style="margin-top:100px">
     <div class="row">
         <div class="h5" style="color:#d07d29">Sélection</div>
         <hr/>
@@ -15,15 +29,14 @@
             </div>
         </div>
         <div class="col-6">
-         <button type="button" class="btn btn-outline-secondary">Lancer l'intégration</button>        </div>
+         <button type="button" class="btn btn-outline-secondary">Lancer l\'intégration</button>        </div>
         </div>
     </div>
-    <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l'intégration</div>
+    <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l\'intégration</div>
         <hr/>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</br>
         Consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur</br>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt </br>
         Consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur </br>
-
-
-</div>
+</div>';
+}

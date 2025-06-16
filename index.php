@@ -23,6 +23,8 @@
 
         require_once(__DIR__ . '/src/navbar.php');
 
+        require_once(__DIR__ . '/src/integrationCSV/integrationCSV.php');
+
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
             case 'selec':
@@ -36,7 +38,7 @@
                 break;
             case 'integ':
                 print displayNavbar();
-                include(__DIR__ . 'src/integrationCSV/YB.php');
+                include(__DIR__ . '/src/integration.php');
                 break;
             case 'log':
                 print displayNavbar();
@@ -50,9 +52,10 @@
                 print displayNavbar();
                 include(__DIR__ . '/src/mooc.php');
                 break;
-            case 'YB':
-                print displayNavbar();
-                include(__DIR__ . '/src/YB.php');
+            case 'CSV':
+                print displayNavbar().
+                displayIntegrationCsv();
+                
                 break;
             default:
                 include(__DIR__ . '/src/connexion.php');
