@@ -1,49 +1,63 @@
-<div class="container">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestion CC Rennes</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap JS (bundle avec Popper inclus) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link href="css/custom.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
 <?php
     try {
-        require_once(__DIR__ . '/vues/header.php');
         require_once(__DIR__ . '/outils/utils.php');
 
-       require_once(__DIR__ . '/vues/selectionVC.php');
+        require_once(__DIR__ . '/src/selection/selectionMVC.php');
+
+        require_once(__DIR__ . '/src/navbar.php');
 
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
             case 'selec':
-                include(__DIR__ . '/vues/navbar.php');
-                
-                print displaySelectionHeader();
-                print selectionController();
-
+                print displayNavbar().
+                displaySelectionHeader().
+                selectionController();
                 break;
             case 'crea':
-                include(__DIR__ . '/vues/navbar.php');
-                include(__DIR__ . '/vues/creation.php');
+                print displayNavbar();
+                include(__DIR__ . '/src/creation.php');
                 break;
             case 'integ':
-                include(__DIR__ . '/vues/navbar.php');
-                include(__DIR__ . '/vues/integration.php');
+                print displayNavbar();
+                include(__DIR__ . 'src/integrationCSV/YB.php');
                 break;
             case 'log':
-                include(__DIR__ . '/vues/navbar.php');
-                include(__DIR__ . '/vues/historique.php');
+                print displayNavbar();
+                include(__DIR__ . '/src/historique.php');
                 break;
             case 'TB':
-                include(__DIR__ . '/vues/navbar.php');
-                include(__DIR__ . '/vues/tableau-bord.php');
+                print displayNavbar();
+                include(__DIR__ . '/src/tableau-bord.php');
                 break;
             case 'mooc':
-                include(__DIR__ . '/vues/navbar.php');
-                include(__DIR__ . '/vues/mooc.php');
+                print displayNavbar();
+                include(__DIR__ . '/src/mooc.php');
                 break;
             case 'YB':
-                include(__DIR__ . '/vues/navbar.php');
-                include(__DIR__ . '/vues/YB.php');
+                print displayNavbar();
+                include(__DIR__ . '/src/YB.php');
                 break;
             default:
-                include(__DIR__ . '/vues/connexion.php');
+                include(__DIR__ . '/src/connexion.php');
                 break;
         }
-        include(__DIR__ . '/vues/footer.php');
 
 
     } catch(Exception $exp) {
@@ -51,4 +65,6 @@
     }
 
 ?>
-</div>
+        </div>
+    </body>
+</html>

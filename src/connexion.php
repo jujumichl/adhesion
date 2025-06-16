@@ -1,5 +1,5 @@
-<div class="position-absolute top-50 start-50 translate-middle">
-    <div class="card text-bg-primary sm mb-3">
+<div class="position-absolute top-50 start-50 translate-middle" style="color:#eeeeed">
+    <div class="card sm mb-3">
         <h1 class="card-header">
             Connexion :
         </h1> 
