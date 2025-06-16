@@ -36,7 +36,7 @@ Processus d"intégration du fichier YB
 		○ Pour chaque ligne 
 		○ Crée une ligne inscription
 			§ Code de l'activité
-			§ Date d'inscription
+			§ Date d'inscription = date d'adhésion
 			§ Montant de l'activité
 			§ Date début : Date du
 			§ Date fin : 31/08
@@ -44,7 +44,7 @@ Processus d"intégration du fichier YB
 	- Crée le règlement
 		○ Est-il possible de distinguer plusieurs paiements
 			§ S'ils ont des modes de paiement différents
-			§ S'ils ont des dates " d'adhésion" différents
+			§ S'ils ont des dates "d'adhésion" différents
 		○ Si un paiement
 			§ Crée le paiement,
 				□ Date du paiement

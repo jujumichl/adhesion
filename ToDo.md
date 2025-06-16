@@ -4,3 +4,4 @@
 - [] faire une fonction qui parcours tous les invalides qui détectant les personnes et les lignes associées a eux
 - [] Pour chaque personne, ligne par année traitement des données (si 1 ligne do something, sinon plus d'année)
 - [] creer adherent ou MAJ donnée adherent hormi email
+- [] si plusieurs ligne pour une personne
