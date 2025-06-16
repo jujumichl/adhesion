@@ -1,5 +1,5 @@
 <?php
-function upload(): array|bool {
+function upload() {
     $target_dir = __DIR__ . "/fichier/";
 
     $tmp_name = $_FILES["fileToUpload"]["tmp_name"];
@@ -7,18 +7,15 @@ function upload(): array|bool {
     $csvFileType = strtolower(pathinfo($_FILES["fileToUpload"]["name"],PATHINFO_EXTENSION));
     //named the file with the year, month, day and hour, minute and seconde
     $target_file = $target_dir . date('YmdHis') . '.' . $csvFileType; 
-    
     // Check if CSV file is a actual CSV or fake CSV
     if (is_uploaded_file($tmp_name) && in_array($csvFileType, $type)){
         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file);
-        $res = array(true, $target_file);
-        return $res;
+        return $target_file;
     }
     else {
-        return false;
+        throw new Exception("Veuillez vérifier le que vous avez bien exporter votre fichier au format CSV encoder en UTF-8.");
     }
 }
-$upload = upload();
 
 
 /*
@@ -96,11 +93,12 @@ function verifierContactEtClasser($fichierOriginal, $fichierValide, $fichierInva
 
     // Localisation des colonnes clés
     $emailKey = null;
+    $telKey = null;
    
     foreach ($entetes as $col) {
         $colUpper = strtoupper(trim($col));
         if (in_array($colUpper, ['COURRIEL'])) $emailKey = $col;
-        if (in_array($colUpper, ['PORTABLE'])) $telKey = $col;      
+        if (in_array($colUpper, ['PORTABLE'])) $telKey = $col;  
     }
     
     if (!$emailKey) {
@@ -113,7 +111,7 @@ function verifierContactEtClasser($fichierOriginal, $fichierValide, $fichierInva
     $doublons = [];
     $date = getAnnees();
     $emailsMap = []; // Associe chaque email à ses lignes
-    $ColonnesSouhaiter = ['Nom', 'Prénom', 'Portable', 'Courriel', 'Commune', 'Montant ADH', 'Montant ACT', 'Règlement', 'Code'];
+    $ColonnesSouhaiter = ['Nom', 'Prénom', 'Portable', 'Courriel', 'Commune', 'Montant ADH', 'Montant ACT', 'Règlement', 'Code', 'Code postal', 'Année'];
     while (($ligne = fgetcsv($handle, 0, $separateur)) !== false) {
         if (count($ligne) != count($entetes)) {
             $invalideData[] = array_merge($ligne, ['Ligne mal formée']);
@@ -173,7 +171,7 @@ function verifierContactEtClasser($fichierOriginal, $fichierValide, $fichierInva
 
     // Écrit les fichiers
     $entetesInvalide = ['Nom', 'Prenom', 'Telephone', 'Courriel', 'Code d\'erreurs'];
-    ecrireCsv($fichierValide, $valideData, $entetes, ',');
-    ecrireCsv($fichierInvalide, $invalideData, $entetesInvalide, ';');
+    writeTableTemp($fichierValide, $valideData, $entetes, ',');
+    writeTableTemp($fichierInvalide, $invalideData, $entetesInvalide, ';');
     return true;
 }

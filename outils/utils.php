@@ -26,7 +26,7 @@ function lireDonneeUrl($nomDonnee, $valDefaut="") {
  * @param string $separateur
  * @return void
  */
-function ecrireCsv($cheminFichier, $donnees, $entetes = [], $separateur = ',') {
+function writeTableTemp($cheminFichier, $donnees, $entetes = [], $separateur = ',') {
     $dir = dirname($cheminFichier);
     if (!is_dir($dir)) {
         mkdir($dir, 0777, true);

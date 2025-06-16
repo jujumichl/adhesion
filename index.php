@@ -58,12 +58,11 @@
                 break;
             case 'upload':
                 require_once(__DIR__ . '/src/integrationCSV/traitementCSV.php');
-                if ($upload){
-                    $csvPath = $upload[1];
-                    
-                }else {
-                    throw new Exception("Veuillez vérifier le que vous avez bien exporter votre fichier au format CSV encoder en UTF-8.");
-                }
+                $csvPath = upload();
+                $valide = '/src/integrationCSV/fichier/valide.csv';
+                $invalide = '/src/integrationCSV/fichier/invalide.csv';
+                verifierContactEtClasser($csvPath, $valide, $invalide);
+                
                 break;
             default:
                 include(__DIR__ . '/src/connexion.php');
