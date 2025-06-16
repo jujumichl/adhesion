@@ -53,9 +53,17 @@
                 include(__DIR__ . '/src/mooc.php');
                 break;
             case 'CSV':
-                print displayNavbar().
+                print displayNavbar(). 
                 displayIntegrationCsv();
-                
+                break;
+            case 'upload':
+                require_once(__DIR__ . '/src/integrationCSV/traitementCSV.php');
+                if ($upload){
+                    $csvPath = $upload[1];
+                    
+                }else {
+                    throw new Exception("Veuillez vérifier le que vous avez bien exporter votre fichier au format CSV encoder en UTF-8.");
+                }
                 break;
             default:
                 include(__DIR__ . '/src/connexion.php');

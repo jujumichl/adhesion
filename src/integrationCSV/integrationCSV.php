@@ -17,20 +17,21 @@ function displayIntegrationCsv(){
         <div class="h5" style="color:#d07d29">Sélection</div>
         <hr/>
         <div class="col-6">
+        <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
             <div class="input-group w-100 float-end">
                 <input
-                    type="text"
+                    type="file"
+                    id="fileToUpload"
+                    name="fileToUpload"
                     class="form-control"
                     placeholder="Choisir un fichier .csv"
                 />
-                <span class="input-group-text" id="basic-addon2">
-                    <img src="./images/search.svg" alt="Search">
-                </span>
             </div>
         </div>
         <div class="col-6">
-         <button type="button" class="btn btn-outline-secondary">Lancer l\'intégration</button>        </div>
+         <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>        </div>
         </div>
+        </form>
     </div>
     <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l\'intégration</div>
         <hr/>
