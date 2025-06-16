@@ -94,6 +94,7 @@ function verifierContactEtClasser($fichierOriginal, $fichierValide, $fichierInva
     // Localisation des colonnes clés
     $emailKey = null;
     $telKey = null;
+    $portKey = null;
    
     foreach ($entetes as $col) {
         $colUpper = strtoupper(trim($col));
@@ -111,7 +112,23 @@ function verifierContactEtClasser($fichierOriginal, $fichierValide, $fichierInva
     $doublons = [];
     $date = getAnnees();
     $emailsMap = []; // Associe chaque email à ses lignes
-    $ColonnesSouhaiter = ['Nom', 'Prénom', 'Portable', 'Courriel', 'Commune', 'Montant ADH', 'Montant ACT', 'Règlement', 'Code', 'Code postal', 'Année'];
+    $ColonnesSouhaiter = [
+    'Nom',
+    'Prénom',
+    'Portable',
+    'Courriel',
+    'Commune',
+    'Montant ADH',
+    'Montant ACT',
+    'Règlement',
+    'Code',
+    'Code postal',
+    'Année',
+    'Date d\'adhésion',
+    'Date de naissance',
+    'Titre',
+    'Téléphone'
+    ];
     while (($ligne = fgetcsv($handle, 0, $separateur)) !== false) {
         if (count($ligne) != count($entetes)) {
             $invalideData[] = array_merge($ligne, ['Ligne mal formée']);

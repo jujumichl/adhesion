@@ -61,13 +61,3 @@ function getAnnees() {
         return "$anneeprecedente-$anneeCourante";
     }    
 }
-
-/**
- * Retourne l'année scolaire courante
- * @return int|string
- */
-function getThisYear(){
-    $annee = date("Y");
-    $annees = $annee + 1;
-    return (date("Y-m")>="$annee-09") ? $annees : $annee;
-}

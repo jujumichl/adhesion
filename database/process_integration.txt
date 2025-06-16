@@ -31,7 +31,7 @@ Processus d"intégration du fichier YB
 				□ activité 'adhésion'
 				□ Date début = date adhésion 
 				□ Date fin = "31/08 ", au prochain mois d'aout.
-				
+			)
 	- Crée les inscriptions
 		○ Pour chaque ligne 
 		○ Crée une ligne inscription
