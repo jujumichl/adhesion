@@ -61,7 +61,8 @@
                 $csvPath = upload();
                 $valide = '/src/integrationCSV/fichier/valide.csv';
                 $invalide = '/src/integrationCSV/fichier/invalide.csv';
-                verifierContactEtClasser($csvPath, $valide, $invalide);
+                CSVToSQL($csvPath, 'gestionccr', 'brouillon');
+                unlink($csvPath);
                 
                 break;
             default:
@@ -71,6 +72,7 @@
 
 
     } catch(Exception $exp) {
+        unlink($csvPath);
         print '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top:50px">' . "Erreur : ".  $exp->getMessage().'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>';
     }
 

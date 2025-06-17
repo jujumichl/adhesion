@@ -62,26 +62,38 @@ function concatNomPrenomDoublons($data, $emailKey, $nomKey, $prenomKey) {
 }
 
 
-/**
- * Valide et trie les contacts d'un fichier CSV en séparant les valides et les invalides.
- * 
- * @param string $fichierOriginal Chemin du fichier CSV source.
- * @param string $fichierValide Chemin du fichier où seront enregistrés les contacts valides.
- * @param string $fichierInvalide Chemin du fichier où seront enregistrés les contacts invalides.
+
+/**************** MODEL ****************************** */
+/* 
+ * add all people who are in csv file
  */
-function verifierContactEtClasser($fichierOriginal, $fichierValide, $fichierInvalide) {
-    if (!file_exists($fichierOriginal)) {
-        die("Fichier introuvable : $fichierOriginal");
+function init_pdo($host, $db, $user, $pass) {
+    $port = "3306";
+    $charset = 'utf8mb4';
+
+    $options = [
+        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+        \PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset;port=$port";
+    $pdo = new \PDO($dsn, $user, $pass, $options);
+    return $pdo;
+}
+
+function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
+    if (!file_exists($cheminFichierCSV)) {
+        die("Fichier introuvable : $cheminFichierCSV");
     }
 
-    $handle = fopen($fichierOriginal, 'r');
+    $handle = fopen($cheminFichierCSV, 'r');
     $entetes = fgetcsv($handle, 0, ';');
     $separateur = ';';
 
     // Réessaie avec ',' si mauvais format
     if (!$entetes || count($entetes) < 3) {
         fclose($handle);
-        $handle = fopen($fichierOriginal, 'r');
+        $handle = fopen($cheminFichierCSV, 'r');
         $entetes = fgetcsv($handle, 0, ',');
         $separateur = ',';
     }
@@ -95,100 +107,119 @@ function verifierContactEtClasser($fichierOriginal, $fichierValide, $fichierInva
     $emailKey = null;
     $telKey = null;
     $portKey = null;
-   
+    $nomKey = null;
+    $prenomKey = null;
+    $commKey = null;
+    $adhKey = null;
+    $actKey = null;
+    $regKey = null;
+    $codeKey = null;
+    $CPKey = null;
+    $annKey = null;
+    $DadhKey = null;
+    $naissKey = null;
+    $titreKey = null;
+
     foreach ($entetes as $col) {
         $colUpper = strtoupper(trim($col));
+        if (in_array($colUpper, ['NOM'])) $nomKey = $col;
+        if (in_array($colUpper, ['PRéNOM'])) $prenomKey = $col;
+        if (in_array($colUpper, ['PORTABLE'])) $portKey = $col;
         if (in_array($colUpper, ['COURRIEL'])) $emailKey = $col;
-        if (in_array($colUpper, ['PORTABLE'])) $telKey = $col;  
+        if (in_array($colUpper, ['COMMUNE'])) $commKey = $col;
+        if (in_array($colUpper, ['MONTANT ADH'])) $adhKey = $col;
+        if (in_array($colUpper, ['MONTANT ACT'])) $actKey = $col;
+        if (in_array($colUpper, ['RèGLEMENT'])) $regKey = $col;
+        if (in_array($colUpper, ['CODE'])) $codeKey = $col;
+        if (in_array($colUpper, ['CODE POSTAL'])) $CPKey = $col;
+        if (in_array($colUpper, ['ANNéE'])) $annKey = $col;
+        if (in_array($colUpper, ['DATE D\'ADHéSION'])) $DadhKey = $col;
+        if (in_array($colUpper, ['DATE DE NAISSANCE'])) $naissKey = $col;
+        if (in_array($colUpper, ['TITRE'])) $titreKey = $col;
+        if (in_array($colUpper, ['TéLéPHONE'])) $telKey = $col;
+
     }
     
     if (!$emailKey) {
         die("Colonne courriel introuvable");
     }
-
-    // Initialisation
-    $valideData = [];
-    $invalideData = [];
-    $doublons = [];
-    $date = getAnnees();
-    $emailsMap = []; // Associe chaque email à ses lignes
-    $ColonnesSouhaiter = [
-    'Nom',
-    'Prénom',
-    'Portable',
-    'Courriel',
-    'Commune',
-    'Montant ADH',
-    'Montant ACT',
-    'Règlement',
-    'Code',
-    'Code postal',
-    'Année',
-    'Date d\'adhésion',
-    'Date de naissance',
-    'Titre',
-    'Téléphone'
-    ];
+    $pdo = init_pdo('localhost', $nomBdd, 'root', '');
     while (($ligne = fgetcsv($handle, 0, $separateur)) !== false) {
-        if (count($ligne) != count($entetes)) {
-            $invalideData[] = array_merge($ligne, ['Ligne mal formée']);
-            continue;
-        }
-        
         $data = array_combine($entetes, $ligne);
+        $nom = trim(preg_replace( '/^\xEF\xBB\xBF/', '', $data[$nomKey] ?? ''));
+        $prenom = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$prenomKey] ?? ''));
+        $port = isset($data[$portKey]) ? preg_replace('/\D/', '', $data[$portKey]) : '';
         $email = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$emailKey] ?? ''));
+        $commune = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$commKey] ?? ''));
+        $adh = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$adhKey] ?? ''));
+        $act = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$actKey] ?? ''));
+        $reg = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$regKey] ?? ''));
+        $code = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$codeKey] ?? ''));
+        $CP = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$CPKey] ?? ''));
+        $annee = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$annKey] ?? ''));
+        $Dadh = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$DadhKey] ?? ''));
+        $naiss = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$naissKey] ?? ''));
+        $titre = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$titreKey] ?? ''));
         $tel = isset($data[$telKey]) ? preg_replace('/\D/', '', $data[$telKey]) : '';
-        $erreurs = [];
         
-        // Vérification email
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            // Vérification téléphone si présent
-            if ($tel !== '' && !preg_match('/^(?:\+33|0033|0)[1-9]\d{8}$/', $tel)) {
-                $erreurs[] = "Telephone invalide";
-                $donneesFiltrees = array_intersect_key($data, array_flip($ColonnesSouhaiter));
-                $invalideData[] = array_merge($donneesFiltrees, [implode(', ', $erreurs)]);
-            }
-
-            // Ajoute aux doublons l'email
-            if (!isset($emailsMap[$email])) {
-                $emailsMap[$email] = [];
-            }
-            $emailsMap[$email][] = $data;
-        }
-        else {
-            $erreurs[] = "Email invalide";
-            $donneesFiltrees = array_intersect_key($data, array_flip($ColonnesSouhaiter));
-            $invalideData[] = array_merge($donneesFiltrees, [implode(', ', $erreurs)]);
-        }
+        $sql = "INSERT INTO $nomTable(
+        brou_nom,
+        brou_prenom,
+        brou_portable,
+        brou_email,
+        brou_commune,
+        brou_adh,
+        brou_act,
+        brou_reglement,
+        brou_code,
+        brou_CP,
+        brou_annee,
+        brou_date_adh,
+        brou_date_naiss,
+        brou_titre,
+        brou_telephone
+        ) Values (
+        :nom,
+        :prenom,
+        :portable,
+        :email,
+        :commune,
+        :adh,
+        :act,
+        :reglement,
+        :code,
+        :cp,
+        :annee,
+        :date_adh,
+        :date_naiss,
+        :titre,
+        :telephone)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':nom' => $nom,
+            ':prenom' => $prenom,
+            ':portable' => $port,
+            ':email' => $email,
+            ':commune' => $commune,
+            ':adh' => $adh,
+            ':act' => $act,
+            ':reglement' => $reg,
+            ':code' => $code,
+            ':cp' => $CP,
+            ':annee' => $annee,
+            ':date_adh' => $Dadh,
+            ':date_naiss' => $naiss,
+            ':titre' => $titre,
+            ':telephone' => $tel
+        ]);
     }
-    
-
+    // --- 3. Vérification du succès (Optionnel mais recommandé) ---
+    if ($stmt->rowCount() > 0) {
+        $dernierId = $pdo->lastInsertId();
+        echo "L'enregistrement a été ajouté avec succès ! Nouvel ID : " . $dernierId;
+    } else {
+        echo "L'insertion a échoué.";
+    }
     fclose($handle);
-
-    // Analyse des emails groupés
-    foreach ($emailsMap as $email => $group) {
-        if (count($group) > 1 && $email !== '-') {
-            foreach ($group as $ligne) {
-                $doublons[] = $ligne;
-            }
-        } else {
-            $valideData[] = array_values($group[0]); // format ligne simple
-        }
-    }
-
-    // Fusionne les doublons avec concatNomPrenomDoublons()
-    if (!empty($doublons)) {
-        $fusionnes = concatNomPrenomDoublons($doublons, $emailKey, 'Nom', 'Prénom');
-        foreach ($fusionnes as $ligne) {
-            $valideData[] = array_map(function ($col) {
-                return is_string($col) ? $col : '';
-            }, array_values($ligne)); // ligne formatée
-        }
-    }
-
-    // Écrit les fichiers
-    $entetesInvalide = ['Nom', 'Prenom', 'Telephone', 'Courriel', 'Code d\'erreurs'];
-    writeTableTemp($fichierValide, $valideData, $entetes, ',');
-    writeTableTemp($fichierInvalide, $invalideData, $entetesInvalide, ';');
-    return true;
+    
 }
