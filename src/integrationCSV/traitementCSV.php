@@ -115,7 +115,9 @@ function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
         die("Colonne courriel introuvable");
     }
     $pdo = init_pdo('localhost', $nomBdd, 'root', '');
+    
     while (($ligne = fgetcsv($handle, 0, $separateur)) !== false) {
+        
         $data = array_combine($entetes, $ligne);
         $nom = trim(preg_replace( '/^\xEF\xBB\xBF/', '', $data[$nomKey] ?? ''));
         $prenom = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$prenomKey] ?? ''));
@@ -132,57 +134,58 @@ function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
         $naiss = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$naissKey] ?? ''));
         $titre = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$titreKey] ?? ''));
         $tel = isset($data[$telKey]) ? preg_replace('/\D/', '', $data[$telKey]) : '';
-        
-        $sql = "INSERT INTO $nomTable(
-        brou_nom,
-        brou_prenom,
-        brou_portable,
-        brou_email,
-        brou_commune,
-        brou_adh,
-        brou_act,
-        brou_reglement,
-        brou_code,
-        brou_CP,
-        brou_annee,
-        brou_date_adh,
-        brou_date_naiss,
-        brou_titre,
-        brou_telephone
-        ) Values (
-        :nom,
-        :prenom,
-        :portable,
-        :email,
-        :commune,
-        :adh,
-        :act,
-        :reglement,
-        :code,
-        :cp,
-        :annee,
-        :date_adh,
-        :date_naiss,
-        :titre,
-        :telephone)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':nom' => $nom,
-            ':prenom' => $prenom,
-            ':portable' => $port,
-            ':email' => $email,
-            ':commune' => $commune,
-            ':adh' => $adh,
-            ':act' => $act,
-            ':reglement' => $reg,
-            ':code' => $code,
-            ':cp' => $CP,
-            ':annee' => $annee,
-            ':date_adh' => $Dadh,
-            ':date_naiss' => $naiss,
-            ':titre' => $titre,
-            ':telephone' => $tel
-        ]);
+        if ($nom !== ''){
+            $sql = "INSERT INTO $nomTable(
+            brou_nom,
+            brou_prenom,
+            brou_portable,
+            brou_email,
+            brou_commune,
+            brou_adh,
+            brou_act,
+            brou_reglement,
+            brou_code,
+            brou_CP,
+            brou_annee,
+            brou_date_adh,
+            brou_date_naiss,
+            brou_titre,
+            brou_telephone
+            ) Values (
+            :nom,
+            :prenom,
+            :portable,
+            :email,
+            :commune,
+            :adh,
+            :act,
+            :reglement,
+            :code,
+            :cp,
+            :annee,
+            :date_adh,
+            :date_naiss,
+            :titre,
+            :telephone)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':nom' => $nom,
+                ':prenom' => $prenom,
+                ':portable' => $port,
+                ':email' => $email,
+                ':commune' => $commune,
+                ':adh' => $adh,
+                ':act' => $act,
+                ':reglement' => $reg,
+                ':code' => $code,
+                ':cp' => $CP,
+                ':annee' => $annee,
+                ':date_adh' => $Dadh,
+                ':date_naiss' => $naiss,
+                ':titre' => $titre,
+                ':telephone' => $tel
+            ]);
+        }
     }
     fclose($handle);
     // --- 3. Vérification du succès ---

@@ -1,5 +1,6 @@
 - [] Valider le modèle de connées avec YB
-- [] faire fonction qui passe les donnée du csv a la table brouillon
+- [x] faire fonction qui passe les donnée du csv a la table brouillon
+- [] faire une condition qui ne récupère que les lignes complètes
 - [] faire une fonction qui parcours la table brouillon et qui la vérifie (champ bool : (true)valide, (false)invalide)
 - [] faire une fonction qui parcours tous les invalides qui détectant les personnes et les lignes associées a eux
 - [] Pour chaque personne, ligne par année traitement des données (si 1 ligne do something, sinon plus d'année)
