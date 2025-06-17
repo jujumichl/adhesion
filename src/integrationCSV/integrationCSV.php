@@ -10,7 +10,7 @@
 /**
  * Display integration form of the integration page
  */
-function displayIntegrationCsv(){
+function displayIntegrationCsv($resultat = "En attente de fichier..."){
     return '
     <div style="margin-top:100px">
     <div class="row">
@@ -35,9 +35,54 @@ function displayIntegrationCsv(){
     </div>
     <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l\'intégration</div>
         <hr/>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</br>
-        Consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur</br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt </br>
-        Consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur </br>
+        '. $resultat .'
 </div>';
+}
+
+function displaySQLtoCSV($donnees) {
+
+    $output = '
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">Nom Prénom</th>
+            <th scope="col">Email</th>
+            <th scope="col">Téléphone</th>
+            <th scope="col">Portable</th>
+            <th scope="col">Commune</th>
+            <th scope="col">Montant ADH</th>
+            <th scope="col">Montant ACT</th>
+            <th scope="col">Mode de règlement</th>
+            <th scope="col">Code d\'activité</th>
+            <th scope="col">Code Postal</th>
+            <th scope="col">Année</th>
+            <th scope="col">Date d\'adhésion</th>
+            <th scope="col">Date de naissance</th>
+            <th scope="col">Titre</th>
+            </tr>
+        </thead>
+        <tbody>';
+        foreach($donnees as $data) {
+            $output.="<tr>
+            <td>". $data['brou_nom']. " ". $data['brou_prenom']."</td>
+                <td>". $data['brou_email']."</td>
+                <td>". $data['brou_telephone']."</td> 
+                <td>" . $data['brou_portable'] . "</td> 
+                <td>" . $data['brou_commune'] . "</td>
+                <td>" . $data['brou_adh'] . "</td>
+                <td>" . $data['brou_act'] . "</td>  
+                <td>" . $data['brou_reglement'] . "</td>  
+                <td>" . $data['brou_code'] . "</td>  
+                <td>" . $data['brou_CP'] . "</td>                     
+                <td>" . $data['brou_annee']. "</td>  
+                <td>" . $data['brou_date_adh'] . "</td>  
+                <td>" . $data['brou_date_naiss'] . "</td>  
+                <td>" . $data['brou_titre'] . "</td>  
+            </tr>";                
+        }
+
+    $output.='</tbody>
+            </table>
+        </div>';
+    return $output;
 }

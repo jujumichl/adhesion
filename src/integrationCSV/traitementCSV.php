@@ -1,4 +1,13 @@
 <?php
+
+use Dom\Element;
+
+
+
+/**************** CONTROLLER ****************************** */
+/**
+ * Controller for the Selection page
+ */
 function upload() {
     $target_dir = __DIR__ . "/fichier/";
 
@@ -18,51 +27,6 @@ function upload() {
 }
 
 
-/*
- * En cas de doublon d'email, concatène les noms/prénoms associés sauf si email = '-'.
- */
-function concatNomPrenomDoublons($data, $emailKey, $nomKey, $prenomKey) {
-    $groupes = [];
-
-    foreach ($data as $ligne) {
-        $email = trim(preg_replace('/^\xEF\xBB\xBF/', '', $ligne[$emailKey]));
-
-        if (!isset($groupes[$email])) {
-            $groupes[$email] = [];
-        }
-
-        $groupes[$email][] = $ligne;
-    }
-
-    $resultat = [];
-
-    foreach ($groupes as $email => $group) {
-        if ($email === '-') {
-            foreach ($group as $ligne) {
-                $resultat[] = $ligne;
-            }
-        } elseif (count($group) > 1) {
-            $noms = [];
-            $prenoms = [];
-
-            foreach ($group as $ligne) {
-                $noms[] = trim($ligne[$nomKey]);
-                $prenoms[] = trim($ligne[$prenomKey]);
-            }
-
-            $fusion = $group[0];
-            $fusion[$nomKey] = implode(' / ', array_unique($noms));
-            $fusion[$prenomKey] = implode(' / ', array_unique($prenoms));
-            $resultat[] = $fusion;
-        } else {
-            $resultat[] = $group[0];
-        }
-    }
-    return $resultat;
-}
-
-
-
 /**************** MODEL ****************************** */
 /* 
  * add all people who are in csv file
@@ -80,7 +44,14 @@ function init_pdo($host, $db, $user, $pass) {
     $pdo = new \PDO($dsn, $user, $pass, $options);
     return $pdo;
 }
-
+/**
+ * make all data who are in csv file into the database selected
+ * @param string $cheminFichierCSV path of csv file
+ * @param string $nomBdd name of database
+ * @param string $nomTable name of table
+ * @throws \Exception if our data aren't in our database
+ * @return array the content of our database
+ */
 function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
     if (!file_exists($cheminFichierCSV)) {
         die("Fichier introuvable : $cheminFichierCSV");
@@ -213,13 +184,16 @@ function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
             ':telephone' => $tel
         ]);
     }
-    // --- 3. Vérification du succès (Optionnel mais recommandé) ---
-    if ($stmt->rowCount() > 0) {
-        $dernierId = $pdo->lastInsertId();
-        echo "L'enregistrement a été ajouté avec succès ! Nouvel ID : " . $dernierId;
-    } else {
-        echo "L'insertion a échoué.";
-    }
     fclose($handle);
-    
+    // --- 3. Vérification du succès ---
+    if ($stmt->rowCount() > 0) {
+        $sql = "select * from brouillon";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
+    } else {
+        throw new Exception("Erreur lors du passage de données, veuillez vérifier le fichier ainsi que le nom des colonnes de ce fichier.");
+    }
 }
+            

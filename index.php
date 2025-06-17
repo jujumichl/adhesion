@@ -61,7 +61,10 @@
                 $csvPath = upload();
                 $valide = '/src/integrationCSV/fichier/valide.csv';
                 $invalide = '/src/integrationCSV/fichier/invalide.csv';
-                CSVToSQL($csvPath, 'gestionccr', 'brouillon');
+                $resultat = CSVToSQL($csvPath, 'gestionccr', 'brouillon');
+                $html = displaySQLtoCSV($resultat);
+                print displayNavbar().
+                displayIntegrationCsv($html);
                 unlink($csvPath);
                 
                 break;
