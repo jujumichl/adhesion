@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `typeactivite` (
 );
 
 CREATE TABLE IF NOT EXISTS `personnes` (
-  `per_id` int ,
+  `per_id` int PRIMARY KEY AUTO_INCREMENT,
   `per_nom` varchar(255) NOT NULL,
   `civ_id` int,
   `per_prenom` varchar(255) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `personnes` (
   `per_adresse` varchar(255),
   `per_code_postal` varchar(255),
   `per_ville` varchar(255),
-  `per_dat_naissance` datetime
+  `per_dat_naissance` varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS `civilites` (
@@ -102,6 +102,6 @@ CREATE TABLE IF NOT EXISTS `brouillon`(
   `brou_date_adh` char(10),
   `brou_date_naiss`char(10),
   `brou_titre` varchar(255),
-  `brou_telephone` char(10)
+  `brou_telephone` char(15)
 );
 

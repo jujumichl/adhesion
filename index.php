@@ -59,12 +59,12 @@
             case 'upload':
                 require_once(__DIR__ . '/src/integrationCSV/traitementCSV.php');
                 $csvPath = upload();
-                $valide = '/src/integrationCSV/fichier/valide.csv';
-                $invalide = '/src/integrationCSV/fichier/invalide.csv';
+                $pdo = init_pdo('localhost', 'gestionccr', 'root', '');
                 $resultat = CSVToSQL($csvPath, 'gestionccr', 'brouillon');
                 $html = displaySQLtoCSV($resultat);
-                print displayNavbar().
-                displayIntegrationCsv($html);
+                storeData($pdo);
+                //print displayNavbar().
+                //displayIntegrationCsv($html);
                 //unlink($csvPath);
                 
                 break;

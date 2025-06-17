@@ -94,16 +94,16 @@ INSERT INTO `an_exercice` (`ans_id`, `ans_libelle`, `ans_date_debut`, `ans_date_
 	(3, '2022-2023', '2022-08-31 00:00:00', '2023-08-31 00:00:00'),
 	(4, '2025-2026', '2025-08-31 00:00:00', '2026-08-31 00:00:00');
 
--- Dumping structure for table adhesion.civilities
-CREATE TABLE IF NOT EXISTS `civilities` (
+-- Dumping structure for table adhesion.civilites
+CREATE TABLE IF NOT EXISTS `civilites` (
   `civ_id` int(11) NOT NULL AUTO_INCREMENT,
   `civ_libelle` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`civ_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- Dumping data for table adhesion.civilities: ~2 rows (approximately)
-DELETE FROM `civilities`;
-INSERT INTO `civilities` (`civ_id`, `civ_libelle`) VALUES
+-- Dumping data for table adhesion.civilites: ~2 rows (approximately)
+DELETE FROM `civilites`;
+INSERT INTO `civilites` (`civ_id`, `civ_libelle`) VALUES
 	(1, 'Monsieur'),
 	(2, 'Madame');
 
