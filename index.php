@@ -65,7 +65,7 @@
                 $html = displaySQLtoCSV($resultat);
                 print displayNavbar().
                 displayIntegrationCsv($html);
-                unlink($csvPath);
+                //unlink($csvPath);
                 
                 break;
             default:
@@ -75,7 +75,7 @@
 
 
     } catch(Exception $exp) {
-        unlink($csvPath);
+        //unlink($csvPath);
         print '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top:50px">' . "Erreur : ".  $exp->getMessage().'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>';
     }
 
