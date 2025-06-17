@@ -1,0 +1,50 @@
+	- Execute une requete1 Group by avec email, nb lignes
+	- Pour chaque email de la requete1
+		○ Récupère la ligne dans la table brouillon
+		○ si le nombre de lignes est ==1 alors
+			- Traite ligneUnique() 
+				□ Crée l'adhérent
+					® Si le mail existe alors Maj des datas
+						◊ Sinon crée l'adhérent
+					® Si pas de mail alors crée l'adhérent, log une erreur
+					® Civilité
+					® Téléphone : intégrer mobile, si pas de mobile intégrer téléphone sinon rien ou bien on concatene
+					® email
+					® Nom
+					® Prénom
+					® Date de naissance
+					® Code postal
+					® Ville
+			
+				□ Pour les lignes Autres (code A05)
+					® S'il n''y a qu'un montant ADH>0 alors la ligne est une adhésion simple
+					® Si les montants sont à 0 log une erreur
+
+				□ Crée l'adhésion
+					® Si le montant de l'adhésion est >0 
+						◊ crée une ligne d'inscription : de type  adhésion (
+							} date d'inscription=date d'adhésion
+							} montant de l'adhésion, 
+							} activité 'adhésion'
+							} Date début = date adhésion 
+							} Date fin = "31/08 ", au prochain mois d'aout.
+							
+				□ Crée les inscriptions
+					® S'il y a un code activite alors Crée une ligne inscription
+						◊ Code de l'activité
+						◊ Date d'inscription
+						◊ Montant de l'activité
+						◊ Date début : Date du
+						◊ Date fin : 31/08
+					® Ligne Autre -> question pour YB?
+				□ Crée le règlement
+					® Si un paiement
+						◊ Crée le paiement,
+							} Date du paiement
+							} Mode de paiement
+							} Montant du paiement
+							} Relier aux lignes d'inscription concernées
+					® Si plusieurs paiements
+			
+		○ Sinon
+			§ TraiteMultilignes
