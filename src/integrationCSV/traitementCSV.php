@@ -281,7 +281,7 @@ function parseAndStoreData($pdo){
                 ]);
                 $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
                 //$res = Array ( [brou_email] => - [tot] => 85 )
-                $per_id = createPers($data, $pdo);
+                $per_id = createPers($data[0], $pdo);
 
                 if ($res['tot'] === 1){
                     if ($data[0]['brou_adh']>0){
@@ -294,7 +294,8 @@ function parseAndStoreData($pdo){
 
                 }
                 else {
-                    multipleLignesComput($data[0]);
+                    print_r($data[0]);
+                    multipleLignesComput($data);
                 }
             }
             else {

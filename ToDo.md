@@ -6,7 +6,11 @@
 
 
 # Si plusieurs ligne :
-
+## Si payer le même jours
+- [ ] Créer d'abord l'adhésion
+- [ ] Puis les autres activités  ------ > pour 1 règlement
+## Sinon :
+-
 
 
 - [ ] Cf fichier utils.php
