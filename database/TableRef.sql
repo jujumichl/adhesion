@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS `an_exercice` (
 -- Dumping data for table adhesion.an_exercice: ~4 rows (approximately)
 DELETE FROM `an_exercice`;
 INSERT INTO `an_exercice` (`ans_id`, `ans_libelle`, `ans_date_debut`, `ans_date_fin`) VALUES
-	(1, '2024-2025', '2024-09-01 00:00:00', '2025-08-31 00:00:00'),
-	(2, '2023-2024', '2023-09-01 00:00:00', '2024-08-31 00:00:00'),
-	(3, '2022-2023', '2022-09-01 00:00:00', '2023-08-31 00:00:00'),
-	(4, '2025-2026', '2025-09-01 00:00:00', '2026-08-31 00:00:00');
+	(1, '2024-2025', '2024-09-01', '2025-08-31'),
+	(2, '2023-2024', '2023-09-01', '2024-08-31'),
+	(3, '2022-2023', '2022-09-01', '2023-08-31'),
+	(4, '2025-2026', '2025-09-01', '2026-08-31');
 
 -- Dumping structure for table adhesion.civilites
 CREATE TABLE IF NOT EXISTS `civilites` (
@@ -144,7 +144,9 @@ INSERT INTO `modereglement` (`mreg_id`, `mreg_code`, `mreg_Libelle`) VALUES
 	(3, 'TPE', 'TPE'),
 	(4, 'CHE', 'Chèque'),
 	(5, 'DIS', 'Dispositif sortir'),
-	(6, '-', 'Aucun mode de règlement');
+	(6, 'VAC', 'Chèque vacances'),
+	(7, 'VIR', 'Virement bancaire'),
+	(8, '-', 'Aucun mode de règlement');
 
 -- Dumping structure for table adhesion.typeactivite
 CREATE TABLE IF NOT EXISTS `typeactivite` (

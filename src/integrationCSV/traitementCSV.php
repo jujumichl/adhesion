@@ -281,12 +281,11 @@ function storeData($pdo){
             if ($res['tot'] === 1){
                 foreach ($data as $row){
                     if ($row['brou_adh']>0){
+                        $row['codeADH'] = 'AUT01';
                         createAdh($row, $pdo);
-                        continue;
                     }
                     if ($row['brou_code'] !== ''){
                         createAct($row, $pdo);
-                        continue;
                     }
                 }
             }
@@ -351,50 +350,45 @@ function createPers($result, $pdo){
  * @return void
  */
 function createAdh($data, $pdo){
-    $act_id = getIDActivity($data['brou_code'], $pdo);
+    $act_id = getIDActivity($data['codeADH'], $pdo);
     $per_id = getIdPeople($data['brou_nom'], $data['brou_prenom'], $pdo);
-    (int)$reg_id = createPayment(
+    $reg_id = createPayment(
         $data['brou_adh'],
         $data['brou_act'],
         $data['brou_date_adh'],
         $data['brou_reglement'],
         $pdo);
-    foreach ($per_id as $per){
-        foreach ($act_id as $act){
-            //$per = Array ( [per_id] => 1 )
-            //$act = Array ( [act_id] => 138)
-            $sql = 'INSERT INTO `inscriptions`(
-            per_id,
-            act_id,
-            ins_date_inscription,
-            id_reg,
-            ins_debut,
-            ins_fin,
-            ins_montant
-            )VALUES(
-            :per_id,
-            :act_id,
-            :ins_date_inscription,
-            :id_reg,
-            :ins_debut,
-            :ins_fin,
-            :ins_montant
-            )
-            ';
-            $stmt = $pdo->prepare($sql);
-            
-            $stmt->execute([
-                ':per_id' => $per['per_id'],
-                ':act_id' => $act['act_id'],
-                ':ins_date_inscription' => $data['brou_date_adh'],
-                ':id_reg' => (int)$reg_id,
-                ':ins_debut' => $data['brou_date_adh'],
-                ':ins_fin' => '31/08' . date('/Y'),
-                ':ins_montant' => $data['brou_adh']
-            ]);
-            
-        }
-    }
+    $sql = 'INSERT INTO `inscriptions`(
+        per_id,
+        act_id,
+        ins_date_inscription,
+        id_reg,
+        ins_debut,
+        ins_fin,
+        ins_montant
+        )VALUES(
+        :per_id,
+        :act_id,
+        :ins_date_inscription,
+        :id_reg,
+        :ins_debut,
+        :ins_fin,
+        :ins_montant
+    )
+    ';
+    $stmt = $pdo->prepare($sql);
+    
+    $stmt->execute([
+        ':per_id' => $per_id,
+        ':act_id' => $act_id,
+        ':ins_date_inscription' => $data['brou_date_adh'],
+        ':id_reg' => (int)$reg_id,
+        ':ins_debut' => $data['brou_date_adh'],
+        ////////////////////////////////////A REVOIR/////////////////////////////////////////////
+        ':ins_fin' => '31/08' . date('/Y'),
+        ////////////////////////////////////////////////////////////////////////////////////////
+        ':ins_montant' => $data['brou_adh']
+    ]);
 }
 
 /**
@@ -404,7 +398,48 @@ function createAdh($data, $pdo){
  * @return void
  */
 function createAct($data, $pdo){
-    return;
+    $act_id = getIDActivity($data['brou_code'], $pdo);
+    $per_id = getIdPeople($data['brou_nom'], $data['brou_prenom'], $pdo);
+    $reg_id = getamout(
+        $per_id,
+        $data['brou_adh'],
+        $data['brou_act'],
+        $data['brou_date_adh'],
+        $data['brou_reglement'],
+        $pdo
+        );
+
+    print $reg_id . ' ---- PER : ' . $per_id;
+    echo "<br><br><br><br>";
+    $sql = 'INSERT INTO `inscriptions`(
+    per_id,
+    act_id,
+    ins_date_inscription,
+    id_reg,
+    ins_debut,
+    ins_fin,
+    ins_montant
+    )VALUES(
+    :per_id,
+    :act_id,
+    :ins_date_inscription,
+    :id_reg,
+    :ins_debut,
+    :ins_fin,
+    :ins_montant
+    )
+    ';
+    $stmt = $pdo->prepare($sql);
+    
+    $stmt->execute([
+        ':per_id' => (int)$per_id,
+        ':act_id' => (int)$act_id,
+        ':ins_date_inscription' => $data['brou_date_adh'],
+        ':id_reg' => (int)$reg_id,
+        ':ins_debut' => $data['brou_date_adh'],
+        ':ins_fin' => '31/08' . date('/Y'),
+        ':ins_montant' => $data['brou_adh']
+    ]);
 }
 
 function getIDActivity($code, $pdo){
@@ -415,7 +450,7 @@ function getIDActivity($code, $pdo){
         ':code'=> $code
         ]);
     $act_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    return $act_id;
+    return $act_id[0]['act_id'];
 }
 
 function getIdPeople($nom, $prenom, $pdo){
@@ -427,7 +462,7 @@ function getIdPeople($nom, $prenom, $pdo){
         ':prenom'=> $prenom
         ]);
     $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    return $per_id;
+    return $per_id[0]['per_id'];
 }
 
 
@@ -439,7 +474,11 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     $stmt->execute([ ':mreg' => $mreg]);
     $mregID = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     $total = $montant_act + $montant_adh;
-    foreach($mregID as $id){
+    if (!$mregID[0]['mreg_id']) {
+        var_dump($mregID[0]['mreg_id']);
+        return null;
+    }
+    else {
         $sql = 'INSERT INTO reglements(
         `reg_montant`,
         `mreg_id`,
@@ -453,10 +492,24 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':total' => $total,
-            ':mregid'=> $id['mreg_id'],
+            ':mregid'=> $mregID[0]['mreg_id'],
             ':dateAdh' => $dateAdh
         ]);
         $reg_id = $pdo->lastInsertId();
+        return $reg_id;
     }
-    return $reg_id;
+}
+
+
+function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
+    $sql = 'select id_reg from inscriptions where per_id = :id';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':id' => $per_id]);
+    $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    if ($amoutid[0]['id_reg']){
+        return $amoutid[0]['id_reg'];
+    }
+    else{
+        return createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $pdo);
+    }
 }

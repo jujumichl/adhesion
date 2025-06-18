@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `personnes` (
   `per_nom` varchar(255) NOT NULL,
   `civ_id` int,
   `per_prenom` varchar(255) NOT NULL,
-  `per_tel` varchar(255) UNIQUE,
+  `per_tel` varchar(255),
   `per_email` varchar(255) NOT NULL,
   `per_adresse` varchar(255),
   `per_code_postal` varchar(255),
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `reglements` (
 
 CREATE TABLE IF NOT EXISTS `modereglement` (
   `mreg_id` int,
-  `mreg_code` varchar(255) COMMENT 'ESP, CHE, HEL, DIS, TPE',
+  `mreg_code` varchar(255) COMMENT 'ESP, CHE, HEL, DIS, TPE, VAC',
   `mreg_Libelle` varchar(255)
 );
 
@@ -67,12 +67,12 @@ CREATE TABLE IF NOT EXISTS `tarifs` (
 CREATE TABLE IF NOT EXISTS `an_exercice` (
   `ans_id` int,
   `ans_libelle` varchar(255) COMMENT '2019-2020, 2020-2021,...',
-  `ans_date_debut` datetime,
-  `ans_date_fin` datetime
+  `ans_date_debut` date,
+  `ans_date_fin` date
 );
 
 CREATE TABLE IF NOT EXISTS `inscriptions` (
-  `ins_id` int ,
+  `ins_id` int PRIMARY KEY AUTO_INCREMENT,
   `per_id` int,
   `act_id` int,
   `ins_date_inscription` varchar(255) NOT NULL,

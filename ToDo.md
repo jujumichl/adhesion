@@ -7,3 +7,5 @@
 - [ ] creer adherent ou MAJ donnée adherent hormi email
 - [ ] si plusieurs ligne pour une personne
 - [ ] Fonction de vérification et affichage des anomalies
+- [ ] Cf fichier utils.php
+- [ ] Renommer la table an_exercice par saison
