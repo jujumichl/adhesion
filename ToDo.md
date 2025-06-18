@@ -1,4 +1,4 @@
-- [] Valider le modèle de connées avec YB
+- [ ] Valider le modèle de connées avec YB
 - [x] faire fonction qui passe les donnée du csv a la table brouillon
 - [] faire une condition qui ne récupère que les lignes complètes
 - [] faire une fonction qui parcours la table brouillon et qui la vérifie (champ bool : (true)valide, (false)invalide)
