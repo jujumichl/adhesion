@@ -62,7 +62,7 @@
                 $pdo = init_pdo('localhost', 'gestionccr', 'root', '');
                 $resultat = CSVToSQL($csvPath, 'gestionccr', 'brouillon');
                 $html = displaySQLtoCSV($resultat);
-                storeData($pdo);
+                parseAndStoreData($pdo);
                 print displayNavbar().
                 displayIntegrationCsv($html);
                 unlink($csvPath);

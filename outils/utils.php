@@ -71,3 +71,26 @@ function getEndOfSeasonDate($date, $endDay ="31/08"){
     return;
 
 }
+
+
+/**
+ * Summary of formatPhoneNumber
+ * @param mixed $number
+ */
+function formatPhoneNumber($number) {
+    // Supprimer tout sauf les chiffres
+    $digits = preg_replace('/\D/', '', $number);
+
+    // Si le numéro commence par 0 et fait 10 chiffres (ex: 0601020304)
+    if (strlen($digits) === 10 && $digits[0] === '0') {
+        return '+33' . substr($digits, 1);
+    }
+
+    // Si déjà en format international
+    if (preg_match('/^\+33\d{9}$/', $number)) {
+        return $number;
+    }
+
+    // Sinon retour vide (mauvais format)
+    return '';
+}
