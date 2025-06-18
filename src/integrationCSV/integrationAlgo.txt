@@ -1,9 +1,7 @@
 	- Execute une requete1 Group by avec email, nb lignes
 	- Pour chaque email de la requete1
 		○ Récupère la ligne dans la table brouillon
-		○ si le nombre de lignes est ==1 alors
-			- Traite ligneUnique() 
-				□ Crée l'adhérent
+		□ Crée l'adhérent
 					® Si le mail existe alors Maj des datas
 						◊ Sinon crée l'adhérent
 					® Si pas de mail alors crée l'adhérent, log une erreur
@@ -15,7 +13,8 @@
 					® Date de naissance
 					® Code postal
 					® Ville
-			
+		○ si le nombre de lignes est ==1 alors
+			- Traite ligneUnique() 
 				□ Pour les lignes Autres (code A05)
 					® S'il n''y a qu'un montant ADH>0 alors la ligne est une adhésion simple
 					® Si les montants sont à 0 log une erreur

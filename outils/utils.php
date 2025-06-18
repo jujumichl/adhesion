@@ -61,3 +61,13 @@ function getCurrentSeason() {
         return "$anneeprecedente-$anneeCourante";
     }    
 }
+
+
+/************************************ TO DO *********************************************** */
+/**
+ * get in table an_exercice ans_date_fin
+ */
+function getEndOfSeasonDate($date, $endDay ="31/08"){
+    return;
+
+}

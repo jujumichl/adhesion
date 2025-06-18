@@ -6,3 +6,4 @@
 - [ ] Pour chaque personne, ligne par année traitement des données (si 1 ligne do something, sinon plus d'année)
 - [ ] creer adherent ou MAJ donnée adherent hormi email
 - [ ] si plusieurs ligne pour une personne
+- [ ] Fonction de vérification et affichage des anomalies

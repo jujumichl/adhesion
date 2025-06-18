@@ -240,6 +240,26 @@ function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
  * store data
  * @param mixed $pdo pdo connexion
  * @return void
+ *   $data = Array (
+ *       [0] => Array ( 
+ *           [brou_id] => ...............................................
+ *           [brou_nom] => ...............................................
+ *           [brou_prenom] => ...............................................
+ *           [brou_portable] => ...............................................
+ *           [brou_email] => ...............................................
+ *           [brou_commune] => ...............................................
+ *           [brou_adh] => ...............................................
+ *           [brou_act] => ...............................................
+ *           [brou_reglement] => ...............................................
+ *           [brou_code] => ...............................................
+ *           [brou_CP] => ...............................................
+ *           [brou_annee] => ...............................................
+ *           [brou_date_adh] => ...............................................
+ *           [brou_date_naiss] => ...............................................
+ *           [brou_titre] => ...............................................
+ *           [brou_telephone] => ..............................................
+ *           )
+ *       ) 
  */
 function storeData($pdo){
     $sql = "select brou_email, count(*) AS tot from brouillon group by brou_email";
@@ -247,94 +267,27 @@ function storeData($pdo){
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($result as $res){
-        //$res = Array ( [brou_email] => - [tot] => 85 )
-        createPers($res, $pdo);
-    }
-}
-
-/**
- * use to create only one people
- * @param mixed $mail email of people
- * @param mixed $pdo pdo connexion
- * @return void
- */
-function createPers($mail, $pdo){
-    // check email
-    if (filter_var($mail['brou_email'], FILTER_VALIDATE_EMAIL)) {
-        $sql = "select * from brouillon where brou_email = :mail";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':mail' => $mail['brou_email']
-        ]);
-        // result = Array (
-        // [0] => Array ( 
-        // [brou_id] => ...............................................
-        // [brou_nom] => ...............................................
-        // [brou_prenom] => ...............................................
-        // [brou_portable] => ...............................................
-        // [brou_email] => ...............................................
-        // [brou_commune] => ...............................................
-        // [brou_adh] => ...............................................
-        // [brou_act] => ...............................................
-        // [brou_reglement] => ...............................................
-        // [brou_code] => ...............................................
-        // [brou_CP] => ...............................................
-        // [brou_annee] => ...............................................
-        // [brou_date_adh] => ...............................................
-        // [brou_date_naiss] => ...............................................
-        // [brou_titre] => ...............................................
-        // [brou_telephone] => ..............................................
-        //) )
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        foreach ($result as $data){
-            if ($data['brou_titre'] === 'Madame'){
-                $data['brou_titre'] = 2;
-            }
-            else if ($data['brou_titre'] === 'Monsieur'){
-                $data['brou_titre'] = 1;
-            }
-            //$data = just array of data cf $result
-            $sql = "INSERT IGNORE INTO `personnes`(
-            per_nom,
-            civ_id,
-            per_prenom,
-            per_tel,
-            per_email,
-            per_code_postal,
-            per_ville,
-            per_dat_naissance
-            )
-            Values (
-            :nom,
-            :civ,
-            :prenom,
-            :tel,
-            :mail,
-            :cp,
-            :ville,
-            :naiss)
-            ";
+        // check email
+        if (filter_var($res['brou_email'], FILTER_VALIDATE_EMAIL)) {
+            $sql = "select * from brouillon where brou_email = :mail";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                ':nom'=>$data['brou_nom'],
-                ':civ'=>$data['brou_titre'],
-                ':prenom'=>$data['brou_prenom'],
-                ':tel'=>$data['brou_portable'],
-                ':mail'=>$data['brou_email'],
-                ':cp'=>$data['brou_CP'],
-                ':ville'=>$data['brou_commune'],
-                ':naiss'=>$data['brou_date_naiss']
+                ':mail' => $res['brou_email']
             ]);
-            
-            if ($mail['tot'] === 1){
+            $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            //$res = Array ( [brou_email] => - [tot] => 85 )
+            createPers($data, $pdo);
 
-                if ($data['brou_adh']>0){
-                    createAdh($data, $pdo);
-                    continue;
-                }
-                if ($data['brou_code'] !== ''){
-                    createAct($data, $pdo);
-                    continue;
+            if ($res['tot'] === 1){
+                foreach ($data as $row){
+                    if ($row['brou_adh']>0){
+                        createAdh($row, $pdo);
+                        continue;
+                    }
+                    if ($row['brou_code'] !== ''){
+                        createAct($row, $pdo);
+                        continue;
+                    }
                 }
             }
         }
@@ -342,52 +295,104 @@ function createPers($mail, $pdo){
 }
 
 /**
- * create one adhesion
+ * use to create only one people
+ * @param mixed $result data of people
+ * @param mixed $pdo pdo connexion
+ * @return void 
+ */
+function createPers($result, $pdo){
+
+    foreach ($result as $data){
+        if ($data['brou_titre'] === 'Madame'){
+            $data['brou_titre'] = 2;
+        }
+        else if ($data['brou_titre'] === 'Monsieur'){
+            $data['brou_titre'] = 1;
+        }
+        //$data = just array of data cf $result
+        $sql = "INSERT IGNORE INTO `personnes`(
+        per_nom,
+        civ_id,
+        per_prenom,
+        per_tel,
+        per_email,
+        per_code_postal,
+        per_ville,
+        per_dat_naissance
+        )
+        Values (
+        :nom,
+        :civ,
+        :prenom,
+        :tel,
+        :mail,
+        :cp,
+        :ville,
+        :naiss)
+        ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':nom'=>$data['brou_nom'],
+            ':civ'=>$data['brou_titre'],
+            ':prenom'=>$data['brou_prenom'],
+            ':tel'=>$data['brou_portable'],
+            ':mail'=>$data['brou_email'],
+            ':cp'=>$data['brou_CP'],
+            ':ville'=>$data['brou_commune'],
+            ':naiss'=>$data['brou_date_naiss']
+        ]);
+    }
+}
+
+/**
+ * create one subscription
  * @param array $data data of createPers
  * @param mixed $pdo PDO connexion
  * @return void
  */
 function createAdh($data, $pdo){
-    ECHO 'ADHHHHH';
-    $act_id = getIDActivity($data, $pdo);
-    $per_id = getIdPeople($data, $pdo);
-    $reg_id = createPayment($data, $pdo);
-    print_r($reg_id);
+    $act_id = getIDActivity($data['brou_code'], $pdo);
+    $per_id = getIdPeople($data['brou_nom'], $data['brou_prenom'], $pdo);
+    (int)$reg_id = createPayment(
+        $data['brou_adh'],
+        $data['brou_act'],
+        $data['brou_date_adh'],
+        $data['brou_reglement'],
+        $pdo);
     foreach ($per_id as $per){
         foreach ($act_id as $act){
-            //foreach ($reg_id as $reg){
-                //$per = Array ( [per_id] => 1 )
-                //$act = Array ( [act_id] => 138)
-                //$reg = Array ( [reg_id] => 1)
-                $sql = 'INSERT INTO `inscriptions`(
-                per_id,
-                act_id,
-                ins_date_inscription,
-                id_reg,
-                ins_debut,
-                ins_fin,
-                ins_montant
-                )VALUES(
-                :per_id,
-                :act_id,
-                :ins_date_inscription,
-                :id_reg,
-                :ins_debut,
-                :ins_fin,
-                :ins_montant
-                ';
-                $stmt = $pdo->prepare($sql);
-                
-                $stmt->execute([
-                    ':per_id' => $per['per_id'],
-                    ':act_id' => $act['act_id'],
-                    ':ins_date_inscription' => $data['brou_date_adh'],
-                    ':id_reg' => $reg_id['brou_date_adh'],
-                    ':ins_debut' => $data['brou_date_adh'],
-                    ':ins_fin' => '31/08' . date('/Y'),
-                    ':ins_montant' => $data['brou_adh']
-                ]);
-            //}
+            //$per = Array ( [per_id] => 1 )
+            //$act = Array ( [act_id] => 138)
+            $sql = 'INSERT INTO `inscriptions`(
+            per_id,
+            act_id,
+            ins_date_inscription,
+            id_reg,
+            ins_debut,
+            ins_fin,
+            ins_montant
+            )VALUES(
+            :per_id,
+            :act_id,
+            :ins_date_inscription,
+            :id_reg,
+            :ins_debut,
+            :ins_fin,
+            :ins_montant
+            )
+            ';
+            $stmt = $pdo->prepare($sql);
+            
+            $stmt->execute([
+                ':per_id' => $per['per_id'],
+                ':act_id' => $act['act_id'],
+                ':ins_date_inscription' => $data['brou_date_adh'],
+                ':id_reg' => (int)$reg_id,
+                ':ins_debut' => $data['brou_date_adh'],
+                ':ins_fin' => '31/08' . date('/Y'),
+                ':ins_montant' => $data['brou_adh']
+            ]);
+            
         }
     }
 }
@@ -402,26 +407,24 @@ function createAct($data, $pdo){
     return;
 }
 
-function getIDActivity($data, $pdo){
-    echo 'idACT';
+function getIDActivity($code, $pdo){
     //Get id of activity
     $sql = 'select act_id from activites where act_ext_key = :code';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':code'=> $data['brou_code']
+        ':code'=> $code
         ]);
     $act_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     return $act_id;
 }
 
-function getIdPeople($data, $pdo){
-    echo 'idPEO';
+function getIdPeople($nom, $prenom, $pdo){
 //Get id people
     $sql = 'select per_id from personnes where per_nom = :nom AND per_prenom = :prenom';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':nom'=> $data['brou_nom'],
-        ':prenom'=> $data['brou_prenom']
+        ':nom'=> $nom,
+        ':prenom'=> $prenom
         ]);
     $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     return $per_id;
@@ -430,31 +433,30 @@ function getIdPeople($data, $pdo){
 
 
 
-function createPayment($data, $pdo){
-    echo 'idPAY';
-    $montant_adh = $data['brou_adh'];
-    $montant_act = $data['brou_act'];
-    $sql = 'select mreg_id from modereglement where mreg_id = :mreg';
+function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
+    $sql = 'select mreg_id from modereglement where mreg_code = :mreg';
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([ ':mreg' => $data['brou_reglement']]);
+    $stmt->execute([ ':mreg' => $mreg]);
     $mregID = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     $total = $montant_act + $montant_adh;
-    $sql = 'INSERT INTO reglements(
-    reg_montant,
-    mreg_id,
-    reg_date
-    )
-    VALUES(
-    :total,
-    :mregid,
-    :dateAdh
-    ';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':total' => $total,
-        ':mregid'=> $mregID,
-        ':dateAdh' => $data['brou_date_adh'],
-    ]);
-    $reg_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    foreach($mregID as $id){
+        $sql = 'INSERT INTO reglements(
+        `reg_montant`,
+        `mreg_id`,
+        `reg_date`
+        )
+        VALUES(
+        :total,
+        :mregid,
+        :dateAdh
+        )';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':total' => $total,
+            ':mregid'=> $id['mreg_id'],
+            ':dateAdh' => $dateAdh
+        ]);
+        $reg_id = $pdo->lastInsertId();
+    }
     return $reg_id;
 }

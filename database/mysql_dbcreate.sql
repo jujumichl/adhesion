@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `role` (
 );
 
 CREATE TABLE IF NOT EXISTS `reglements` (
-  `reg_id` int ,
+  `reg_id` int PRIMARY KEY AUTO_INCREMENT,
   `reg_montant` float,
   `mreg_id` int,
   `reg_date` varchar(255)
@@ -75,10 +75,10 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   `ins_id` int ,
   `per_id` int,
   `act_id` int,
-  `ins_date_inscription` date NOT NULL,
+  `ins_date_inscription` varchar(255) NOT NULL,
   `id_reg` int,
-  `ins_debut` datetime COMMENT 'début d''activité de la ligne',
-  `ins_fin` datetime COMMENT 'fin''activité de la ligne',
+  `ins_debut` varchar(255) COMMENT 'début d''activité de la ligne',
+  `ins_fin` varchar(255) COMMENT 'fin''activité de la ligne',
   `ins_montant` float
 );
 
