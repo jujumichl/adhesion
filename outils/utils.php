@@ -49,7 +49,7 @@ function writeTableTemp($cheminFichier, $donnees, $entetes = [], $separateur = '
  *
  * @return string Une chaine de caractère sous la forme "$anneeCourante-$anneeSuivante"
  */
-function getAnnees() {
+function getCurrentSeason() {
     $date = date("Y-m");
     $anneeCourante = date("Y");
     if ($date >= "$anneeCourante-09"){

@@ -54,13 +54,13 @@ Table civilites {
 Table reglements {
   reg_id int [increment, primary key]
   reg_montant float
-  mreg_id int
+  mreg_id int 
   reg_date varchar
 }
 
 Table modereglement {
   mreg_id int 
-  mreg_code varchar [note : "ESP, CHE, HEL, DIS, TPE" ]
+  mreg_code varchar [note : "ESP, CHE, HEL, DIS, TPE, - " ]
   mreg_Libelle varchar 
  }
 

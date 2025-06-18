@@ -248,10 +248,7 @@ function storeData($pdo){
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($result as $res){
         //$res = Array ( [brou_email] => - [tot] => 85 )
-        if ($res['tot'] === 1){
-            createPers($res['brou_email'], $pdo);
-        }
-        
+        createPers($res, $pdo);
     }
 }
 
@@ -263,11 +260,11 @@ function storeData($pdo){
  */
 function createPers($mail, $pdo){
     // check email
-    if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+    if (filter_var($mail['brou_email'], FILTER_VALIDATE_EMAIL)) {
         $sql = "select * from brouillon where brou_email = :mail";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            ':mail' => $mail
+            ':mail' => $mail['brou_email']
         ]);
         // result = Array (
         // [0] => Array ( 
@@ -328,13 +325,17 @@ function createPers($mail, $pdo){
                 ':ville'=>$data['brou_commune'],
                 ':naiss'=>$data['brou_date_naiss']
             ]);
-            if ($data['brou_adh']>0){
-                createAdh($data, $pdo);
-                continue;
-            }
-            if ($data['brou_code'] !== ''){
-                createAct($data, $pdo);
-                continue;
+            
+            if ($mail['tot'] === 1){
+
+                if ($data['brou_adh']>0){
+                    createAdh($data, $pdo);
+                    continue;
+                }
+                if ($data['brou_code'] !== ''){
+                    createAct($data, $pdo);
+                    continue;
+                }
             }
         }
     }
@@ -347,37 +348,18 @@ function createPers($mail, $pdo){
  * @return void
  */
 function createAdh($data, $pdo){
-    //Get id people
-    $sql = 'select per_id from personnes where per_nom = :nom AND per_prenom = :prenom';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':nom'=> $data['brou_nom'],
-        ':prenom'=> $data['brou_prenom']
-        ]);
-    $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    //Get id of activity
-    $sql = 'select act_id from activites where act_ext_key = :code';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':code'=> $data['brou_code']
-        ]);
-    $act_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    /* A voir plus tard, il faut d'abord enregistrer le paiement puis récupérer son identifiant
-    //Get id of payments (reg_montant = total -- id_reg = sous-total ?, payment details)
-    $sql = 'select reg_id from reglements where act_ext_key = :code';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':code'=> $data['brou_code']
-        ]);
-    $reg_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    */
+    ECHO 'ADHHHHH';
+    $act_id = getIDActivity($data, $pdo);
+    $per_id = getIdPeople($data, $pdo);
+    $reg_id = createPayment($data, $pdo);
+    print_r($reg_id);
     foreach ($per_id as $per){
         foreach ($act_id as $act){
             //foreach ($reg_id as $reg){
                 //$per = Array ( [per_id] => 1 )
                 //$act = Array ( [act_id] => 138)
                 //$reg = Array ( [reg_id] => 1)
-                $sql = 'INSERT IGNORE INTO `inscriptions`(
+                $sql = 'INSERT INTO `inscriptions`(
                 per_id,
                 act_id,
                 ins_date_inscription,
@@ -400,11 +382,10 @@ function createAdh($data, $pdo){
                     ':per_id' => $per['per_id'],
                     ':act_id' => $act['act_id'],
                     ':ins_date_inscription' => $data['brou_date_adh'],
-                    //id_reg a récupérer
-                    ':id_reg' => $reg['brou_date_adh'],
+                    ':id_reg' => $reg_id['brou_date_adh'],
                     ':ins_debut' => $data['brou_date_adh'],
                     ':ins_fin' => '31/08' . date('/Y'),
-                    ':ins_montant' => $data['brou_date_adh']
+                    ':ins_montant' => $data['brou_adh']
                 ]);
             //}
         }
@@ -419,4 +400,61 @@ function createAdh($data, $pdo){
  */
 function createAct($data, $pdo){
     return;
+}
+
+function getIDActivity($data, $pdo){
+    echo 'idACT';
+    //Get id of activity
+    $sql = 'select act_id from activites where act_ext_key = :code';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':code'=> $data['brou_code']
+        ]);
+    $act_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $act_id;
+}
+
+function getIdPeople($data, $pdo){
+    echo 'idPEO';
+//Get id people
+    $sql = 'select per_id from personnes where per_nom = :nom AND per_prenom = :prenom';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':nom'=> $data['brou_nom'],
+        ':prenom'=> $data['brou_prenom']
+        ]);
+    $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $per_id;
+}
+
+
+
+
+function createPayment($data, $pdo){
+    echo 'idPAY';
+    $montant_adh = $data['brou_adh'];
+    $montant_act = $data['brou_act'];
+    $sql = 'select mreg_id from modereglement where mreg_id = :mreg';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([ ':mreg' => $data['brou_reglement']]);
+    $mregID = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $total = $montant_act + $montant_adh;
+    $sql = 'INSERT INTO reglements(
+    reg_montant,
+    mreg_id,
+    reg_date
+    )
+    VALUES(
+    :total,
+    :mregid,
+    :dateAdh
+    ';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':total' => $total,
+        ':mregid'=> $mregID,
+        ':dateAdh' => $data['brou_date_adh'],
+    ]);
+    $reg_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $reg_id;
 }

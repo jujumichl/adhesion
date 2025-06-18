@@ -143,7 +143,8 @@ INSERT INTO `modereglement` (`mreg_id`, `mreg_code`, `mreg_Libelle`) VALUES
 	(2, 'HEL', 'HelloAsso'),
 	(3, 'TPE', 'TPE'),
 	(4, 'CHE', 'Chèque'),
-	(5, 'DIS', 'Dispositif sortir');
+	(5, 'DIS', 'Dispositif sortir'),
+	(6, '-', 'Aucun mode de règlement');
 
 -- Dumping structure for table adhesion.typeactivite
 CREATE TABLE IF NOT EXISTS `typeactivite` (
