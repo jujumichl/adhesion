@@ -409,8 +409,6 @@ function createAct($data, $pdo){
         $pdo
         );
 
-    print $reg_id . ' ---- PER : ' . $per_id;
-    echo "<br><br><br><br>";
     $sql = 'INSERT INTO `inscriptions`(
     per_id,
     act_id,
@@ -438,7 +436,7 @@ function createAct($data, $pdo){
         ':id_reg' => (int)$reg_id,
         ':ins_debut' => $data['brou_date_adh'],
         ':ins_fin' => '31/08' . date('/Y'),
-        ':ins_montant' => $data['brou_adh']
+        ':ins_montant' => $data['brou_act']
     ]);
 }
 
@@ -506,7 +504,7 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $per_id]);
     $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    if ($amoutid[0]['id_reg']){
+    if (!empty($amoutid[0]['id_reg'])){
         return $amoutid[0]['id_reg'];
     }
     else{

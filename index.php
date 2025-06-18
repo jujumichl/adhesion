@@ -63,9 +63,9 @@
                 $resultat = CSVToSQL($csvPath, 'gestionccr', 'brouillon');
                 $html = displaySQLtoCSV($resultat);
                 storeData($pdo);
-                //print displayNavbar().
-                //displayIntegrationCsv($html);
-                //unlink($csvPath);
+                print displayNavbar().
+                displayIntegrationCsv($html);
+                unlink($csvPath);
                 
                 break;
             default:
@@ -75,7 +75,7 @@
 
 
     } catch(Exception $exp) {
-        //unlink($csvPath);
+        unlink($csvPath);
         print '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top:50px">' . "Erreur : ".  $exp->getMessage().'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>';
     }
 
