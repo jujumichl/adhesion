@@ -293,6 +293,13 @@ function parseAndStoreData($pdo){
  * @return mixed 
  */
 function createPers($data, $pdo){
+    $sql = 'select per_email where per_email = :mail';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':mail' => $data['brou_email']
+    ]);
+    $exist = $stmt->fetch(\PDO::FETCH_ASSOC);
+    if ($exist[0]['per_email'])
  /////////////////////////////////////////////check people and create people if not exists/////////////////////////////////////////////
     if ($data['brou_titre'] === 'Madame'){
         $data['brou_titre'] = 2;

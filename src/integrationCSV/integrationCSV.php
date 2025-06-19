@@ -10,33 +10,38 @@
 /**
  * Display integration form of the integration page
  */
-function displayIntegrationCsv($resultat = "En attente de fichier..."){
-    return '
+function displayIntegrationCsv($resultat = "En attente de fichier...", $nomFichiers = "Aucun fichier sélectionné") {
+    $output = '
     <div style="margin-top:100px">
     <div class="row">
         <div class="h5" style="color:#d07d29">Sélection</div>
         <hr/>
         <div class="col-6">
-        <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
+        <form name="foo" action="index.php?uc=upload" method="post" enctype="multipart/form-data" class="form-floating">
             <div class="input-group w-100 float-end">
                 <input
                     type="file"
                     id="fileToUpload"
                     name="fileToUpload"
                     class="form-control"
-                    placeholder="Choisir un fichier .csv"
                 />
+                ';
+    if ($nomFichiers !== "Aucun fichier sélectionné"){
+        $output .= '</div>
+        <small class="form-text text-muted">Dernier fichier importer : ' . htmlspecialchars($nomFichiers) . '</small>
+        <div class="input-group w-100 float-end">';
+    }
+    $output .= '</div>
+        </div>
+            <div class="col-6">
+            <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>        </div>
             </div>
-        </div>
-        <div class="col-6">
-         <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>        </div>
-        </div>
         </form>
-    </div>
+        </div>
     <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l\'intégration</div>
         <hr/>
-        '. $resultat .'
-</div>';
+        ' . $resultat . '</div>';
+    return $output;
 }
 
 function displaySQLtoCSV($donnees) {

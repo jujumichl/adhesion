@@ -2,7 +2,7 @@
 # Si une ligne :
 - [x] faire fonction qui passe les donnée du csv a la table brouillon
 - [x] creer adherent ou MAJ donnée adherent hormi email
-- [ ] Garder le nom du fichier dans la box de récup de fichier.
+- [x] Garder le nom du fichier dans la box de récup de fichier.
 
 
 # Si plusieurs ligne :
@@ -10,7 +10,8 @@
 - [ ] Créer d'abord l'adhésion
 - [ ] Puis les autres activités  ------ > pour 1 règlement
 ## Sinon :
--
+- [ ] Créer une nouvelle inscription
+
 
 
 - [ ] Cf fichier utils.php

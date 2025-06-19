@@ -27,7 +27,7 @@
         require_once './src/integrationCSV/integrationCSV.php';
 
         require_once './config.php';
-        $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
+        $pdo = init_pdo($dblocal, $db, $dbLocalUser, $dbLocalMdp);
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
             case 'selec':
@@ -62,11 +62,13 @@
             case 'upload':
                 require_once './src/integrationCSV/traitementCSV.php';
                 $csvPath = upload();
+                $nomFichier = $_FILES["fileToUpload"]["name"];
                 $resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
-                $html = displaySQLtoCSV($resultat);
+                //$html = displaySQLtoCSV($resultat);
+                $html = '<p>nombre de personnes entrée au total: $variable ------ ';
                 parseAndStoreData($pdo);
                 print displayNavbar().
-                displayIntegrationCsv($html);
+                displayIntegrationCsv($html, $nomFichier);
                 unlink($csvPath);
                 
                 break;
@@ -77,7 +79,7 @@
 
 
     } catch(Exception $exp) {
-        unlink($csvPath);
+        if ($csvPath){unlink($csvPath);}
         print '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top:50px">' . "Erreur : ".  $exp->getMessage().'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>';
     }
 
