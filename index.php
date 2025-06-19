@@ -21,23 +21,25 @@
         require_once './outils/utils.php';
 
         require_once './src/selection/selectionMVC.php';
+        require_once './src/creation/creationMVC.php';
 
         require_once './src/navbar.php';
 
         require_once './src/integrationCSV/integrationCSV.php';
 
-        require_once './configLocal.php';
+        require_once './config.php';
         $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
             case 'selec':
                 print displayNavbar().
-                displaySelectionHeader().
+                displaySelectionHeader($pdo).
                 selectionController($pdo);
                 break;
             case 'crea':
                 print displayNavbar();
-                include './src/creation.php';
+               //  displaySelectionHeader();
+                print creationController($pdo);
                 break;
             case 'integ':
                 print displayNavbar();
@@ -65,7 +67,7 @@
                 $nomFichier = $_FILES["fileToUpload"]["name"];
                 $resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
                 $msgErr = parseAndStoreData($pdo);
-                //print displayNavbar().
+                print displayNavbar().
                 print displayIntegrationCsv($msgErr, $nomFichier);
                 unlink($csvPath);
                 
@@ -77,7 +79,7 @@
 
 
     } catch(Exception $exp) {
-        if ($csvPath){unlink($csvPath);}
+        // if ($csvPath){unlink($csvPath);}
         print '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top:50px">' . "Erreur : ".  $exp->getMessage().'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>';
     }
 

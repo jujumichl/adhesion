@@ -19,6 +19,13 @@ function selectionController ($pdo) {
             } else {
                 throw new Exception ("Error : getpersonnes without searchString");
             }
+        } else { 
+            if ($action=='getActList') {
+                if (isset ($_GET['act_id'])) {
+                    $personsList = getInscriptionPersonListToActivity($_GET['act_id'], $pdo);
+                    $output .= displayPersonList($personsList);
+                }
+            }
         }
     }
     return $output;
@@ -29,7 +36,9 @@ function selectionController ($pdo) {
 /**
  * Display header of the selection page
  */
-function displaySelectionHeader() {
+function displaySelectionHeader($pdo) {
+
+    $activitesList=getActivites($pdo);
 
     $searchString='';
     if (isset ($_GET['searchString'])) 
@@ -51,17 +60,20 @@ function displaySelectionHeader() {
                    <button type="submit" value="Submit"  class="btn btn-outline-secondary" id="button-addon1">Chercher</button>
                    </div>            
             </div>
-           <div class="col-2" style="margin-right:30px">
+           <div class="col-4" style="margin-right:30px">
                <div class="dropdown" >
-                    <a class="btn btn-outline-secondary dropdown-toggle"  href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="btn btn-outline-secondary dropdown-toggle"  href="#" role="button" id="activiteList" data-bs-toggle="dropdown" aria-expanded="false">
                         Recherches définies
                     </a>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Adhésions</a></li>
-                        <li><a class="dropdown-item" href="#">Atelier musique irlandaise</a></li>
-                        <li><a class="dropdown-item" href="#">Astour</a></li>
-                    </ul>
+                    ';
+                    foreach ($activitesList as $activite) {
+                        $output.='
+                        <li style=""><a class="dropdown-item" href="index.php?uc=selec&action=getActList&act_id='. $activite['act_id'].' ">'.$activite['act_libelle'].'</a></li>
+                        ';
+                    }
+                        $output.='</ul>
                 </div>               
             </div>
 
@@ -137,7 +149,7 @@ function displayPersonList($personList) {
                 <tbody>';
                 foreach($personList as $person) {
                     $output.="<tr>
-                    <td>". $person['per_prenom']. " ". $person['per_nom']."</td>
+                    <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">".  $person['per_nom']." ". $person['per_prenom']. "</a></td>
                      <td>". $person['per_email']."</td>
                      <td>". $person['per_tel']."</td> 
                      <td></td> 
@@ -159,7 +171,36 @@ function displayPersonList($personList) {
  */
 function getSearch($searchString, $pdo) {
  
-    $stmt = $pdo->prepare("select * from personnes      where per_nom  LIKE  '%".  $searchString ."%' OR per_prenom  LIKE  '%".  $searchString ."%' OR per_email LIKE  '%".  $searchString ."%'"); //
+    $stmt = $pdo->prepare("select * from personnes      where per_nom  LIKE  '%".  $searchString ."%' OR per_prenom  LIKE  '%". 
+         $searchString ."%' OR per_email LIKE  '%".  $searchString ."%' order by per_nom"); //
+    $stmt->execute();
+    $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    // print " Résultats " . json_encode($result) ."</br>";
+
+    return $result;
+}
+
+
+function getInscriptionPersonListToActivity($act_id, $pdo) {
+ 
+    $stmt = $pdo->prepare("select * from personnes      
+LEFT JOIN inscriptions ON inscriptions.per_id=personnes.per_id
+WHERE inscriptions.act_id=".$act_id."
+order by per_nom"); //
+    $stmt->execute();
+    $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    // print " Résultats " . json_encode($result) ."</br>";
+
+    return $result;
+}
+
+
+/* 
+ * Search personnes
+ */
+function getActivites( $pdo) {
+ 
+    $stmt = $pdo->prepare("select * from activites order by act_libelle"); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     // print " Résultats " . json_encode($result) ."</br>";
