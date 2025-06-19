@@ -75,10 +75,10 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   `ins_id` int PRIMARY KEY AUTO_INCREMENT,
   `per_id` int,
   `act_id` int,
-  `ins_date_inscription` varchar(255) NOT NULL,
+  `ins_date_inscription` DATE NOT NULL,
   `id_reg` int,
-  `ins_debut` varchar(255) COMMENT 'début d''activité de la ligne',
-  `ins_fin` varchar(255) COMMENT 'fin''activité de la ligne',
+  `ins_debut` DATE COMMENT 'début d''activité de la ligne',
+  `ins_fin` DATE COMMENT 'fin''activité de la ligne',
   `ins_montant` float
 );
 

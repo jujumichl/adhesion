@@ -17,13 +17,14 @@ function displayIntegrationCsv($resultat = "En attente de fichier...", $nomFichi
         <div class="h5" style="color:#d07d29">Sélection</div>
         <hr/>
         <div class="col-6">
-        <form name="foo" action="index.php?uc=upload" method="post" enctype="multipart/form-data" class="form-floating">
+        <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
             <div class="input-group w-100 float-end">
                 <input
                     type="file"
                     id="fileToUpload"
                     name="fileToUpload"
                     class="form-control"
+                    placeholder="Choisir un fichier .csv"
                 />
                 ';
     if ($nomFichiers !== "Aucun fichier sélectionné"){
@@ -44,6 +45,11 @@ function displayIntegrationCsv($resultat = "En attente de fichier...", $nomFichi
     return $output;
 }
 
+/**
+ * Use to display all data in our database
+ * @param mixed $donnees
+ * @return string
+ */
 function displaySQLtoCSV($donnees) {
 
     $output = '

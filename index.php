@@ -16,7 +16,7 @@
 <body>
     <div class="container">
 <?php
-    ini_set( 'display_errors', 1 );
+    ini_set( 'display_errors', 1 ); // a enlever en prod
     try {
         require_once './outils/utils.php';
 
@@ -26,8 +26,8 @@
 
         require_once './src/integrationCSV/integrationCSV.php';
 
-        require_once './config.php';
-        $pdo = init_pdo($dblocal, $db, $dbLocalUser, $dbLocalMdp);
+        require_once './configLocal.php';
+        $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
             case 'selec':
@@ -64,11 +64,9 @@
                 $csvPath = upload();
                 $nomFichier = $_FILES["fileToUpload"]["name"];
                 $resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
-                //$html = displaySQLtoCSV($resultat);
-                $html = '<p>nombre de personnes entrée au total: $variable ------ ';
-                parseAndStoreData($pdo);
-                print displayNavbar().
-                displayIntegrationCsv($html, $nomFichier);
+                $msgErr = parseAndStoreData($pdo);
+                //print displayNavbar().
+                print displayIntegrationCsv($msgErr, $nomFichier);
                 unlink($csvPath);
                 
                 break;

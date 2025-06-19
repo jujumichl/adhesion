@@ -3,7 +3,7 @@
 - [x] faire fonction qui passe les donnée du csv a la table brouillon
 - [x] creer adherent ou MAJ donnée adherent hormi email
 - [x] Garder le nom du fichier dans la box de récup de fichier.
-
+- [x] Vérifier si la personne n'est pas déjà dans la base de données
 
 # Si plusieurs ligne :
 ## Si payer le même jours

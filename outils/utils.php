@@ -63,15 +63,36 @@ function getCurrentSeason() {
 }
 
 
-/************************************ TO DO *********************************************** */
+/**
+ * parse string (D/M/Y) to date (Y-M-D)
+ * @param string $day default = 00
+ * @param string $month default = 00
+ * @param string $year default = 0000
+ * @return string
+ */
+function stringToDate($day = '00', $month = '00', $year = '0000') {
+    $ymd = DateTime::createFromFormat('d/m/Y', "$day/$month/$year");
+    return $ymd ? $ymd->format('Y-m-d') : null;
+}
+
 /**
  * get in table an_exercice ans_date_fin
  */
-function getEndOfSeasonDate($date, $endDay ="31/08"){
-    return;
+function getEndOfSeasonDate($date, $endDay = "31/08") {
+    // Convertit $date (ex: "2024-09-18") en DateTime
+    $dateObj = DateTime::createFromFormat('Y-m-d', $date);
+    if (!$dateObj) return null;
 
+    // Récupère l'année suivante
+    $nextYear = (int)$dateObj->format('Y') + 1;
+
+    // Crée une nouvelle date avec $endDay pour l'année suivante
+    $endOfSeasonStr = "$endDay/$nextYear";
+    $endOfSeasonObj = DateTime::createFromFormat('d/m/Y', $endOfSeasonStr);
+    if (!$endOfSeasonObj) return null;
+
+    return $endOfSeasonObj->format('Y-m-d');
 }
-
 
 /**
  * Summary of formatPhoneNumber

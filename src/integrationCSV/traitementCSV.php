@@ -293,54 +293,57 @@ function parseAndStoreData($pdo){
  * @return mixed 
  */
 function createPers($data, $pdo){
-    $sql = 'select per_email where per_email = :mail';
+    //check if person isn't in db
+    $sql = 'SELECT per_id FROM personnes WHERE per_email = :email';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':mail' => $data['brou_email']
+        ':email' => $data['brou_email']
     ]);
-    $exist = $stmt->fetch(\PDO::FETCH_ASSOC);
-    if ($exist[0]['per_email'])
- /////////////////////////////////////////////check people and create people if not exists/////////////////////////////////////////////
-    if ($data['brou_titre'] === 'Madame'){
-        $data['brou_titre'] = 2;
+    $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    //if not in
+    if (count($per_id) < 0) {
+        if ($data['brou_titre'] === 'Madame'){
+            $data['brou_titre'] = 2;
+        }
+        else if ($data['brou_titre'] === 'Monsieur'){
+            $data['brou_titre'] = 1;
+        }
+        //$data = just array of data cf $result
+        $sql = "INSERT IGNORE INTO `personnes`(
+        per_nom,
+        civ_id,
+        per_prenom,
+        per_tel,
+        per_email,
+        per_code_postal,
+        per_ville,
+        per_dat_naissance
+        )
+        Values (
+        :nom,
+        :civ,
+        :prenom,
+        :tel,
+        :mail,
+        :cp,
+        :ville,
+        :naiss)
+        ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':nom'=>$data['brou_nom'],
+            ':civ'=>$data['brou_titre'],
+            ':prenom'=>$data['brou_prenom'],
+            ':tel'=>$data['brou_portable'],
+            ':mail'=>$data['brou_email'],
+            ':cp'=>$data['brou_CP'],
+            ':ville'=>$data['brou_commune'],
+            ':naiss'=>$data['brou_date_naiss']
+        ]);
+        $per_id = $pdo->lastInsertId();
+        return $per_id;
     }
-    else if ($data['brou_titre'] === 'Monsieur'){
-        $data['brou_titre'] = 1;
-    }
-    //$data = just array of data cf $result
-    $sql = "INSERT IGNORE INTO `personnes`(
-    per_nom,
-    civ_id,
-    per_prenom,
-    per_tel,
-    per_email,
-    per_code_postal,
-    per_ville,
-    per_dat_naissance
-    )
-    Values (
-    :nom,
-    :civ,
-    :prenom,
-    :tel,
-    :mail,
-    :cp,
-    :ville,
-    :naiss)
-    ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':nom'=>$data['brou_nom'],
-        ':civ'=>$data['brou_titre'],
-        ':prenom'=>$data['brou_prenom'],
-        ':tel'=>$data['brou_portable'],
-        ':mail'=>$data['brou_email'],
-        ':cp'=>$data['brou_CP'],
-        ':ville'=>$data['brou_commune'],
-        ':naiss'=>$data['brou_date_naiss']
-    ]);
-    $per_id = $pdo->lastInsertId();
-    return $per_id;
+    //else
 }
 
 /**
@@ -377,16 +380,17 @@ function createSubscription($data, $per_id, $pdo){
     )
     ';
     $stmt = $pdo->prepare($sql);
-    
+    $dateAdh = stringToDate(
+            substr($data['brou_date_adh'], 0,-8),
+            substr($data['brou_date_adh'], 3, -5),
+            substr($data['brou_date_adh'], -4));
     $stmt->execute([
         ':per_id' => $per_id,
         ':act_id' => $act_id,
-        ':ins_date_inscription' => $data['brou_date_adh'],
+        ':ins_date_inscription' => $dateAdh,
         ':id_reg' => (int)$reg_id,
-        ':ins_debut' => $data['brou_date_adh'],
-        ////////////////////////////////////A REVOIR/////////////////////////////////////////////
-        ':ins_fin' => '31/08' . date('/Y'),
-        ////////////////////////////////////////////////////////////////////////////////////////
+        ':ins_debut' => $dateAdh,
+        ':ins_fin' => getEndOfSeasonDate($data['brou_date_adh']),
         ':ins_montant' => $data['brou_adh']
     ]);
 }
@@ -427,14 +431,17 @@ function createAct($data, $per_id, $pdo){
     )
     ';
     $stmt = $pdo->prepare($sql);
-    
+    $dateAdh = stringToDate(
+            substr($data['brou_date_adh'], 0,-8),
+            substr($data['brou_date_adh'], 3, -5),
+            substr($data['brou_date_adh'], -4));
     $stmt->execute([
-        ':per_id' => (int)$per_id,
-        ':act_id' => (int)$act_id,
-        ':ins_date_inscription' => $data['brou_date_adh'],
+        ':per_id' => $per_id,
+        ':act_id' => $act_id,
+        ':ins_date_inscription' => $dateAdh,
         ':id_reg' => (int)$reg_id,
-        ':ins_debut' => $data['brou_date_adh'],
-        ':ins_fin' => '31/08' . date('/Y'),
+        ':ins_debut' => $dateAdh,
+        ':ins_fin' => getEndOfSeasonDate($data['brou_date_adh']),
         ':ins_montant' => $data['brou_act']
     ]);
 }
