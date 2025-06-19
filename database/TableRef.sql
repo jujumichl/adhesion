@@ -16,12 +16,12 @@
 
 -- Dumping structure for table adhesion.activites
 CREATE TABLE IF NOT EXISTS `activites` (
-  `act_id` int(11) NOT NULL AUTO_INCREMENT,
+  `act_id` MEDIUMINT NOT NULL AUTO_INCREMENT,
   `act_ext_key` varchar(255) DEFAULT NULL COMMENT 'clé externe type D02',
   `act_libelle` varchar(255) NOT NULL,
   `act_mode_rem` varchar(255) DEFAULT NULL COMMENT 'Mode de rémunération du prof a l''h ou au 1/4/ h/élève',
-  `dom_id` int(11) DEFAULT NULL,
-  `tyac_id` int(11) DEFAULT NULL,
+  `dom_id` MEDIUMINT DEFAULT NULL,
+  `tyac_id` MEDIUMINT DEFAULT NULL,
   PRIMARY KEY (`act_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -79,7 +79,7 @@ INSERT INTO `activites` (`act_id`, `act_ext_key`, `act_libelle`, `act_mode_rem`,
 
 -- Dumping structure for table adhesion.an_exercice
 CREATE TABLE IF NOT EXISTS `an_exercice` (
-  `ans_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ans_id` MEDIUMINT NOT NULL AUTO_INCREMENT,
   `ans_libelle` varchar(255) DEFAULT NULL COMMENT '2019-2020, 2020-2021,...',
   `ans_date_debut` datetime DEFAULT NULL,
   `ans_date_fin` datetime DEFAULT NULL,
@@ -96,7 +96,7 @@ INSERT INTO `an_exercice` (`ans_id`, `ans_libelle`, `ans_date_debut`, `ans_date_
 
 -- Dumping structure for table adhesion.civilites
 CREATE TABLE IF NOT EXISTS `civilites` (
-  `civ_id` int(11) NOT NULL AUTO_INCREMENT,
+  `civ_id` MEDIUMINT NOT NULL AUTO_INCREMENT,
   `civ_libelle` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`civ_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -109,7 +109,7 @@ INSERT INTO `civilites` (`civ_id`, `civ_libelle`) VALUES
 
 -- Dumping structure for table adhesion.domaines
 CREATE TABLE IF NOT EXISTS `domaines` (
-  `dom_id` int(11) NOT NULL AUTO_INCREMENT,
+  `dom_id` MEDIUMINT NOT NULL AUTO_INCREMENT,
   `dom_libelle` varchar(255) DEFAULT NULL COMMENT 'Danse, ',
   PRIMARY KEY (`dom_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -131,7 +131,7 @@ INSERT INTO `domaines` (`dom_id`, `dom_libelle`) VALUES
 
 -- Dumping structure for table adhesion.modereglement
 CREATE TABLE IF NOT EXISTS `modereglement` (
-  `mreg_id` int(11) DEFAULT NULL,
+  `mreg_id` MEDIUMINT DEFAULT NULL,
   `mreg_code` varchar(50) NOT NULL,
   `mreg_Libelle` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -150,7 +150,7 @@ INSERT INTO `modereglement` (`mreg_id`, `mreg_code`, `mreg_Libelle`) VALUES
 
 -- Dumping structure for table adhesion.typeactivite
 CREATE TABLE IF NOT EXISTS `typeactivite` (
-  `tyac_id` int(11) NOT NULL AUTO_INCREMENT,
+  `tyac_id` MEDIUMINT NOT NULL AUTO_INCREMENT,
   `tyac_libelle` varchar(255) DEFAULT NULL COMMENT 'cours, événement,adhésion, stage, don, Crowdfunding',
   PRIMARY KEY (`tyac_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -168,7 +168,7 @@ INSERT INTO `typeactivite` (`tyac_id`, `tyac_libelle`) VALUES
 
 -- Dumping structure for table adhesion.typerole
 CREATE TABLE IF NOT EXISTS `typerole` (
-  `tyro_id` int(11) NOT NULL AUTO_INCREMENT,
+  `tyro_id` MEDIUMINT NOT NULL AUTO_INCREMENT,
   `tyro_libelle` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`tyro_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
