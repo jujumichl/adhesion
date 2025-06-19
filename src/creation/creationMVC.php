@@ -40,10 +40,9 @@ function creationController ($pdo) {
 
 /**************** MODEL ****************************** */
 /* 
- * Search personnes
+ * Get a person
  */
 function getPerson($per_id, $pdo) {
- 
   $stmt = $pdo->prepare("select * from personnes  left join
     civilites on  personnes.civ_id=civilites.civ_id   where per_id=".$per_id.""); //
   $stmt->execute();
@@ -59,9 +58,10 @@ function getPerson($per_id, $pdo) {
       return $result[0];
 }
 
-
+/**
+ * 
+ */
 function getPersonSubscriptions($per_id, $pdo) {
- 
   $stmt = $pdo->prepare("SELECT * FROM inscriptions 
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN reglements ON reglements.reg_id = inscriptions.id_reg
@@ -72,9 +72,10 @@ function getPersonSubscriptions($per_id, $pdo) {
   return $result;
 }
 
-
+/**
+ * 
+ */
 function getPersonInscriptions($per_id, $pdo) {
- 
   $stmt = $pdo->prepare("SELECT * FROM inscriptions 
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN reglements ON reglements.reg_id = inscriptions.id_reg
@@ -85,7 +86,7 @@ function getPersonInscriptions($per_id, $pdo) {
   return $result;
 }
 
-
+/**************** VIEW ****************************** */
 
 function displayPerson($person) {
  $output='
@@ -203,11 +204,13 @@ function displayPerson($person) {
           </div>
     </div> 
   </div>
-
 ';
 return $output;
 }
   
+/**
+ * 
+ */
 function displaypersonSubscriptions($personSubscriptions) {
 
  $output=' <!-- Adhésions --->
@@ -266,8 +269,10 @@ return $output;
   }
 
 
-
-  function displaypersonInscriptions($personInscriptions) {
+/**
+ * 
+ */
+function displaypersonInscriptions($personInscriptions) {
 
    $output=' <!-- Adhésions --->
       <div class="row" style="margin-top:30px">
@@ -326,8 +331,10 @@ return $output;
     }
 
 
-  
-  function displayActivities () {
+/**
+ * 
+ */
+function displayRest () {
    $output=' <!-- Participations -->
     <div class="row" style="margin-top:30px">
           <div class="col-12">
@@ -448,11 +455,8 @@ return $output;
           </tbody>
         </table>
     </div>
-
 </div>
-
-</div>
-';
+</div>';
 
  return $output;
 }
