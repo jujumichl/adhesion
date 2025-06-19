@@ -157,14 +157,14 @@ CREATE TABLE IF NOT EXISTS `typeactivite` (
 
 -- Dumping data for table adhesion.typeactivite: ~7 rows (approximately)
 DELETE FROM `typeactivite`;
-INSERT INTO `typeactivite` (`tyac_id`, `tyac_libelle`) VALUES
-	(1, 'Activité'),
-	(2, 'Stage'),
-	(3, 'Adhésion'),
-	(4, 'Evénement'),
-	(10, 'Répétitions'),
-	(11, 'Autres'),
-	(12, 'Réduction-supplément');
+INSERT INTO `typeactivite` (`tyac_id`, `tyac_libelle` , `tyac_famille`) VALUES
+	(1, 'Activité','1'),
+	(2, 'Stage','1'),
+	(3, 'Adhésion','2'),
+	(4, 'Evénement','1'),
+	(10, 'Répétitions','1'),
+	(11, 'Autres','1'),
+	(12, 'Réduction-supplément','3');
 
 -- Dumping structure for table adhesion.typerole
 CREATE TABLE IF NOT EXISTS `typerole` (
