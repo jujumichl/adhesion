@@ -16,51 +16,53 @@
 <body>
     <div class="container">
 <?php
+    ini_set( 'display_errors', 1 );
     try {
-        require_once(__DIR__ . '/outils/utils.php');
+        require_once './outils/utils.php';
 
-        require_once(__DIR__ . '/src/selection/selectionMVC.php');
+        require_once './src/selection/selectionMVC.php';
 
-        require_once(__DIR__ . '/src/navbar.php');
+        require_once './src/navbar.php';
 
-        require_once(__DIR__ . '/src/integrationCSV/integrationCSV.php');
+        require_once './src/integrationCSV/integrationCSV.php';
 
+        require_once './config.php';
+        $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
             case 'selec':
                 print displayNavbar().
                 displaySelectionHeader().
-                selectionController();
+                selectionController($pdo);
                 break;
             case 'crea':
                 print displayNavbar();
-                include(__DIR__ . '/src/creation.php');
+                include './src/creation.php';
                 break;
             case 'integ':
                 print displayNavbar();
-                include(__DIR__ . '/src/integration.php');
+                include './src/integration.php';
                 break;
             case 'log':
                 print displayNavbar();
-                include(__DIR__ . '/src/historique.php');
+                include './src/historique.php';
                 break;
             case 'TB':
                 print displayNavbar();
-                include(__DIR__ . '/src/tableau-bord.php');
+                include './src/tableau-bord.php';
                 break;
             case 'mooc':
                 print displayNavbar();
-                include(__DIR__ . '/src/mooc.php');
+                include './src/mooc.php';
                 break;
             case 'CSV':
                 print displayNavbar(). 
                 displayIntegrationCsv();
                 break;
             case 'upload':
-                require_once(__DIR__ . '/src/integrationCSV/traitementCSV.php');
+                require_once './src/integrationCSV/traitementCSV.php';
                 $csvPath = upload();
-                $pdo = init_pdo('localhost', 'gestionccr', 'root', '');
-                $resultat = CSVToSQL($csvPath, 'gestionccr', 'brouillon');
+                $resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
                 $html = displaySQLtoCSV($resultat);
                 parseAndStoreData($pdo);
                 print displayNavbar().
@@ -69,7 +71,7 @@
                 
                 break;
             default:
-                include(__DIR__ . '/src/connexion.php');
+                include './src/connexion.php';
                 break;
         }
 

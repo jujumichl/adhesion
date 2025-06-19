@@ -9,7 +9,7 @@ use Dom\Element;
  * Controller for the Selection page
  */
 function upload() {
-    $target_dir = __DIR__ . "/fichier/";
+    $target_dir = "./src/integrationCSV/fichier";
 
     $tmp_name = $_FILES["fileToUpload"]["tmp_name"];
     $type = array("csv");
@@ -32,26 +32,6 @@ function upload() {
  * Get data in csv file, add all data which we need in our database and stores them
  */
 
-/**
- * Function for initialize PDO
- * @param mixed $host (ex: localhost)
- * @param mixed $db name of database
- * @param mixed $user user who we want connect
- * @param mixed $pass the password of this user
- * @return PDO connexion to the database
- */
-function init_pdo($host, $db, $user, $pass) {
-    $port = "3306";
-    $charset = 'utf8mb4';
-    $options = [
-        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-        \PDO::ATTR_EMULATE_PREPARES   => false,
-    ];
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset;port=$port";
-    $pdo = new \PDO($dsn, $user, $pass, $options);
-    return $pdo;
-}
 
 /**
  * make all data who are in csv file into the database selected
@@ -61,7 +41,7 @@ function init_pdo($host, $db, $user, $pass) {
  * @throws \Exception if our data aren't in our database
  * @return array the content of our database
  */
-function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
+function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
     if (!file_exists($cheminFichierCSV)) {
         die("Fichier introuvable : $cheminFichierCSV");
     }
@@ -124,7 +104,6 @@ function CSVToSQL($cheminFichierCSV, $nomBdd, $nomTable){
         throw new Exception("Colonne courriel introuvable");
     }
     //Drop and create table brouillon
-    $pdo = init_pdo('localhost', $nomBdd, 'root', '');
     $sql = "drop table brouillon";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -294,12 +273,11 @@ function parseAndStoreData($pdo){
 
                 }
                 else {
-                    print_r($data[0]);
                     multipleLignesComput($data);
                 }
             }
             else {
-                throw new Exception("Email invalide " . $res['brou_id']);
+                throw new Exception("Email invalide " . $res['brou_email']);
             }
         }catch (Exception $e){
             $message .= "Erreur : " . $e->getMessage() . "</br>";
@@ -462,7 +440,7 @@ function getIDActivity($code, $pdo){
         ':code'=> $code
         ]);
     $act_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    return $act_id['act_id'];
+    return $act_id[0]['act_id'];
 }
 
 function getIdPerson($email, $pdo){
@@ -473,7 +451,7 @@ function getIdPerson($email, $pdo){
         ':email'=> $email
         ]);
     $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    return $per_id['per_id'];
+    return $per_id[0]['per_id'];
 }
 
 
@@ -485,7 +463,7 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
     $stmt->execute([ ':mreg' => $mreg]);
     $mregID = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     $total = $montant_act + $montant_adh;
-    if (!$mregID['mreg_id']) {
+    if (!$mregID[0]['mreg_id']) {
         return "Modèle de règlement non connu ou invalide." . $per_id;
     }
     else {
@@ -502,7 +480,7 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':total' => $total,
-            ':mregid'=> $mregID['mreg_id'],
+            ':mregid'=> $mregID[0]['mreg_id'],
             ':dateAdh' => $dateAdh
         ]);
         $reg_id = $pdo->lastInsertId();

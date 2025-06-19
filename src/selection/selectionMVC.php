@@ -6,7 +6,7 @@
 /**
  * Controller for the Selection page
  */
-function selectionController () {
+function selectionController ($pdo) {
     // $output = displaySelectionHeader();
     $output = '';
     if (isset ($_GET['action'])){
@@ -14,7 +14,7 @@ function selectionController () {
         if ($action=='getpersonnes') {
             if (isset ($_GET['searchString'])) {
                 // print $_GET['searchString'];
-                $personsList = getsearch($_GET['searchString']);
+                $personsList = getsearch($_GET['searchString'], $pdo);
                 $output .= displayPersonList($personsList);
             } else {
                 throw new Exception ("Error : getpersonnes without searchString");
@@ -157,24 +157,8 @@ function displayPersonList($personList) {
 /* 
  * Search personnes
  */
-function getSearch($searchString) {
+function getSearch($searchString, $pdo) {
  
-    $host = 'localhost';
-    $db   = 'gestionccr';
-    $user = 'root';
-    $pass = '';
-    $port = "3306";
-    $charset = 'utf8mb4';
-
-    $options = [
-        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-        \PDO::ATTR_EMULATE_PREPARES   => false,
-    ];
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset;port=$port";
-    $pdo = new \PDO($dsn, $user, $pass, $options);
-
-
     $stmt = $pdo->prepare("select * from personnes      where per_nom  LIKE  '%".  $searchString ."%' OR per_prenom  LIKE  '%".  $searchString ."%' OR per_email LIKE  '%".  $searchString ."%'"); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
