@@ -301,7 +301,7 @@ function createPers($data, $pdo){
     ]);
     $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     //if not in
-    if (count($per_id) < 0) {
+    if (count($per_id) < 1) {
         if ($data['brou_titre'] === 'Madame'){
             $data['brou_titre'] = 2;
         }
@@ -309,7 +309,7 @@ function createPers($data, $pdo){
             $data['brou_titre'] = 1;
         }
         //$data = just array of data cf $result
-        $sql = "INSERT IGNORE INTO `personnes`(
+        $sql = "INSERT INTO `personnes`(
         per_nom,
         civ_id,
         per_prenom,

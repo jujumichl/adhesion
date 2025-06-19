@@ -14,7 +14,7 @@ function displayIntegrationCsv($resultat = "En attente de fichier...", $nomFichi
     $output = '
     <div style="margin-top:100px">
     <div class="row">
-        <div class="h5" style="color:#d07d29">Sélection</div>
+        <div class="h5" style="color:#d07d29">Intégration fichier CSV </div>
         <hr/>
         <div class="col-6">
         <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
@@ -35,7 +35,8 @@ function displayIntegrationCsv($resultat = "En attente de fichier...", $nomFichi
     $output .= '</div>
         </div>
             <div class="col-6">
-            <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>        </div>
+                <button type="submit" class="btn btn-outline-secondary">Vérifier fichier CSV</button>
+                <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>
             </div>
         </form>
         </div>
