@@ -245,6 +245,7 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
  */
 function parseAndStoreData($pdo){
     (string)$message = "";
+    $data = null;
     $sql = "select brou_email, count(*) AS tot from brouillon group by brou_email";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -280,7 +281,12 @@ function parseAndStoreData($pdo){
                 throw new Exception("Email invalide " . $res['brou_email']);
             }
         }catch (Exception $e){
-            $message .= "Erreur : " . $e->getMessage() . "</br>";
+            if ($data !== null){
+                $message .= "Erreur : " . $e->getMessage() . ' -- ' . $data[0]['brou_nom']."</br>";
+            }
+            else {
+                $message .= "Erreur : " . $e->getMessage() ."</br>";
+            }
         }
     }
     return $message;

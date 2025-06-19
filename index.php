@@ -65,8 +65,8 @@
                 $nomFichier = $_FILES["fileToUpload"]["name"];
                 $resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
                 $msgErr = parseAndStoreData($pdo);
-                print displayNavbar().
-                displayIntegrationCsv($msgErr, $nomFichier);
+                //print displayNavbar().
+                print displayIntegrationCsv($msgErr, $nomFichier);
                 unlink($csvPath);
                 
                 break;

@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `typerole` (
   `tyro_libelle` varchar(255) COMMENT 'animateur, référent, etc'
 );
 CREATE TABLE IF NOT EXISTS `brouillon`(
-  `brou_id` int PRIMARY KEY AUTO_INCREMENT,
+  `brou_id` int,
   `brou_nom` varchar(255),
   `brou_prenom` varchar(255),
   `brou_portable` char(10),
