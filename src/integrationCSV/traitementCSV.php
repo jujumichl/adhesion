@@ -25,8 +25,10 @@ function upload() {
         throw new Exception("Veuillez vérifier le que vous avez bien exporter votre fichier au format CSV encoder en UTF-8.");
     }
 }
-
-
+$csvPath = upload();
+$nomFichier = $_FILES["fileToUpload"]["name"];
+$resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
+$msgErr = parseAndStoreData($pdo);
 /**************** MODEL ****************************** */
 /* 
  * Get data in csv file, add all data which we need in our database and stores them
@@ -262,6 +264,7 @@ function parseAndStoreData($pdo){
                 ]);
                 $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
                 //$res = Array ( [brou_email] => - [tot] => 85 )
+                //Return the good ID of person
                 $per_id = createPers($data[0], $pdo);
 
                 if ($res['tot'] === 1){
@@ -400,7 +403,7 @@ function createSubscription($data, $per_id, $pdo){
         ':ins_date_inscription' => $dateAdh,
         ':id_reg' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
-        ':ins_fin' => getEndOfSeasonDate($data['brou_date_adh']),
+        ':ins_fin' => getEndOfSeasonDate($dateAdh),
         ':ins_montant' => $data['brou_adh']
     ]);
 }
@@ -451,7 +454,7 @@ function createAct($data, $per_id, $pdo){
         ':ins_date_inscription' => $dateAdh,
         ':id_reg' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
-        ':ins_fin' => getEndOfSeasonDate($data['brou_date_adh']),
+        ':ins_fin' => getEndOfSeasonDate($dateAdh),
         ':ins_montant' => $data['brou_act']
     ]);
 }
@@ -518,11 +521,12 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $per_id]);
     $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    if ($amoutid !== null){
-        print json_encode($amoutid[0]['id_reg']) . '<br>';
+    if ($amoutid !== null and $amoutid !== 0){
+        //print json_encode($amoutid[0]['id_reg']) . '<br>';
         return $amoutid[0]['id_reg'];
     }
     else{
+        var_dump($amoutid);
         return createPayment(
             $montant_adh, 
             $montant_act, 

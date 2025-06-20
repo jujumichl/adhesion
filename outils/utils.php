@@ -79,14 +79,18 @@ function stringToDate($day = '00', $month = '00', $year = '0000') {
  * get in table an_exercice ans_date_fin
  */
 function getEndOfSeasonDate($date, $endDay = "31/08") {
-    // Convertit $date (ex: "2024-09-18") en DateTime
+    // Convert $date (ex: "2024-09-18") in DateTime
     $dateObj = DateTime::createFromFormat('Y-m-d', $date);
     if (!$dateObj) return null;
-
-    // Récupère l'année suivante
-    $nextYear = (int)$dateObj->format('Y') + 1;
-
-    // Crée une nouvelle date avec $endDay pour l'année suivante
+    if ((int)$dateObj->format('m') >= 1){
+        //get current year
+        $nextYear = (int)$dateObj->format('Y');
+    }
+    else{
+        // Get next year
+        $nextYear = (int)$dateObj->format('Y') + 1;
+    }
+    // Create new Date with $endDay with the next year
     $endOfSeasonStr = "$endDay/$nextYear";
     $endOfSeasonObj = DateTime::createFromFormat('d/m/Y', $endOfSeasonStr);
     if (!$endOfSeasonObj) return null;

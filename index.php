@@ -62,13 +62,8 @@
                 break;
             case 'upload':
                 require_once './src/integrationCSV/traitementCSV.php';
-                $csvPath = upload();
-                $nomFichier = $_FILES["fileToUpload"]["name"];
-                $resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
-                $msgErr = parseAndStoreData($pdo);
-                print displayNavbar().
-                displayIntegrationCsv($msgErr, $nomFichier);
-                
+                //print displayNavbar().
+                print displayIntegrationCsv($msgErr, $nomFichier);
                 break;
             default:
                 include './src/connexion.php';
