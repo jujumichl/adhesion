@@ -36,7 +36,6 @@
                 selectionController($pdo);
                 break;
             case 'crea':
-                require_once './src/creation/creationMVC.php';
                 print displayNavbar();
                //  displaySelectionHeader();
                 print creationController($pdo);
