@@ -21,8 +21,7 @@
         require_once './outils/utils.php';
 
         require_once './src/selection/selectionMVC.php';
-        require_once './src/creation/creationMVC.php';
-
+ 
         require_once './src/navbar.php';
 
         require_once './src/integrationCSV/integrationCSV.php';
@@ -37,6 +36,7 @@
                 selectionController($pdo);
                 break;
             case 'crea':
+                require_once './src/creation/creationMVC.php';
                 print displayNavbar();
                //  displaySelectionHeader();
                 print creationController($pdo);
