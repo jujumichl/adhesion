@@ -208,6 +208,7 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        unlink($cheminFichierCSV);
         return $result;
     } else {
         throw new Exception("Erreur lors du passage de données, veuillez vérifier le fichier ainsi que le nom des colonnes de ce fichier.");

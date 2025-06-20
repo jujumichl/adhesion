@@ -69,7 +69,6 @@
                 $msgErr = parseAndStoreData($pdo);
                 print displayNavbar().
                 displayIntegrationCsv($msgErr, $nomFichier);
-                unlink($csvPath);
                 
                 break;
             default:
