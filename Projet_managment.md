@@ -20,6 +20,8 @@
     - Intégration des cas comportant plus de 2 lignes, (JM)
     - Prise en compte des lignes déjà insérées (JM)
     - Intégration des années antérieures (JM)
+    - Traitement cas de modifications sur des lignes déjà intégrées.
+    - Développement fonction vérification du fichier d'intégration
 
 - Développement fonction de recherche et visualisation (V1) X (DB)
     - Développement page de sélection
@@ -28,6 +30,8 @@
         - Finaliser l'affichage des règlements
 
 - Développement fonction interface Brevo (V1) X (JM)
+
+- Développement intégration HelloAsso
 
 - Développement de l'interface historique (V2)
 
