@@ -368,11 +368,11 @@ function createPers($data, $pdo){
 function createSubscription($data, $per_id, $pdo){
     $act_id = getIDActivity($data['codeADH'], $pdo);
     $reg_id = getamout(
+        $per_id,
         $data['brou_adh'],
         $data['brou_act'],
         $data['brou_date_adh'],
         $data['brou_reglement'],
-        $per_id,
         $pdo);
     $sql = 'INSERT INTO `inscriptions`(
         per_id,
@@ -422,8 +422,7 @@ function createAct($data, $per_id, $pdo){
         $data['brou_act'],
         $data['brou_date_adh'],
         $data['brou_reglement'],
-        $pdo
-        );
+        $pdo);
 
     $sql = 'INSERT INTO `inscriptions`(
     per_id,
@@ -489,7 +488,7 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
     $stmt = $pdo->prepare($sql);
     $stmt->execute([ ':mreg' => $mreg]);
     $mregID = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    $total = $montant_act + $montant_adh;
+    $total = (int)$montant_act + (int)$montant_adh;
     if (!$mregID[0]['mreg_id']) {
         return "Modèle de règlement non connu ou invalide." . $per_id;
     }
@@ -516,24 +515,37 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
 }
 
 
+
+/**
+ * Get id_reg and check if he is already inside db or not, add it if not
+ * @param int $per_id
+ * @param int $montant_adh
+ * @param int $montant_act
+ * @param string $dateAdh
+ * @param string $mreg
+ * @param mixed $pdo
+ */
 function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     $sql = 'select id_reg from inscriptions where per_id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $per_id]);
     $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    if ($amoutid !== null and $amoutid !== 0){
-        //print json_encode($amoutid[0]['id_reg']) . '<br>';
-        return $amoutid[0]['id_reg'];
-    }
-    else{
-        var_dump($amoutid);
+
+    // If $amoutid is empty, it means no registration was found, so create a new payment.
+    if (empty($amoutid)){
         return createPayment(
-            $montant_adh, 
-            $montant_act, 
-            $dateAdh, 
-            $mreg, 
-            $per_id, 
-            $pdo);
+            $montant_adh,
+            $montant_act,
+            $dateAdh,
+            $mreg,
+            $per_id,
+            $pdo
+        );
+    }
+    // If $amoutid is NOT empty, it means a registration was found, so return its id_reg.
+    else {
+        // print json_encode($amoutid[0]['id_reg']) . '<br>';
+        return $amoutid[0]['id_reg'];
     }
 }
 
