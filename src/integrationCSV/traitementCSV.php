@@ -208,6 +208,7 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        unlink($cheminFichierCSV);
         return $result;
     } else {
         throw new Exception("Erreur lors du passage de données, veuillez vérifier le fichier ainsi que le nom des colonnes de ce fichier.");
@@ -349,7 +350,10 @@ function createPers($data, $pdo){
         $per_id = $pdo->lastInsertId();
         return $per_id;
     }
-    //else
+    else{
+        ///////////////////////// JE RETOURNE LE PER_ID MÊME SI LA PERSONNE EXISTE DéJà /////////////////////////////////
+        return $per_id[0]['per_id'];
+    }
 }
 
 /**
@@ -360,7 +364,7 @@ function createPers($data, $pdo){
  */
 function createSubscription($data, $per_id, $pdo){
     $act_id = getIDActivity($data['codeADH'], $pdo);
-    $reg_id = createPayment(
+    $reg_id = getamout(
         $data['brou_adh'],
         $data['brou_act'],
         $data['brou_date_adh'],
@@ -514,8 +518,9 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $per_id]);
     $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    if (!empty($amoutid['id_reg'])){
-        return $amoutid['id_reg'];
+    if ($amoutid !== null){
+        print json_encode($amoutid[0]['id_reg']) . '<br>';
+        return $amoutid[0]['id_reg'];
     }
     else{
         return createPayment(
