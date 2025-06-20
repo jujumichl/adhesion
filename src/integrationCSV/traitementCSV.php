@@ -52,7 +52,7 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
     $entetes = fgetcsv($handle, 0, ';');
     $separateur = ';';
 
-    // Réessaie avec ',' si mauvais format
+    // Try again with ',' if bad format
     if (!$entetes || count($entetes) < 3) {
         fclose($handle);
         $handle = fopen($cheminFichierCSV, 'r');
@@ -60,12 +60,12 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         $separateur = ',';
     }
 
-    // Nettoyage des entêtes
+    // Cleaning headers
     $entetes = array_map(function ($col) {
         return trim(preg_replace('/^\xEF\xBB\xBF/', '', $col));
     }, $entetes);
 
-    // Localisation des colonnes clés
+    // Location of key columns
     $emailKey = null;
     $telKey = null;
     $portKey = null;
@@ -354,7 +354,6 @@ function createPers($data, $pdo){
         return $per_id;
     }
     else{
-        ///////////////////////// JE RETOURNE LE PER_ID MÊME SI LA PERSONNE EXISTE DéJà /////////////////////////////////
         return $per_id[0]['per_id'];
     }
 }
