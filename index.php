@@ -68,7 +68,7 @@
                 $resultat = CSVToSQL($csvPath,  'brouillon', $pdo);
                 $msgErr = parseAndStoreData($pdo);
                 print displayNavbar().
-                print displayIntegrationCsv($msgErr, $nomFichier);
+                displayIntegrationCsv($msgErr, $nomFichier);
                 unlink($csvPath);
                 
                 break;
