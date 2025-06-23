@@ -5,17 +5,12 @@
  */
 function displayModalBrevo(){
     return 
-    '<!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Launch demo modal
-    </button>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    '<!-- Modal -->
+    <div class="modal fade" id="brevoModal" tabindex="-1" aria-labelledby="brevoModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title fs-5" id="brevoModal">Modal title</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -400,4 +395,4 @@ class Adherents{
 $adherent = new Adherents();
 $apikey = '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';
 $allList = $adherent -> getAllListName($apikey);
-print_r($allList);
+//print_r($allList);
