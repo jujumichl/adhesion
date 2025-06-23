@@ -278,7 +278,7 @@ function parseAndStoreData($pdo){
 
                 }
                 else {
-                    multipleLignesComput($data);
+                    multipleLignesComput($data, $pdo);
                 }
             }
             else {
@@ -548,6 +548,25 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     }
 }
 
-function multipleLignesComput($Table){
-    return;
+/**
+ * use to process multiple lines
+ * @param mixed $person data on one person
+ * @param mixed $pdo pdo connexion
+ * @return void
+ */
+function multipleLignesComput($person, $pdo){
+    foreach ($person as $dataPerson){
+        $sql ="SELECT brou_code, brou_reglement, brou_adh, brou_act 
+        FROM brouillon 
+        WHERE brou_date_adh = :dates AND brou_email = :email";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ":dates" => $dataPerson["brou_date_adh"],
+            ":email" => $dataPerson["brou_email"]
+        ]);
+        $dataSorted[] = $stmt->fetchAll();
+        
+    }
+    print_r($dataSorted);
+    
 }
