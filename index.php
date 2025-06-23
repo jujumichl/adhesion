@@ -67,10 +67,6 @@
                 print displayNavbar().
                  displayIntegrationCsv($msgErr, $nomFichier);
                 break;
-            case 'brevo':
-                print //displayNavbar().
-                displayModalBrevo();
-                break;
             default:
                 include './src/connexion.php';
                 break;
