@@ -377,7 +377,7 @@ function createSubscription($data, $per_id, $pdo){
         per_id,
         act_id,
         ins_date_inscription,
-        id_reg,
+        reg_id,
         ins_debut,
         ins_fin,
         ins_montant
@@ -385,7 +385,7 @@ function createSubscription($data, $per_id, $pdo){
         :per_id,
         :act_id,
         :ins_date_inscription,
-        :id_reg,
+        :reg_id,
         :ins_debut,
         :ins_fin,
         :ins_montant
@@ -400,7 +400,7 @@ function createSubscription($data, $per_id, $pdo){
         ':per_id' => $per_id,
         ':act_id' => $act_id,
         ':ins_date_inscription' => $dateAdh,
-        ':id_reg' => (int)$reg_id,
+        ':reg_id' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
         ':ins_fin' => getEndOfSeasonDate($dateAdh),
         ':ins_montant' => $data['brou_adh']
@@ -427,7 +427,7 @@ function createAct($data, $per_id, $pdo){
     per_id,
     act_id,
     ins_date_inscription,
-    id_reg,
+    reg_id,
     ins_debut,
     ins_fin,
     ins_montant
@@ -435,7 +435,7 @@ function createAct($data, $per_id, $pdo){
     :per_id,
     :act_id,
     :ins_date_inscription,
-    :id_reg,
+    :reg_id,
     :ins_debut,
     :ins_fin,
     :ins_montant
@@ -450,7 +450,7 @@ function createAct($data, $per_id, $pdo){
         ':per_id' => $per_id,
         ':act_id' => $act_id,
         ':ins_date_inscription' => $dateAdh,
-        ':id_reg' => (int)$reg_id,
+        ':reg_id' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
         ':ins_fin' => getEndOfSeasonDate($dateAdh),
         ':ins_montant' => $data['brou_act']
@@ -516,7 +516,7 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
 
 
 /**
- * Get id_reg and check if he is already inside db or not, add it if not
+ * Get reg_id and check if he is already inside db or not, add it if not
  * @param int $per_id
  * @param int $montant_adh
  * @param int $montant_act
@@ -525,7 +525,7 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
  * @param mixed $pdo
  */
 function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
-    $sql = 'select id_reg from inscriptions where per_id = :id';
+    $sql = 'select reg_id from inscriptions where per_id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $per_id]);
     $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -541,10 +541,10 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
             $pdo
         );
     }
-    // If $amoutid is NOT empty, it means a registration was found, so return its id_reg.
+    // If $amoutid is NOT empty, it means a registration was found, so return its reg_id.
     else {
-        // print json_encode($amoutid[0]['id_reg']) . '<br>';
-        return $amoutid[0]['id_reg'];
+        // print json_encode($amoutid[0]['reg_id']) . '<br>';
+        return $amoutid[0]['reg_id'];
     }
 }
 

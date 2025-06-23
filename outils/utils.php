@@ -71,7 +71,7 @@ function getCurrentSeason() {
  * @return string
  */
 function stringToDate($day = '00', $month = '00', $year = '0000') {
-    $ymd = DateTime::createFromFormat('d/m/Y', "$day/$month/$year");
+    $ymd = DateTime::createFromFormat( 'd/m/Y', "$day/$month/$year");
     return $ymd ? $ymd->format('Y-m-d') : null;
 }
 
@@ -82,7 +82,7 @@ function getEndOfSeasonDate($date, $endDay = "31/08") {
     // Convert $date (ex: "2024-09-18") in DateTime
     $dateObj = DateTime::createFromFormat('Y-m-d', $date);
     if (!$dateObj) return null;
-    if ((int)$dateObj->format('m') >= 1){
+    if ((int)$dateObj->format('m') >= 1 && (int)$dateObj->format('m') >= 8){
         //get current year
         $nextYear = (int)$dateObj->format('Y');
     }

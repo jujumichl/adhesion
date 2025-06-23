@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   `per_id` int,
   `act_id` int,
   `ins_date_inscription` DATE NOT NULL,
-  `id_reg` int,
+  `reg_id` int,
   `ins_debut` DATE COMMENT 'début d''activité de la ligne',
   `ins_fin` DATE COMMENT 'fin''activité de la ligne',
   `ins_montant` float
