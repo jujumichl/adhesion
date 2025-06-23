@@ -1,5 +1,41 @@
 <?php
-require_once __DIR__ ."\Utils_csv.php";
+/**************** VIEW ****************************** */
+/**
+ * Display header of the brevo modal
+ */
+function displayModalBrevo(){
+    return 
+    '<!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            ...
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+    </div>
+    </div>';
+}
+
+
+
+
+
+
+
 /**
  * Class de gestion des adhérents, ajout d'adhérents a une liste, récupération des emails adhérents
  * dans une liste, récupération des adérents présent dans une liste,
@@ -161,7 +197,7 @@ class Adherents{
     /**
      * Envoie un fichier CSV de contacts à l'API Brevo pour importation dans une liste donnée.
      *
-     * @param string $csvContent Contenu texte brut du fichier CSV (non encodé en base64).
+     * @param string $content Contenu texte brut du fichier CSV (non encodé en base64).
      * @param string $apikey Clé API pour authentification.
      * @param int $listId Identifiant de la liste de contacts dans laquelle importer les contacts.
      * 
@@ -169,53 +205,45 @@ class Adherents{
      * @throws Exception En cas d'erreur cURL ou d'erreur HTTP lors de l'import.
      */
     function addContact(string $content, string $apikey, int $listId): array {
-        // URL de l'endpoint API pour importer des contacts
         $contactsUrlImport = "https://api.brevo.com/v3/contacts/import";
 
-        // Construction du corps de la requête avec les paramètres attendus
         $request = [
-            "listIds" => [$listId],          // Liste des IDs dans lesquels on souhaite importer les contacts
-            "updateEnabled" => true,         // Permet de mettre à jour les contacts existants
-            "fileBody" => $content,          // Contenu CSV en texte brut (pas base64)
-            "fileType" => "csv"              // Type de fichier envoyé
+            "listIds" => [$listId],          // List of IDs into which contacts are to be imported
+            "updateEnabled" => true,         // Update existing contacts
+            "fileBody" => $content,
+            "fileType" => "csv"
         ];
 
-        // Initialisation de la session cURL avec l'URL API
         $curl = curl_init($contactsUrlImport);
 
-        // Configuration de cURL pour retourner la réponse sous forme de chaîne
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-        // Envoi de la requête HTTP POST avec les données JSON encodées
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($request));
 
-        // Spécifie que c'est une requête POST
         curl_setopt($curl, CURLOPT_POST, true);
 
-        // Définition des headers HTTP nécessaires (clé API, type contenu, acceptation JSON)
+        // define HTTP headers needed
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             "api-key: $apikey",
             "accept: application/json",
             "content-type: application/json"
         ]);
 
-        // Exécution de la requête cURL
         $response = curl_exec($curl);
 
-        // Gestion des erreurs cURL
+        // cURL error handlings
         if ($response === false) {
-            $err = curl_error($curl); // Récupération du message d'erreur cURL
-            curl_close($curl);         // Fermeture de la session cURL
-            throw new Exception("Erreur cURL : $err");  // Lève une exception avec le message d'erreur
+            $err = curl_error($curl); 
+            curl_close($curl);         
+            throw new Exception("Erreur cURL : $err");
         }
 
-        // Récupération du code HTTP de la réponse
+
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        // Fermeture de la session cURL
         curl_close($curl);
 
-        // Retourne le code HTTP (utile pour une gestion plus fine après l'appel)
+        // return HTTP code
         return array($httpCode, $response);
     }
 
@@ -316,10 +344,11 @@ class Adherents{
 
         //number which we remake this before return result
         $offset = 0;
+        $allLists = [];
         do {
             $curl = curl_init();
 
-            curl_setopt_array($curl, array(
+            curl_setopt_array($curl, [
             CURLOPT_URL => "https://api.brevo.com/v3/contacts/lists?limit=$limit&offset=$offset",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -332,7 +361,7 @@ class Adherents{
                 'accept: application/json',
                 "API-key: $apikey"
             ),
-            ));
+            ]);
 
             $response = curl_exec($curl);
 
@@ -360,13 +389,15 @@ class Adherents{
                 exit;
             }
 
-            $count = $data['count'];
+            $count = count ($data['lists']);
             $offset += $limit;
+            $allLists = array_merge($allLists, $data['lists']);
 
         } while ($count === $limit);
-        return $response;
+        return $allLists;
     }
 }
 $adherent = new Adherents();
 $apikey = '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';
 $allList = $adherent -> getAllListName($apikey);
+print_r($allList);
