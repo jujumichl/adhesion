@@ -1,7 +1,7 @@
 <?php
 function displayNavbar(){
   return 
-  '<nav class="navbar navbar-expand-xxxl  fixed-top">
+  '<nav class="navbar navbar-expand-xxxl  fixed-top pt-0">
   <div class="container-fluid d-flex justify-content-between align-items-center" style="background-color:#eeeeed">
     
     <!-- Logo à gauche -->

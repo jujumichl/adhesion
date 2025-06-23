@@ -18,7 +18,7 @@
 - [ ] Renommer la table an_exercice par saison
 
 
-
+pt-0 sur le bandeau 
 # Fonction de Vérfication de la cohérence du fichier CSV
 - [ ] Vérifier si on a tous les modes de règlements
 - [ ] faire une condition qui ne récupère que les lignes complètes
