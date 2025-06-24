@@ -249,6 +249,8 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
 function parseAndStoreData($pdo){
     (string)$message = "";
     $data = null;
+    //$count=0;
+    //$count1=0;
     $sql = "select brou_email, count(*) AS tot from brouillon group by brou_email";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -257,28 +259,31 @@ function parseAndStoreData($pdo){
         try{
             // check email
             if (filter_var($res['brou_email'], FILTER_VALIDATE_EMAIL)) {
+                //$count++;  //601
                 $sql = "select * from brouillon where brou_email = :mail";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
                     ':mail' => $res['brou_email']
                 ]);
                 $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-                //$res = Array ( [brou_email] => - [tot] => 85 )
+                //$res = Array ( [brou_email] => - [tot] => 17 )
                 //Return the good ID of person
                 $per_id = createPers($data[0], $pdo);
 
+                if ($data[0]['brou_adh']>0){
+                    $data[0]['codeADH'] = 'AUT01';
+                    createSubscription($data[0],$per_id, $pdo);
+                }
+                
                 if ($res['tot'] === 1){
-                    if ($data[0]['brou_adh']>0){
-                        $data[0]['codeADH'] = 'AUT01';
-                        createSubscription($data[0],$per_id, $pdo);
-                    }
                     if ($data[0]['brou_code'] !== ''){
                         createAct($data[0],$per_id, $pdo);
                     }
 
                 }
                 else {
-                    multipleLignesComput($data, $pdo);
+                    multipleLignesComput($data, $per_id, $pdo);
+                    //$count1++;  //85
                 }
             }
             else {
@@ -293,6 +298,8 @@ function parseAndStoreData($pdo){
             }
         }
     }
+    //echo $count . "/" . $count1;
+    die();
     return $message;
 }
 
@@ -553,20 +560,104 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
  * @param mixed $person data on one person
  * @param mixed $pdo pdo connexion
  * @return void
+ * print_r($mreg); =====> Array ( [0] => TPE [1] => TPE ) 
+ * print_r($act); =====> Array ( [0] => 40 [1] => 130 ) 
+ * print_r($adh); =====> Array ( [0] => 38 [1] => 0 ) 
+ * print_r($payment); =====> 25/09/2024
+ * 
  */
-function multipleLignesComput($person, $pdo){
-    foreach ($person as $dataPerson){
-        $sql ="SELECT brou_code, brou_reglement, brou_adh, brou_act 
-        FROM brouillon 
-        WHERE brou_date_adh = :dates AND brou_email = :email";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ":dates" => $dataPerson["brou_date_adh"],
-            ":email" => $dataPerson["brou_email"]
-        ]);
-        $dataSorted[] = $stmt->fetchAll();
-        
+function multipleLignesComput($person, $per_id, $pdo){
+    $paymentDates = [];
+    $hasDifferentDates = [];
+
+    foreach ($person as $entry) {
+        $email = $entry['brou_email'];
+        $dateAdh = $entry['brou_date_adh'];
+        $adh[] =$entry['brou_adh'];
+        $act[] = $entry['brou_act'];
+        $mreg[] = $entry['brou_reglement'];
+
+        if (!isset($paymentDates[$email])) {
+            // First time seeing this email, store the date
+            $paymentDates[$email] = $dateAdh;
+            $paymentDates['mreg'] = $mreg;
+        } else {
+            // If the email has been seen before, compare the dates and payment methods
+            if ($paymentDates[$email] !== $dateAdh || $paymentDates['mreg'] !== $mreg) {
+                $hasDifferentDates[$dateAdh] = $mreg;
+            }
+        }
     }
-    print_r($dataSorted);
-    
+    foreach ($paymentDates as $payment) {
+        getamouts($adh, $act, $payment,$mreg,$per_id, $pdo);
+    }
+    if ($hasDifferentDates){ 
+        return;
+    }
 }
+
+
+function createsPayments($adh, $act, $dateAdh, $mregs, $per_id, $pdo){
+    $i=0;
+    foreach ($mregs as $mreg) {
+        $sql = 'select mreg_id from modereglement where mreg_code = :mreg';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([ ':mreg' => $mreg]);
+        $mregID = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $total = (int)$act[$i] + (int)$adh[$i];
+        $i++;
+        if (!$mregID[0]['mreg_id']) {
+            return "Modèle de règlement non connu ou invalide." . $per_id;
+        }
+        else {
+            $sql = 'INSERT INTO reglements(
+            `reg_montant`,
+            `mreg_id`,
+            `reg_date`
+            )
+            VALUES(
+            :total,
+            :mregid,
+            :dateAdh
+            )';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':total' => $total,
+                ':mregid'=> $mregID[0]['mreg_id'],
+                ':dateAdh' => $dateAdh
+            ]);
+            $reg_id[] = $pdo->lastInsertId();
+        }
+    }
+    return $reg_id;
+}
+
+function getamouts($adh, $act, $date,$mreg,$per_id, $pdo){
+    $sql = 'select reg_id from inscriptions where per_id = :id';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':id' => $per_id]);
+    $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    // If $amoutid is empty, it means no registration was found, so create a new payment.
+    if (empty($amoutid)){
+        return createsPayments(
+            $adh,
+            $act,
+            $date,
+            $mreg,
+            $per_id,
+            $pdo
+        );
+    }
+    // If $amoutid is NOT empty, it means a registration was found, so return its reg_id.
+    else {
+        // print json_encode($amoutid[0]['reg_id']) . '<br>';
+        return $amoutid[0]['reg_id'];
+    }
+}
+       
+
+   /*  if ($data[0]['brou_code'] !== ''){
+        createActs($data[0],$per_id, $pdo);
+    }
+ */
