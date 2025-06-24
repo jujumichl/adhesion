@@ -568,7 +568,7 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
  * 
  */
 function multipleLignesComput($person, $per_id, $pdo){
-    count($person)){}
+    if (count($person)){}
 }
 
 
