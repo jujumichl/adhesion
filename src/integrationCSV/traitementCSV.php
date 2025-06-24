@@ -270,16 +270,17 @@ function parseAndStoreData($pdo){
                 //Return the good ID of person
                 $per_id = createPers($data[0], $pdo);
 
-                if ($data[0]['brou_adh']>0){
-                    $data[0]['codeADH'] = 'AUT01';
-                    createSubscription($data[0],$per_id, $pdo);
-                }
+                
                 
                 if ($res['tot'] === 1){
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
                     if ($data[0]['brou_code'] !== ''){
                         createAct($data[0],$per_id, $pdo);
                     }
-
+                    if ($data[0]['brou_adh']>0){
+                        $data[0]['codeADH'] = 'AUT01';
+                        createSubscription($data[0],$per_id, $pdo);
+                    }
                 }
                 else {
                     multipleLignesComput($data, $per_id, $pdo);
@@ -567,33 +568,7 @@ function getamout($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
  * 
  */
 function multipleLignesComput($person, $per_id, $pdo){
-    $paymentDates = [];
-    $hasDifferentDates = [];
-
-    foreach ($person as $entry) {
-        $email = $entry['brou_email'];
-        $dateAdh = $entry['brou_date_adh'];
-        $adh[] =$entry['brou_adh'];
-        $act[] = $entry['brou_act'];
-        $mreg[] = $entry['brou_reglement'];
-
-        if (!isset($paymentDates[$email])) {
-            // First time seeing this email, store the date
-            $paymentDates[$email] = $dateAdh;
-            $paymentDates['mreg'] = $mreg;
-        } else {
-            // If the email has been seen before, compare the dates and payment methods
-            if ($paymentDates[$email] !== $dateAdh || $paymentDates['mreg'] !== $mreg) {
-                $hasDifferentDates[$dateAdh] = $mreg;
-            }
-        }
-    }
-    foreach ($paymentDates as $payment) {
-        getamouts($adh, $act, $payment,$mreg,$per_id, $pdo);
-    }
-    if ($hasDifferentDates){ 
-        return;
-    }
+    count($person)){}
 }
 
 
