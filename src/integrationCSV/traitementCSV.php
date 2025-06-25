@@ -300,7 +300,6 @@ function parseAndStoreData($pdo){
         }
     }
     //echo $count . "/" . $count1;
-    die();
     return $message;
 }
 
