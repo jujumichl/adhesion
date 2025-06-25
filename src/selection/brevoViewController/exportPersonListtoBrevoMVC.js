@@ -56,7 +56,7 @@ async function exportPersonListtoBrevoMVC(htlmPartId) {
 
         <div class="row">
             <div class="col-4">
-               <label for="exampleFormControlInput1" class="col-form-label">ou Choisir une liste existante</label>
+               <label for="exampleFormControlInput1" class="col-form-label">ou choisir une liste existante</label>
         </div>
 
         <div class="col-8">

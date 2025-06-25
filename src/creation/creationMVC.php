@@ -66,7 +66,7 @@ function getPerson($per_id, $pdo) {
 function getPersonSubscriptions($per_id, $pdo) {
   $stmt = $pdo->prepare("SELECT * FROM inscriptions 
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
-  LEFT JOIN reglements ON reglements.reg_id = inscriptions.id_reg
+  LEFT JOIN reglements ON reglements.reg_id = inscriptions.reg_id
   LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
   WHERE typeactivite.tyac_famille=2 and per_id=".$per_id."");
@@ -81,7 +81,7 @@ function getPersonSubscriptions($per_id, $pdo) {
 function getPersonInscriptions($per_id, $pdo) {
   $stmt = $pdo->prepare("SELECT * FROM inscriptions 
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
-  LEFT JOIN reglements ON reglements.reg_id = inscriptions.id_reg
+  LEFT JOIN reglements ON reglements.reg_id = inscriptions.reg_id
       LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
   WHERE typeactivite.tyac_famille=1 and per_id=".$per_id."");
@@ -95,8 +95,8 @@ function getPersonInscriptions($per_id, $pdo) {
  * 
  */
 function getPersonPayments($per_id, $pdo) {
-  $stmt = $pdo->prepare('SELECT reg_id, reg_montant, reg_date, mreg_code,  GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br> ") as reg_details FROM reglements 
-LEFT JOIN inscriptions ON inscriptions.id_reg=reglements.reg_id
+  $stmt = $pdo->prepare('SELECT reglements.reg_id, reglements.reg_montant, reglements.reg_date, mreg_code,  GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br> ") as reg_details FROM reglements 
+LEFT JOIN inscriptions ON inscriptions.reg_id=reglements.reg_id
   LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id

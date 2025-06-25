@@ -84,7 +84,7 @@ Table inscriptions {
   per_id int 
   act_id int 
   ins_date_inscription date [not null]
-  id_reg int
+  reg_id int
   ins_debut datetime [note : "début d'activité de la ligne"]
   ins_fin datetime [note : "fin'activité de la ligne"]
   ins_montant float
@@ -99,7 +99,7 @@ ref : "personnes"."civ_id" - "civilites"."civ_id"
 ref : "activites"."act_id" < "inscriptions"."act_id"
 ref : "inscriptions"."per_id" > "personnes"."per_id"
 
-Ref: "reglements"."reg_id" < "inscriptions"."id_reg"
+Ref: "reglements"."reg_id" < "inscriptions"."reg_id"
 
 Ref: "domaines"."dom_id" > "activites"."dom_id"
 
