@@ -100,3 +100,5 @@ async function putToClipboard(text) {
 
     navigator.clipboard.writeText(text)
 }
+
+
