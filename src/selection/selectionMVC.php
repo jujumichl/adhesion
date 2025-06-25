@@ -8,6 +8,8 @@
  */
 function selectionController ($pdo) {
     // $output = displaySelectionHeader();
+    // session_start();
+    setcookie('user_id', '1234');
     $output = '';
     if (isset ($_GET['action'])){
         $action = $_GET['action'];
@@ -27,7 +29,13 @@ function selectionController ($pdo) {
                 }
             }
         }
+        
+        // $output .= displayPersonList($personsList);
+          
     }
+    // $output.='<script type="text/javascript" src="./src/selection/exportPersonListMVC.js"></script>';
+    $output.='<script type="text/javascript" src="./src/selection/brevoViewController/exportPersonListtoBrevoMVC.js"></script>';
+   
     return $output;
 
 }
@@ -95,6 +103,7 @@ function displaySelectionHeader($pdo) {
     </form>
 </div>
     ';
+    $output.= ' <div id="modalRecordPack"></div>';
 
     return $output;
 }
@@ -104,19 +113,18 @@ function displaySelectionHeader($pdo) {
  */
 function displayPersonList($personList) {
 
-    // print json_encode($personList);
-
     $output='   <div class="row" style="margin-top:30px">
         <div class="col-12">
             <div class="d-flex justify-content-between" style="backgournd-color:">
                 <div class="h6" style="color:#d07d29">Résultats
                 </div>
                 <div class="d-flex justify-content-end" >
-                    <button type="button" class=" " data-bs-toggle="modal" data-bs-placement="bottom" title="Créer une liste Brevo" data-bs-target="#brevoModal">
+                    <a href="#" onclick="exportPersonListtoBrevoMVC(\'modalRecordPack \')")>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mailbox-flag me-2" viewBox="0 0 16 16">
                             <path d="M10.5 8.5V3.707l.854-.853A.5.5 0 0 0 11.5 2.5v-2A.5.5 0 0 0 11 0H9.5a.5.5 0 0 0-.5.5v8zM5 7c0 .334-.164.264-.415.157C4.42 7.087 4.218 7 4 7s-.42.086-.585.157C3.164 7.264 3 7.334 3 7a1 1 0 0 1 2 0"/>
                             <path d="M4 3h4v1H6.646A4 4 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3V3a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4m0 1a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3"/>
                         </svg>
+                        </a>
                     </button>
 
                     <!-- Modal -->
@@ -160,26 +168,36 @@ function displayPersonList($personList) {
                     <th scope="col">Nom Prénom</th>
                     <th scope="col">Email</th>
                     <th scope="col">Téléphone</th>
-                    <th scope="col">Rôles</th>
                     <th scope="col">Adhésions</th>
                     <th scope="col">Activités</th>            
                     </tr>
                 </thead>
                 <tbody>';
+                if(isset($_COOKIE['user_id'])){
+                    echo 'Votre ID de session est le ' .$_COOKIE['user_id'];
+                } else  
+                    echo " Pas de cookie user_id";
+            
+            
                 foreach($personList as $person) {
+                    // print json_encode($person);
                     $output.="<tr>
                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">".  $person['per_nom']." ". $person['per_prenom']. "</a></td>
-                     <td>". $person['per_email']."</td>
-                     <td>". $person['per_tel']."</td> 
-                     <td></td> 
-                     <td></td>
-                     <td></td>                         
+                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['per_email']."</a></td>
+                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['per_tel']."</a></td> 
+                    <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['subscrCOncat']."</a></td> 
+                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['inscrptCOncat']."</a></td>                        
                     </tr>";                
                 }
 
     $output.='</tbody>
             </table>
         </div>';
+
+       //  print json_encode($personList);
+    $personListClean=htmlspecialchars(json_encode($personList));
+    $output.='<div
+    class="service-container" data-service="' . $personListClean.'"></div>';
 
     return $output;
 }
@@ -190,26 +208,55 @@ function displayPersonList($personList) {
  */
 function getSearch($searchString, $pdo) {
  
-    $stmt = $pdo->prepare("select * from personnes      where per_nom  LIKE  '%".  $searchString ."%' OR per_prenom  LIKE  '%". 
-         $searchString ."%' OR per_email LIKE  '%".  $searchString ."%' order by per_nom"); //
+    $stmt = $pdo->prepare('
+    select personnes.per_id, per_nom, per_prenom, per_email, per_tel, subscrCOncat, inscrptCOncat from personnes      
+LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS inscrptCOncat from inscriptions 
+       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+       WHERE typeactivite.tyac_famille=1
+       GROUP BY per_id) AS inscrp ON inscrp.per_id= personnes.per_id
+       
+LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS subscrCOncat from inscriptions 
+       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+       WHERE typeactivite.tyac_famille=2
+       GROUP BY per_id) AS subscr ON subscr.per_id= personnes.per_id
+                    where per_nom  LIKE "%'.  $searchString .'%" OR per_prenom  LIKE  "%'. 
+         $searchString .'%" OR per_email LIKE  "%'.  $searchString .'%"
+ order by per_nom');
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     // print " Résultats " . json_encode($result) ."</br>";
-
+   // $_SESSION['personList']= json_encode($result) ;
+   //  setcookie('personListCook', '1234' ); 
+    // setcookie('user_id', '1234');
     return $result;
 }
 
 
 function getInscriptionPersonListToActivity($act_id, $pdo) {
  
-    $stmt = $pdo->prepare("select * from personnes      
-LEFT JOIN inscriptions ON inscriptions.per_id=personnes.per_id
-WHERE inscriptions.act_id=".$act_id."
-order by per_nom"); //
+    $stmt = $pdo->prepare('select personnes.per_id, per_nom, per_prenom, per_email, per_tel, subscrCOncat, inscrptCOncat from personnes      
+LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS inscrptCOncat from inscriptions 
+       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+       WHERE typeactivite.tyac_famille=1
+       GROUP BY per_id) AS inscrp ON inscrp.per_id= personnes.per_id
+       
+LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS subscrCOncat from inscriptions 
+       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+       WHERE typeactivite.tyac_famille=2
+       GROUP BY per_id) AS subscr ON subscr.per_id= personnes.per_id
+left join inscriptions on inscriptions.per_id=personnes.per_id
+
+WHERE inscriptions.act_id='.$act_id.'
+order by per_nom'); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     // print " Résultats " . json_encode($result) ."</br>";
-
+    // $_SESSION['personList']= json_encode($result) ;
+   // setcookie('personList', json_encode($result));
     return $result;
 }
 

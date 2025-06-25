@@ -210,6 +210,9 @@ class Adherents{
         return array($httpCode, $response);
     }
 
+    /**
+     * 
+     */
     function checkContact(array $csvContent, array $emails, array $noms, array $prenoms){
         $nbAdherent = 0;
         $erreur = [];
@@ -360,7 +363,7 @@ class Adherents{
         return $allLists;
     }
 }
-$adherent = new Adherents();
+// $adherent = new Adherents();
 $apikey = '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';
-$allList = $adherent -> getAllListName($apikey);
+// $allList = $adherent -> getAllListName($apikey);
 //print_r($allList);

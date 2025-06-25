@@ -28,6 +28,8 @@
 
         require_once './src/selection/brevo/brevo-modal.php';
 
+        require_once './src/creation/creationMVC.php';
+
         require_once './config.php';
         $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
         $uc = lireDonneeUrl('uc');

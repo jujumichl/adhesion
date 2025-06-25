@@ -20,8 +20,6 @@ function creationController ($pdo) {
                 $inscriptions= getPersonInscriptions($_GET['per_id'], $pdo);
                 $output .= displaypersonInscriptions($inscriptions);
 
-                $personPayments= getPersonPayments($_GET['per_id'], $pdo);
-                $output .= displayPersonPayments($personPayments);
 
                 
              //   print json_encode($person)."</br>";
@@ -49,7 +47,7 @@ function getPerson($per_id, $pdo) {
     civilites on  personnes.civ_id=civilites.civ_id   where per_id=".$per_id.""); //
   $stmt->execute();
   $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-   // print " Résultats " . json_encode($result) ."</br>";
+  // print " Résultats " . json_encode($result) ."</br>";
 
   if(count($result) <1) 
     throw new Exception ("La personne n'a pas été trouvée dans la base de données. id : ". $per_id);
@@ -67,7 +65,6 @@ function getPersonSubscriptions($per_id, $pdo) {
   $stmt = $pdo->prepare("SELECT * FROM inscriptions 
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN reglements ON reglements.reg_id = inscriptions.id_reg
-  LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
   WHERE typeactivite.tyac_famille=2 and per_id=".$per_id."");
   $stmt->execute();
@@ -82,25 +79,8 @@ function getPersonInscriptions($per_id, $pdo) {
   $stmt = $pdo->prepare("SELECT * FROM inscriptions 
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN reglements ON reglements.reg_id = inscriptions.id_reg
-      LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
   WHERE typeactivite.tyac_famille=1 and per_id=".$per_id."");
-  $stmt->execute();
-  $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-  return $result;
-}
-
-
-/**
- * 
- */
-function getPersonPayments($per_id, $pdo) {
-  $stmt = $pdo->prepare('SELECT reg_id, reg_montant, reg_date, mreg_code,  GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br> ") as reg_details FROM reglements 
-LEFT JOIN inscriptions ON inscriptions.id_reg=reglements.reg_id
-  LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
-  LEFT JOIN activites ON activites.act_id=inscriptions.act_id
-  LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
-  where per_id='.$per_id.' ');
   $stmt->execute();
   $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
   return $result;
@@ -273,7 +253,7 @@ function displaypersonSubscriptions($personSubscriptions) {
                 <td>'.$personSubscription['ins_montant'].'€</td>
                 <td>'.$personSubscription['ins_debut'].'</td>
                 <td>'.$personSubscription['ins_fin'].'</td>
-                <td>'.$personSubscription['reg_montant'].'€ - '. $personSubscription['reg_date'].' - '. $personSubscription['mreg_code'].'</td>
+                <td>'.$personSubscription['reg_montant'].'€ - '. $personSubscription['reg_date'].' - '. $personSubscription['act_mode_rem'].'</td>
               </tr>';
             }
           }  else {
@@ -283,7 +263,7 @@ function displaypersonSubscriptions($personSubscriptions) {
           </tbody>
         </table>
       </div>
-
+    </div>
     ';
 return $output;
   }
@@ -335,7 +315,7 @@ function displaypersonInscriptions($personInscriptions) {
                   <td>'.$personInscription['ins_montant'].'€</td>
                   <td>'.$personInscription['ins_debut'].'</td>
                   <td>'.$personInscription['ins_fin'].'</td>
-                  <td>'.$personInscription['reg_montant'].'€ - '. $personInscription['reg_date'].' - '. $personInscription['mreg_code'].'</td>
+                  <td>'.$personInscription['reg_montant'].'€ - '. $personInscription['reg_date'].' - '. $personInscription['act_mode_rem'].'</td>
                 </tr>';
               }
             }  else {
@@ -348,64 +328,9 @@ function displaypersonInscriptions($personInscriptions) {
       </div>
       ';
   return $output;
-}
+    }
 
-/**
- * 
- */
-function displayPersonPayments($personPayments) {
 
-  print json_encode($personPayments);
-  $output=' <!-- Adhésions --->
-     <div class="row" style="margin-top:30px">
-       <div class="col-12">
-             <div class="d-flex justify-content-between" style="backgournd-color:">
-                 <div class="h6" style="color:#d07d29">Règlements
-                 </div>
-                 <div class="d-flex je="cursor: pointer;margin-left:5px" data-toggle="tooltip" data-placement="bottom" title="Ajoute adhésion"> 
-                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
-                       <path d="M14 1ustify-content-end" >
-                   <div class="" styla1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                     </svg>
-                   </div>
-                  </div>
-             </div>
-         </div>
- 
-         <hr/>
-         <table class="table table-striped">
-           <thead>
-           <tr>
-            <th scope="col">Date règlement</th>
-            <th scope="col">Montant règlement</th> 
-            <th scope="col">Mode règlement</th>
-            <th scope="col">Détail</th>           
-          </tr>
-           </thead>
-           <tbody>
-           ';
-           if (count($personPayments) >0) {
-             foreach ($personPayments as $personPayment ) {
-             $output.='<tr>
- 
-              <td >'.$personPayment['reg_date'].' </td>                
-                 <td>'.$personPayment['reg_montant'].'€</td>
-                 <td>'.$personPayment['mreg_code'].'</td>
-                 <td>'.$personPayment['reg_details'].'</td>
-                </tr>';
-             }
-           }  else {
-             $output.='<tr><td>Pas de paiement pour cette personne</td></tr>';
-           }
-           $output.=' 
-           </tbody>
-         </table>
-       </div>
-     </div>
-     ';
- return $output;
-   }
 /**
  * 
  */
