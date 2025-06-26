@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `activites` (
+CREATE TABLE `activites` (
   `act_id` int,
   `act_ext_key` varchar(255) COMMENT 'clé externe type D02',
   `act_libelle` varchar(255) NOT NULL,
@@ -7,101 +7,109 @@ CREATE TABLE IF NOT EXISTS `activites` (
   `tyac_id` int
 );
 
-CREATE TABLE IF NOT EXISTS `domaines` (
+CREATE TABLE `domaines` (
   `dom_id` int,
   `dom_libelle` varchar(255) COMMENT 'Danse, '
 );
 
-CREATE TABLE IF NOT EXISTS `typeactivite` (
+CREATE TABLE `typeactivite` (
   `tyac_id` int,
   `tyac_libelle` varchar(255) COMMENT 'cours, événement,adhésion, stage, don, Crowdfunding',
   `tyac_famille` varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS `personnes` (
+CREATE TABLE `personnes` (
   `per_id` int PRIMARY KEY AUTO_INCREMENT,
   `per_nom` varchar(255) NOT NULL,
   `civ_id` int,
   `per_prenom` varchar(255) NOT NULL,
-  `per_tel` varchar(255),
+  `per_tel` varchar(255) UNIQUE,
   `per_email` varchar(255) NOT NULL,
   `per_adresse` varchar(255),
   `per_code_postal` varchar(255),
   `per_ville` varchar(255),
-  `per_dat_naissance` varchar(255)
+  `per_dat_naissance` datetime
 );
 
-CREATE TABLE IF NOT EXISTS `civilites` (
+CREATE TABLE `civilites` (
   `civ_id` int,
   `civ_libelle` varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS `role` (
-  `rol_id` int ,
+CREATE TABLE `role` (
+  `rol_id` int PRIMARY KEY AUTO_INCREMENT,
   `tyro_id` int,
   `pers_id` int,
   `act_id` int
 );
 
-CREATE TABLE IF NOT EXISTS `reglements` (
+CREATE TABLE `reglements` (
   `reg_id` int PRIMARY KEY AUTO_INCREMENT,
   `reg_montant` float,
   `mreg_id` int,
   `reg_date` varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS `modereglement` (
+CREATE TABLE `modereglement` (
   `mreg_id` int,
-  `mreg_code` varchar(255) COMMENT 'ESP, CHE, HEL, DIS, TPE, VAC',
+  `mreg_code` varchar(255) COMMENT 'ESP, CHE, HEL, DIS, TPE',
   `mreg_Libelle` varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS `tarifs` (
-  `tar_id` int ,
+CREATE TABLE `tarifs` (
+  `tar_id` int PRIMARY KEY AUTO_INCREMENT,
   `ans_id` int,
   `act_id` int,
   `tar_montant` float,
   `tar_libelle` varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS `an_exercice` (
+CREATE TABLE `an_exercice` (
   `ans_id` int,
   `ans_libelle` varchar(255) COMMENT '2019-2020, 2020-2021,...',
-  `ans_date_debut` date,
-  `ans_date_fin` date
+  `ans_date_debut` datetime,
+  `ans_date_fin` datetime
 );
 
-CREATE TABLE IF NOT EXISTS `inscriptions` (
+CREATE TABLE `inscriptions` (
   `ins_id` int PRIMARY KEY AUTO_INCREMENT,
   `per_id` int,
   `act_id` int,
-  `ins_date_inscription` DATE NOT NULL,
+  `ins_date_inscription` date NOT NULL,
   `reg_id` int,
-  `ins_debut` DATE COMMENT 'début d''activité de la ligne',
-  `ins_fin` DATE COMMENT 'fin''activité de la ligne',
-  `ins_montant` float
+  `ins_debut` datetime COMMENT 'début d''activité de la ligne',
+  `ins_fin` datetime COMMENT 'fin''activité de la ligne',
+  `ins_montant` float,
+  `ans_id` int
 );
 
-CREATE TABLE IF NOT EXISTS `typerole` (
+CREATE TABLE `typerole` (
   `tyro_id` int,
   `tyro_libelle` varchar(255) COMMENT 'animateur, référent, etc'
 );
-CREATE TABLE IF NOT EXISTS `brouillon`(
-  `brou_id` int,
-  `brou_nom` varchar(255),
-  `brou_prenom` varchar(255),
-  `brou_portable` char(10),
-  `brou_email` varchar(255),
-  `brou_commune` varchar(255),
-  `brou_adh` float,
-  `brou_act` float,
-  `brou_reglement` char(3),
-  `brou_code` varchar(255),
-  `brou_CP` varchar(255),
-  `brou_annee` char(9),
-  `brou_date_adh` char(10),
-  `brou_date_naiss`char(10),
-  `brou_titre` varchar(255),
-  `brou_telephone` char(15)
-);
 
+ALTER TABLE `civilites` ADD FOREIGN KEY (`civ_id`) REFERENCES `personnes` (`civ_id`);
+
+ALTER TABLE `inscriptions` ADD FOREIGN KEY (`act_id`) REFERENCES `activites` (`act_id`);
+
+ALTER TABLE `inscriptions` ADD FOREIGN KEY (`per_id`) REFERENCES `personnes` (`per_id`);
+
+ALTER TABLE `inscriptions` ADD FOREIGN KEY (`reg_id`) REFERENCES `reglements` (`reg_id`);
+
+ALTER TABLE `domaines` ADD FOREIGN KEY (`dom_id`) REFERENCES `activites` (`dom_id`);
+
+ALTER TABLE `tarifs` ADD FOREIGN KEY (`ans_id`) REFERENCES `an_exercice` (`ans_id`);
+
+ALTER TABLE `activites` ADD FOREIGN KEY (`act_id`) REFERENCES `tarifs` (`act_id`);
+
+ALTER TABLE `activites` ADD FOREIGN KEY (`tyac_id`) REFERENCES `typeactivite` (`tyac_id`);
+
+ALTER TABLE `personnes` ADD FOREIGN KEY (`per_id`) REFERENCES `role` (`pers_id`);
+
+ALTER TABLE `role` ADD FOREIGN KEY (`act_id`) REFERENCES `activites` (`act_id`);
+
+ALTER TABLE `reglements` ADD FOREIGN KEY (`mreg_id`) REFERENCES `modereglement` (`mreg_id`);
+
+ALTER TABLE `role` ADD FOREIGN KEY (`tyro_id`) REFERENCES `typerole` (`tyro_id`);
+
+ALTER TABLE `inscriptions` ADD FOREIGN KEY (`ans_id`) REFERENCES `an_exercice` (`ans_id`);

@@ -40,7 +40,8 @@ function displayNavbar(){
   <div class="offcanvas-body">
 <hr/>
     <ul class="list-unstyled">
-      <li><a class="dropdown-item" href="index.php?uc=selec">Sélection personnes</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=selec">Recherche</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=selecjs">Listes de personnes</a></li>
       <li><a class="dropdown-item" href="index.php?uc=crea">Création personne</a></li>
       <hr/>
       <li><a class="dropdown-item" href="index.php?uc=TB">Tableau de bord</a></li>

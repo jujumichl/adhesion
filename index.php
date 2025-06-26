@@ -15,6 +15,7 @@
 </head>
 <body>
     <div class="container">
+        
 <?php
     ini_set( 'display_errors', 1 ); // a enlever en prod
     try {
@@ -39,6 +40,10 @@
                 displaySelectionHeader($pdo).
                 selectionController($pdo);
                 break;
+            case 'selecjs':
+                header('Location: src/selectionjs/selectionjs.html');
+                break;
+    
             case 'crea':
                 print displayNavbar();
                //  displaySelectionHeader();

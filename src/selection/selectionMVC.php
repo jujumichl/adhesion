@@ -55,13 +55,13 @@ function displaySelectionHeader($pdo) {
         $searchString = $_GET['searchString'];
     
     $output='
-<div style="margin-top:100px">
+        <div style="margin-top:100px">
    <!-- Recherche -->
     
         <form  method="get"  href="index.php">   
             <input type="hidden"  value="selec" name="uc" >
             <input type="hidden"  value="getpersonnes" name="action" >
-            <div class="h5" style="color:#d07d29">Sélection</div>
+            <div class="h5" style="color:#d07d29">Recherche</div>
             <hr/>
 <div class="row">
             <div class="col-4">
@@ -177,10 +177,10 @@ function displayPersonList($personList) {
                     </tr>
                 </thead>
                 <tbody>';
-                if(isset($_COOKIE['user_id'])){
-                    echo 'Votre ID de session est le ' .$_COOKIE['user_id'];
-                } else  
-                    echo " Pas de cookie user_id";
+                // if(isset($_COOKIE['user_id'])){
+                //     echo 'Votre ID de session est le ' .$_COOKIE['user_id'];
+                // } else  
+                //     echo " Pas de cookie user_id";
             
             
                 foreach($personList as $person) {

@@ -1,0 +1,14 @@
+(function(){const e=document.getElementById("data-embedded").dataset.referer
+function t(t){parent&&parent.postMessage(t,e)}function o(e){let o=e.target.getAttribute("data-link-to-post")
+if(o){let n=document.getElementById("post-"+o)
+if(n){let o=n.getBoundingClientRect()
+if(o&&o.top)return t({type:"discourse-scroll",top:o.top}),e.preventDefault(),!1}}}window.onload=function(){let e=document.querySelector("[data-embed-state]"),n="unknown",l=null
+e&&(n=e.getAttribute("data-embed-state"),l=e.getAttribute("data-embed-id")),t({type:"discourse-resize",height:document.body.offsetHeight,state:n,embedId:l})
+let d,a=document.querySelectorAll("a[data-link-to-post]")
+for(d=0;d<a.length;d++)a[d].onclick=o
+let r=document.querySelectorAll(".cooked a")
+for(d=0;d<r.length;d++)r[d].target="_blank"
+let c=document.querySelectorAll(".cooked a.hashtag-cooked")
+for(d=0;d<c.length;d++)c[d].querySelector(".hashtag-icon-placeholder .d-icon").remove(),c[d].querySelector(".hashtag-icon-placeholder").innerText="#"}})()
+
+//# sourceMappingURL=embed-application-60cbf911.map
