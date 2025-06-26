@@ -87,29 +87,3 @@ CREATE TABLE `typerole` (
   `tyro_id` int,
   `tyro_libelle` varchar(255) COMMENT 'animateur, référent, etc'
 );
-
-ALTER TABLE `civilites` ADD FOREIGN KEY (`civ_id`) REFERENCES `personnes` (`civ_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`act_id`) REFERENCES `activites` (`act_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`per_id`) REFERENCES `personnes` (`per_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`reg_id`) REFERENCES `reglements` (`reg_id`);
-
-ALTER TABLE `domaines` ADD FOREIGN KEY (`dom_id`) REFERENCES `activites` (`dom_id`);
-
-ALTER TABLE `tarifs` ADD FOREIGN KEY (`ans_id`) REFERENCES `an_exercice` (`ans_id`);
-
-ALTER TABLE `activites` ADD FOREIGN KEY (`act_id`) REFERENCES `tarifs` (`act_id`);
-
-ALTER TABLE `activites` ADD FOREIGN KEY (`tyac_id`) REFERENCES `typeactivite` (`tyac_id`);
-
-ALTER TABLE `personnes` ADD FOREIGN KEY (`per_id`) REFERENCES `role` (`pers_id`);
-
-ALTER TABLE `role` ADD FOREIGN KEY (`act_id`) REFERENCES `activites` (`act_id`);
-
-ALTER TABLE `reglements` ADD FOREIGN KEY (`mreg_id`) REFERENCES `modereglement` (`mreg_id`);
-
-ALTER TABLE `role` ADD FOREIGN KEY (`tyro_id`) REFERENCES `typerole` (`tyro_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`ans_id`) REFERENCES `an_exercice` (`ans_id`);
