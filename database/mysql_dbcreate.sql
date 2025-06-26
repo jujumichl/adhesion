@@ -77,8 +77,8 @@ CREATE TABLE `inscriptions` (
   `act_id` int,
   `ins_date_inscription` date NOT NULL,
   `reg_id` int,
-  `ins_debut` DATE COMMENT 'début d''activité de la ligne',
-  `ins_fin` DATE COMMENT 'fin''activité de la ligne',
+  `ins_debut` datetime COMMENT 'début d''activité de la ligne',
+  `ins_fin` datetime COMMENT 'fin''activité de la ligne',
   `ins_montant` float,
   `ans_id` int
 );
