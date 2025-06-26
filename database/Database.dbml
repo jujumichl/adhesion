@@ -3,6 +3,8 @@
 // https://dbdiagram.io/d/Database-cc-rennes-684d86293cc77757c8e217fb
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
 
 Table activites {
   act_id int 
@@ -54,13 +56,13 @@ Table civilites {
 Table reglements {
   reg_id int [increment, primary key]
   reg_montant float
-  mreg_id int 
+  mreg_id int
   reg_date varchar
 }
 
 Table modereglement {
   mreg_id int 
-  mreg_code varchar [note : "ESP, CHE, HEL, DIS, TPE, - " ]
+  mreg_code varchar [note : "ESP, CHE, HEL, DIS, TPE" ]
   mreg_Libelle varchar 
  }
 
@@ -88,6 +90,7 @@ Table inscriptions {
   ins_debut datetime [note : "début d'activité de la ligne"]
   ins_fin datetime [note : "fin'activité de la ligne"]
   ins_montant float
+  ans_id int
 }
 
 Table typerole {
@@ -116,3 +119,5 @@ Ref: "activites"."act_id" < "role"."act_id"
 Ref: "reglements"."mreg_id" > "modereglement"."mreg_id"
 
 Ref: "typerole"."tyro_id" < "role"."tyro_id"
+
+Ref: "an_exercice"."ans_id" < "inscriptions"."ans_id"

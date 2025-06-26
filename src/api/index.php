@@ -43,21 +43,20 @@ switch ($domain) {
         require_once('./personController.php');
         if (isset($uri[6])) {
         require_once('../creation/creationMVC.php');
-        $body=getPerson($uri[6]);
+        $body=getPerson($pdo,$uri[6]);
         }
         break;
+
     case 'searchperson' : 
-        // print 'searchperson' .$uri[6] ;
         require_once('./personController.php');
         $body=getSearchWS($pdo,$uri[6]);
         break;
-        case 'searchpersonfromactivity' : 
-            // print 'searchperson' .$uri[6] ;
-            require_once('./personController.php');
-            $body=getInscriptionPersonListToActivityWS($pdo,$uri[6]);
-            break;
+
+    case 'searchpersonfromactivity' : 
+        require_once('./personController.php');
+        $body=getInscriptionPersonListToActivityWS($pdo,$uri[6]);
+        break;
     
- 
     case 'activities':
         require_once('./personController.php');
         $body=getActivitesWS($pdo);
@@ -72,8 +71,6 @@ switch ($domain) {
 // if (isset($uri[2])) {
 //     $userId = (int) $uri[2];
 // }
-
-
 
 // // pass the request method and user ID to the PersonController and process the HTTP request:
 $response['body'] = json_encode($body );

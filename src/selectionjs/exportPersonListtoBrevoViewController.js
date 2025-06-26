@@ -1,9 +1,7 @@
-
-
 const editModaleStringBrevo = `
-        <div class="modal fade" id="myModalLogin" role="dialog" data-bs-backdrop="static"
+        <div class="modal fade" id="myModalBrevo" role="dialog" data-bs-backdrop="static"
                 data-bs-keyboard="false" >
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-xl">
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -22,7 +20,7 @@ const editModaleStringBrevo = `
 `;
 
 // TODO : Manage callback
-async function exportPersonListtoBrevoMVC(htlmPartId) {
+export async function exportPersonListtoBrevoMVC(htlmPartId) {
 
     // *** Variable that keeps the modal object
     let editModal = null;
@@ -71,47 +69,12 @@ async function exportPersonListtoBrevoMVC(htlmPartId) {
         </div>
         `;
 
-
-
-
-
-        //     <div class="row">
-        //         <div class="col-4 mb-3">
-        //             <button type="button" class="btn btn-secondary">Choisir une liste existante</button>
-        //         </div>
-
-        //         <div class="col-4 mb-3">
-        //             <select id="brevolistchoice">`;
-        // brevoLists.lists.map((brevoList, index) => {
-        //                     outpuStr += `<option id="${brevoList.name}" >${brevoList.name}</option >`
-        //                 });
-        //                 outpuStr += ` </select>
-        //         </div>
-
-        // 
-        // 
-        // 
-        // 
-        // personList.map((person, index) => {
-        //     outpuStr += `
-        //     <div class= "mb-3 row" >
-        //         <div class="col-8">
-        //             <label for="' class= " form-label" > `+ person.per_nom + ` ` + person.per_prenom + ` </label >
-        //         </div >
-        //         <div class="col-4">
-        //     <!--     <input type="number" class="form-control input-sm pull-right text-end" name="ConsumedPDIQty${index}" id="ConsumedPDIQty${index}" placeholder="" value="" />
-        //             <input type="hidden" class="form-control col-sm-10 " name="ConsumedPDImoid${index}" id="FormControlInput"'.$j.' placeholder= "" value=""/>
-        //         -->
-        //         </div>
-        //     </div > `
-        // });
-
         outpuStr += `
              <div class="modal-footer">
                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                   <input type="hidden" name="action" value= "packgenerateMOPDV"/>
                   <input type="hidden" name="moid" value= ""/>
-                   <button type="submit" id="btnSave" class="btn btn-outline-secondary" form="" >Envoyer</button>
+                   <button type="submit" id="btnSave" class="btn btn-outline-secondary" style="margin-left:3px"  >Envoyer</button>
                   <input type="hidden" id="ConsumedPDIlineNb" value= ""/>            
             </div>  
         </form >
@@ -124,7 +87,7 @@ async function exportPersonListtoBrevoMVC(htlmPartId) {
             console.log("Save clicked");
         };
 
-        editModal = new bootstrap.Modal(document.querySelector("#myModalLogin"))
+        editModal = new bootstrap.Modal(document.querySelector("#myModalBrevo"))
         editModal.show({ backdrop: 'static', keyboard: false });
 
 

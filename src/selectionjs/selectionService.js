@@ -117,5 +117,23 @@ export function getSubList() {
         personList = [];
 
     return personList;
+}
 
+export function removeSubList(subList) {
+    let personList = [];
+    let personListModified = [];
+    let personListJson = sessionStorage.getItem("personList");
+    if (personListJson) {
+        personList = JSON.parse(personListJson);
+        for (let i = 0; i < subList.length; i++) {
+            let compa = subList[i].per_nom;
+            let indexPerson = personList.findIndex(pers => pers.per_id === subList[i].per_id); //
+            if (indexPerson >= 0) {
+                personList.splice(indexPerson, 1);
+
+            }
+            console.log("found : " + indexPerson + "</br>");
+        }
+    }
+    sessionStorage.setItem("personList", JSON.stringify(personList));
 }

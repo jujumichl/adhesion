@@ -27,7 +27,7 @@
 
         require_once './src/integrationCSV/integrationCSV.php';
 
-        require_once './src/selection/brevo/brevo-modal.php';
+        // require_once './src/selection/brevo/brevo-modal.php';
 
         require_once './src/creation/creationMVC.php';
 

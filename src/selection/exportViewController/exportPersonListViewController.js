@@ -67,6 +67,7 @@ async function exportPersonListViewController(htlmPartId) {
         document.querySelector("#btnSave").onclick = async function (event) {
             await putToClipboard(JSON.stringify(personsList))
             console.log("Send to clipboard");
+            editModal.hide();
         };
 
         editModal = new bootstrap.Modal(document.querySelector("#myModalLogin"))

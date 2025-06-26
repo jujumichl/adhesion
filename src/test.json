@@ -1,0 +1,92 @@
+[
+    {
+        "per_id": 228,
+        "per_nom": "BOUCHERIT",
+        "per_prenom": "Gilles",
+        "per_email": "gillesboucherit@sfr.fr",
+        "per_tel": "+336027132",
+        "subscrCOncat": null,
+        "inscrptCOncat": null
+    },
+    {
+        "per_id": 575,
+        "per_nom": "BOUDIN",
+        "per_prenom": "Patrick",
+        "per_email": "tresorier.kkr@laposte.net",
+        "per_tel": "+336155788",
+        "subscrCOncat": "2024-11-25 - Adhésion</br>2024-11-25 - Adhésion",
+        "inscrptCOncat": "2024-11-25 - Autres </br>2024-11-25 - Autres "
+    },
+    {
+        "per_id": 326,
+        "per_nom": "BOUDIN",
+        "per_prenom": "Laurence",
+        "per_email": "laurence.marie35@laposte.net",
+        "per_tel": "+336190647",
+        "subscrCOncat": "2024-11-25 - Adhésion</br>2024-11-25 - Adhésion",
+        "inscrptCOncat": "2024-11-25 - Autres </br>2024-11-25 - Autres "
+    },
+    {
+        "per_id": 500,
+        "per_nom": "BOUGNOUX",
+        "per_prenom": "Romain",
+        "per_email": "rmain.bougnoux@gmail.com",
+        "per_tel": "+336464286",
+        "subscrCOncat": null,
+        "inscrptCOncat": null
+    },
+    {
+        "per_id": 148,
+        "per_nom": "BOULORE",
+        "per_prenom": "Dominique",
+        "per_email": "d.boulore@orange.fr",
+        "per_tel": "+336898654",
+        "subscrCOncat": null,
+        "inscrptCOncat": null
+    },
+    {
+        "per_id": 43,
+        "per_nom": "BOURBON",
+        "per_prenom": "Anne-Sophie",
+        "per_email": "annesophie.bourbon@yahoo.fr",
+        "per_tel": "+336339899",
+        "subscrCOncat": "2024-10-15 - Adhésion</br>2024-10-15 - Adhésion",
+        "inscrptCOncat": "2024-10-15 - Musique bretonne en ensemble </br>2024-10-15 - Musique bretonne en ensemble "
+    },
+    {
+        "per_id": 89,
+        "per_nom": "BOURGEON",
+        "per_prenom": "Clément",
+        "per_email": "bourgeon.clement@gmail.com",
+        "per_tel": "+336290227",
+        "subscrCOncat": "2023-09-18 - Adhésion</br>2023-09-18 - Adhésion",
+        "inscrptCOncat": "2023-09-18 - Bombarde</br>2023-09-18 - Bombarde"
+    },
+    {
+        "per_id": 394,
+        "per_nom": "BOUTARD",
+        "per_prenom": "Martine",
+        "per_email": "martine.boutard35@gmail.com",
+        "per_tel": "+336322937",
+        "subscrCOncat": "2024-09-13 - Adhésion</br>2024-09-13 - Adhésion",
+        "inscrptCOncat": "2024-09-13 - Astour - Musique</br>2024-09-13 - Astour - Musique"
+    },
+    {
+        "per_id": 475,
+        "per_nom": "IBOUANGA",
+        "per_prenom": "Phylicia",
+        "per_email": "phyliciafeeling@gmail.com",
+        "per_tel": "+337617407",
+        "subscrCOncat": "2025-04-08 - Adhésion</br>2025-04-08 - Adhésion",
+        "inscrptCOncat": "2025-04-08 - Autres </br>2025-04-08 - Autres "
+    },
+    {
+        "per_id": 319,
+        "per_nom": "LABOUS",
+        "per_prenom": "Marie-Anne",
+        "per_email": "labousnollet@free.fr",
+        "per_tel": "+336159230",
+        "subscrCOncat": "2024-09-21 - Adhésion</br>2024-09-21 - Adhésion",
+        "inscrptCOncat": "2024-09-21 - Danse bretonne non-débutants - mercredi</br>2024-09-21 - Danse bretonne non-débutants - mercredi"
+    }
+]

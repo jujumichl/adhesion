@@ -1,8 +1,8 @@
 
 import { getPersonforCriteria, getSubList, addList } from './selectionService.js'
-import { displayPersonList } from './selectjsViewController.js'
+import { displayPersonList, displaySelectionjsContent } from './selectjsViewController.js'
 const editModaleString = `
-        <div class="modal fade " id="myModalLogin" role="dialog" data-bs-backdrop="static"
+        <div class="modal fade " id="myModalgetPerson" role="dialog" data-bs-backdrop="static"
                 data-bs-keyboard="false" >
             <div class="modal-dialog modal-xl">
                 <!-- Modal content-->
@@ -48,8 +48,8 @@ export async function getpersonsViewDisplay(htlmPartId) {
  
         <div class="row ">
             <div class="col-12 d-flex flex-row-reverse">
-                <button type="submit" class="btn btn-outline-secondary  btn-sm" id="btnSaveList" class="btn btn-primary" form="" >Sauver</button>
-                <button type="button" class="btn btn-outline-secondary  btn-sm" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-outline-secondary  btn-sm" id="btnSaveList" class="btn btn-primary" style= "margin-left:3px"  >Sauver</button>
+                <button type="button" class="btn btn-outline-secondary  btn-sm" data-bs-dismiss="modal" style= "margin-left:3px" >Annuler</button>
 
             </div>
         </div>
@@ -60,6 +60,8 @@ export async function getpersonsViewDisplay(htlmPartId) {
         // outpuStr += displayResultList(personsList);
 
         // *** Display string
+        outpuStr += displayResultList(personsList);
+
         document.querySelector("#modalbodyPack").innerHTML = outpuStr;
 
         // document.querySelector("#btnSave").onclick = async function (event) {
@@ -72,25 +74,37 @@ export async function getpersonsViewDisplay(htlmPartId) {
             console.log("buttonSearch");
             let outpuStr = displayResultList(personsList);
             document.querySelector("#searchResultPart").innerHTML = outpuStr;
+            // getpersonsViewDisplay(htlmPartId);
         };
+
         document.querySelector("#btnSaveList").onclick = async function (event) {
             // let personsList = await getPersonforCriteria(document.querySelector("#searchString").value);
             console.log("btnSaveList");
 
-            let subList = getSubList();
+            let subList = getCheckedPersonList();
             addList(subList);
             // *** Display list
             // let outpuStr = displayResultList(personsList);
             // document.querySelector("#searchResultPart").innerHTML = outpuStr;
             editModal.hide();
-            displayPersonList();
+            displaySelectionjsContent("mainActiveSection");
+
         };
 
         // *** Initialisation
         // $(document).ready(function () {
-        editModal = new bootstrap.Modal(document.querySelector("#myModalLogin"))
+        editModal = new bootstrap.Modal(document.querySelector("#myModalgetPerson"))
         editModal.show({ backdrop: 'static', keyboard: false });
         // });
+
+
+        // *** Main checkboxe change => change person checkbox
+        document.getElementById("mainCheckSub").addEventListener('change', function (e) {
+            const cbox = document.querySelectorAll(".personcheckSub");
+            for (let i = 0; i < cbox.length; i++) {
+                cbox[i].checked = e.target.checked;
+            }
+        });
 
 
     } catch (error) {
@@ -99,6 +113,31 @@ export async function getpersonsViewDisplay(htlmPartId) {
     }
 }
 
+
+
+
+
+/**
+ * 
+ * @returns 
+ */
+function getCheckedPersonList() {
+    let returnTab = [];
+    let cbox = document.querySelectorAll(".personcheckSub");
+
+    for (let i = 0; i < cbox.length; i++) {
+        if (cbox[i].checked === true) {
+            console.log("checked = " + + cbox[i].dataset.service + "</br>");
+            returnTab.push(JSON.parse(cbox[i].dataset.service));
+        }
+    }
+    return returnTab;
+}
+/**
+ * 
+ * @param {*} personsList 
+ * @returns 
+ */
 function displayResultList(personsList) {
     let outpuStr = `       </hr>
      <div class="col-12 "> ${personsList.length} résultats dans la liste
@@ -110,7 +149,7 @@ function displayResultList(personsList) {
         <tr>
             <th scope="col">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <input class="form-check-input" type="checkbox" value="" id="mainCheckSub">
                 </div>
             </th>
             <th scope="col">Nom Prénom</th>
@@ -123,7 +162,7 @@ function displayResultList(personsList) {
     personsList.map((person, index) => {
         outpuStr += `<tr>
         <td> <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="personcheck${person.per_id}">
+            <input class="form-check-input personcheckSub" type="checkbox" data-service='${JSON.stringify(person)}'>
         </div>
         <td>  ${person.per_nom} ${person.per_prenom}</td>
         <td> ${person.per_email}</td>
