@@ -87,3 +87,21 @@ CREATE TABLE `typerole` (
   `tyro_id` int,
   `tyro_libelle` varchar(255) COMMENT 'animateur, référent, etc'
 );
+CREATE TABLE IF NOT EXISTS `brouillon`(
+  `brou_id` int,
+  `brou_nom` varchar(255),
+  `brou_prenom` varchar(255),
+  `brou_portable` char(10),
+  `brou_email` varchar(255),
+  `brou_commune` varchar(255),
+  `brou_adh` float,
+  `brou_act` float,
+  `brou_reglement` char(3),
+  `brou_code` varchar(255),
+  `brou_CP` varchar(255),
+  `brou_annee` char(9),
+  `brou_date_adh` char(10),
+  `brou_date_naiss`char(10),
+  `brou_titre` varchar(255),
+  `brou_telephone` char(15)
+);
