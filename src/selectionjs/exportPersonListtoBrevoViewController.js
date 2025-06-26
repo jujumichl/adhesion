@@ -112,7 +112,7 @@ async function getPersonList() {
 
     // TODO : tester la validité des paramètres
 
-    let wsUrl = window.location.protocol + '//' + window.location.hostname + '/adhesion/src/selection/brevoViewController/api.php/curentPersonList';
+    // let wsUrl = `${getAppPath()}/src/selection/brevoViewController/api.php/curentPersonList`;
 
     let responsefr = await fetch(wsUrl, {
         method: "GET",

@@ -1,16 +1,11 @@
 <?php
 /**************** MODEL ****************************** */
-
-
-
 /* 
  * Search personnes
  */
 function getSearchWS($pdo,$searchString) {
  
-    //  include .'./config.php';
-    // $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
-
+ 
     $stmt = $pdo->prepare('
     select personnes.per_id, per_nom, per_prenom, per_email, per_tel, subscrCOncat, inscrptCOncat from personnes      
 LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS inscrptCOncat from inscriptions 
@@ -28,20 +23,13 @@ LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_li
          $searchString .'%" OR per_email LIKE  "%'.  $searchString .'%" order by per_nom'); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    // print " Résultats " . json_encode($result) ."</br>";
-
-   // *** Save the list in the session storage
-   // $_SESSION['PersonList']=json_encode($result);
-
+   
     return $result;
 }
 
 
 function getInscriptionPersonListByActivityWS($pdo,$act_id) {
  
-    // include $_SERVER['DOCUMENT_ROOT'].'/adhesion/config.php';
-    // $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
-
     $stmt = $pdo->prepare('select personnes.per_id, per_nom, per_prenom, per_email, per_tel, subscrCOncat, inscrptCOncat from personnes      
 LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS inscrptCOncat from inscriptions 
        LEFT JOIN activites ON activites.act_id=inscriptions.act_id
@@ -60,11 +48,7 @@ WHERE inscriptions.act_id='.$act_id.'
 order by per_nom'); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    // print " Résultats " . json_encode($result) ."</br>";
-
-    // *** Save the list in the session storage
-    // $_SESSION['PersonList']=json_encode($result);
-    return $result;
+     return $result;
 }
 
 
@@ -89,10 +73,7 @@ WHERE inscriptions.act_id='.$act_id.'
 order by per_nom'); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    // print " Résultats " . json_encode($result) ."</br>";
-    // $_SESSION['personList']= json_encode($result) ;
-   // setcookie('personList', json_encode($result));
-    return $result;
+     return $result;
 }
 
 /* 
@@ -100,9 +81,7 @@ order by per_nom'); //
  */
 function getActivitesWS($pdo ) {
  
-    // include $_SERVER['DOCUMENT_ROOT'].'/adhesion/config.php';
-    // $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
-
+  
     $stmt = $pdo->prepare("select * from activites order by act_libelle"); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);

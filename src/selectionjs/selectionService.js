@@ -3,8 +3,7 @@ export async function getPersonforCriteria(searchCriteria) {
 
     // TODO : tester la validité des paramètres
 
-    let wsUrl = window.location.protocol + '//' + window.location.hostname + '/adhesion/src/api/index.php/searchperson/' + searchCriteria;
-    // http://localhost/adhesion/src/api/index.php/searchperson/bou
+    let wsUrl = `${getAppPath()}/src/api/index.php/searchperson/${searchCriteria}`;
     let responsefr = await fetch(wsUrl, {
         method: "GET",
         headers: {
@@ -19,7 +18,8 @@ export async function getPersonforCriteria(searchCriteria) {
         return (data);
 
     } else {
-        console.log(`getPersonforCriteria Error: ${JSON.stringify(responsefr)} `);
+        console.log(`getPersonforCriteria Error: ${JSON.stringify(responsefr)
+            } `);
         throw new Error("getPersonforCriteria Error message : " + responsefr.status + " " + responsefr.statusText);
     }
 }
@@ -29,8 +29,7 @@ export async function getPersonforActivity(act_id) {
 
     // TODO : tester la validité des paramètres
 
-    let wsUrl = window.location.protocol + '//' + window.location.hostname + '/adhesion/src/api/index.php/searchpersonbyactivity/' + act_id;
-    // http://localhost/adhesion/src/api/index.php/searchperson/bou
+    let wsUrl = `${getAppPath()}/src/api/index.php/searchpersonbyactivity/${act_id}`;
     let responsefr = await fetch(wsUrl, {
         method: "GET",
         headers: {
@@ -55,8 +54,7 @@ export async function getActivities() {
 
     // TODO : tester la validité des paramètres
 
-    let wsUrl = window.location.protocol + '//' + window.location.hostname + '/adhesion/src/api/index.php/activities';
-    // http://localhost/adhesion/src/api/index.php/searchperson/bou
+    let wsUrl = `${getAppPath()}/src/api/index.php/activities`;
     let responsefr = await fetch(wsUrl, {
         method: "GET",
         headers: {
@@ -136,4 +134,36 @@ export function removeSubList(subList) {
         }
     }
     sessionStorage.setItem("personList", JSON.stringify(personList));
+}
+
+/**
+ * 
+ * @returns 
+ * /adhesion/src/selectionjs/
+ */
+export function getPathFromserver() {
+    var pathArray = location.pathname.split('/');
+    var appPath = "/";
+    for (var i = 1; i < pathArray.length - 1; i++) {
+        appPath += pathArray[i] + "/";
+    }
+    return appPath;
+}
+
+
+/**
+ * 
+ * @returns Get current app path http://host/app
+ * https://localhost/adhesion 
+ */
+export function getAppPath() {
+    let appName = '';
+    var path = location.pathname.split('/');
+    if (path[0] == "")
+        appName = path[1]
+    else
+        appName = path[0]
+
+    return window.location.protocol + "//" + window.location.hostname + '/' + appName;
+
 }

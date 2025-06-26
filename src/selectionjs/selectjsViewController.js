@@ -4,7 +4,7 @@ import { getpersonsViewDisplay } from './getpersonsViewController.js'
 import { exportPersonListtoBrevoMVC } from './exportPersonListtoBrevoViewController.js'
 import { getExportPersonListViewDisplay } from './exportPersonListViewController.js'
 
-import { getActivities, getPersonforActivity, removeSubList } from './selectionService.js'
+import { getActivities, getPersonforActivity, removeSubList, getAppPath } from './selectionService.js'
 import { getList } from './selectionService.js'
 
 /**
@@ -38,7 +38,7 @@ export async function displaySelectionjsContent(htlmPartId) {
       <div class="row" style="margin-top:100px">
         <div class="col-12">
           <div class="d-flex justify-content-between" style="backgournd-color:">
-              <div class="h5" style="color:#d07d29">Liste de personnes
+              <div class="h5" style="color:#d07d29">Liste de personnes ${getAppPath()} 
               </div>
 
               <div class="d-flex justify-content-end" >
@@ -241,7 +241,7 @@ function headerViewDisplaySelectionjs(htmlPartId) {
     
     <!-- Logo à gauche -->
     <a class="navbar-brand" href="#">
-      <img src="/adhesion/images/logo-bandeau-blanc.jpg" alt="Logo" width="200" height="auto">
+      <img src="../../images/logo-bandeau-blanc.jpg" alt="Logo" width="200" height="auto">
     </a>
 
     <!-- Bouton Menu à droite -->
@@ -273,28 +273,29 @@ function headerViewDisplaySelectionjs(htmlPartId) {
     ></button>
   </div>
   <div class="offcanvas-body">
-<hr/>
-    <ul class="list-unstyled">
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=selec">Recherche</a></li>
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=selecjs">Liste de personnes</a></li>
-      <!-- <li><a class="dropdown-item" href="/adhesion/index.php?uc=crea">Création personne</a></li> -->
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=selecv2">Sélection V2</a></li>
 
-      <hr/>
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=TB">Tableau de bord</a></li>
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=mooc">horaires animateurs</a></li>
-      <hr/>
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=CSV">Intégration fichier CSV</a></li>
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=integ">IntégrationHelloAsso</a></li>
-      <hr/>
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=mooc">MOOC</a></li>
-      <li><a class="dropdown-item" href="/adhesion/index.php?uc=log">Historique</a></li>
-      <hr/>
+    <hr/>
+    <ul class="list-unstyled">
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=selec">Recherche</a></li>
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=selecjs">Liste de personnes</a></li>
+      <!-- <li><a class="dropdown-item" href="${getAppPath()}/ndex.php?uc=crea">Création personne</a></li> -->
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=selecv2">Sélection V2</a></li>
+
+      <hr />
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=TB">Tableau de bord</a></li>
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=mooc">horaires animateurs</a></li>
+      <hr />
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=CSV">Intégration fichier CSV</a></li>
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=integ">IntégrationHelloAsso</a></li>
+      <hr />
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=mooc">MOOC</a></li>
+      <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=log">Historique</a></li>
+      <hr />
     </ul>
-  </div>
+  </div >
   
-</div>
-`;
+</div >
+    `;
   document.querySelector("#" + htmlPartId).innerHTML = initString;
 }
 
