@@ -1,4 +1,5 @@
 - [ ] Valider le modèle de connées avec YB
+- [ ] Ajout d'un champ annee d'exercice
 # Si une ligne :
 - [x] faire fonction qui passe les donnée du csv a la table brouillon
 - [x] creer adherent ou MAJ donnée adherent hormi email
