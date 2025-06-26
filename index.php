@@ -72,7 +72,7 @@
             case 'upload':
                 require_once './src/integrationCSV/traitementCSV.php';
                 print displayNavbar().
-                 displayIntegrationCsv($msgErr, $nomFichier);
+                 displayIntegrationCsv($msgErr, $filename);
                 break;
             default:
                 include './src/connexion.php';

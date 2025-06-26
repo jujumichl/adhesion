@@ -263,38 +263,76 @@ function parseAndStoreData($pdo){
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($result as $res){
+        // $res = Array ( [brou_email] => - [tot] => 17 )
         try{
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////// MAIN FUNCTION WHO MAKES DECISIONS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // check email
             if (filter_var($res['brou_email'], FILTER_VALIDATE_EMAIL)) {
-                //$count++;  //601
-                $sql = "select * from brouillon where brou_email = :mail";
+                // *** Get the lines of one person
+                //SQL request who takes all line of one person who is identify by her email
+                $sql = "select * from brouillon
+                        LEFT JOIN modereglement ON modereglement.mreg_code = brouillon.brou_reglement
+                        where brouillon.brou_email = :mail;";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
                     ':mail' => $res['brou_email']
                 ]);
                 $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-                //$res = Array ( [brou_email] => - [tot] => 17 )
-                //Return the good ID of person
-                $per_id = createPers($data[0], $pdo);
-                $reg_id = getamount($per_id, $data[0]['brou_adh'], $data[0]['brou_act'], $data[0]['brou_date_adh'], $data[0]['brou_reglement'], $pdo);
 
+                // *** Create the person and get back the ID of person this person
+                $per_id = createPers($data[0], $pdo);
                 
+                // *** Check date and mreg validity
+                foreach ($data as $line){
+
+                    // Check date
+                    if (strtotime($line['brou_date_adh']) === false){
+                        throw new Exception("Date d'adhésion invalide invalide" . $line['brou_email']);
+                    }
+                    
+
+                    // check mreg 
+                    if (is_null($line['mreg_id'])){
+                        throw new Exception("Mode de règlement invalide" . $line['brou_email']);
+                    }
+                    
+                }
                 
-                if ($res['tot'] === 1){
-                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    if ($data[0]['brou_code'] !== ''){
-                        createAct($data[0],$per_id, $reg_id, $pdo);
-                    }
-                    if ($data[0]['brou_adh']>0){
-                        $data[0]['codeADH'] = 'AUT01';
-                        createSubscription($data[0],$per_id, $reg_id, $pdo);
-                    }
+
+                // *** Choose treatment of according to the numbre of line
+                switch ($res['tot']){
+                    // print "La date et le mode de règlement sont correctes";
+                    // print "Vérification du nombre de lignes...";
+                    // print "Il y a " . $res['tot'] . " de ligne(s)";
+                    case 1:
+                        $message .= "ligne traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        // print "Il n'y a qu'une seule ligne";
+                        if ($data[0]['brou_code'] !== ''){
+                            createAct($data[0],$per_id, $reg_id, $pdo);
+                            // print "Création d'une activitées...";
+                        }
+                        if ($data[0]['brou_adh']>0){
+                            $data[0]['codeADH'] = 'AUT01';
+                            createSubscription($data[0],$per_id, $reg_id, $pdo);
+                            // print "Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
+                        }
+                        break;
+                    case 2:
+                        $message .= "ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        break;
+                    default:
+                        $message .= "ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
                 }
-                else {
-                    multipleLignesComput($data, $per_id, $reg_id, $pdo);
-                    //$count1++;  //85
-                }
+                    
+                    
+                
             }
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////// MAIN FUNCTION WHO MAKES DECISIONS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             else {
                 throw new Exception("Email invalide " . $res['brou_email']);
             }
