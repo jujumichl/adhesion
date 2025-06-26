@@ -23,7 +23,7 @@ CREATE TABLE `personnes` (
   `per_nom` varchar(255) NOT NULL,
   `civ_id` int,
   `per_prenom` varchar(255) NOT NULL,
-  `per_tel` varchar(255) UNIQUE,
+  `per_tel` varchar(255),
   `per_email` varchar(255) NOT NULL,
   `per_adresse` varchar(255),
   `per_code_postal` varchar(255),
