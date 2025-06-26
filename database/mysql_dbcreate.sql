@@ -79,7 +79,8 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   `reg_id` int,
   `ins_debut` DATE COMMENT 'début d''activité de la ligne',
   `ins_fin` DATE COMMENT 'fin''activité de la ligne',
-  `ins_montant` float
+  `ins_montant` float,
+  `ans_id` int
 );
 
 CREATE TABLE IF NOT EXISTS `typerole` (
