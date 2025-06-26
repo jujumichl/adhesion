@@ -23,7 +23,7 @@ CREATE TABLE `personnes` (
   `per_nom` varchar(255) NOT NULL,
   `civ_id` int,
   `per_prenom` varchar(255) NOT NULL,
-  `per_tel` varchar(255) UNIQUE,
+  `per_tel` varchar(255),
   `per_email` varchar(255) NOT NULL,
   `per_adresse` varchar(255),
   `per_code_postal` varchar(255),
@@ -77,13 +77,8 @@ CREATE TABLE `inscriptions` (
   `act_id` int,
   `ins_date_inscription` date NOT NULL,
   `reg_id` int,
-<<<<<<< HEAD
   `ins_debut` datetime COMMENT 'début d''activité de la ligne',
   `ins_fin` datetime COMMENT 'fin''activité de la ligne',
-=======
-  `ins_debut` DATE COMMENT 'début d''activité de la ligne',
-  `ins_fin` DATE COMMENT 'fin''activité de la ligne',
->>>>>>> 9d360ae9a6702b6630e8b813983a2f60bc651a5b
   `ins_montant` float,
   `ans_id` int
 );
@@ -92,29 +87,21 @@ CREATE TABLE `typerole` (
   `tyro_id` int,
   `tyro_libelle` varchar(255) COMMENT 'animateur, référent, etc'
 );
-
-ALTER TABLE `civilites` ADD FOREIGN KEY (`civ_id`) REFERENCES `personnes` (`civ_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`act_id`) REFERENCES `activites` (`act_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`per_id`) REFERENCES `personnes` (`per_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`reg_id`) REFERENCES `reglements` (`reg_id`);
-
-ALTER TABLE `domaines` ADD FOREIGN KEY (`dom_id`) REFERENCES `activites` (`dom_id`);
-
-ALTER TABLE `tarifs` ADD FOREIGN KEY (`ans_id`) REFERENCES `an_exercice` (`ans_id`);
-
-ALTER TABLE `activites` ADD FOREIGN KEY (`act_id`) REFERENCES `tarifs` (`act_id`);
-
-ALTER TABLE `activites` ADD FOREIGN KEY (`tyac_id`) REFERENCES `typeactivite` (`tyac_id`);
-
-ALTER TABLE `personnes` ADD FOREIGN KEY (`per_id`) REFERENCES `role` (`pers_id`);
-
-ALTER TABLE `role` ADD FOREIGN KEY (`act_id`) REFERENCES `activites` (`act_id`);
-
-ALTER TABLE `reglements` ADD FOREIGN KEY (`mreg_id`) REFERENCES `modereglement` (`mreg_id`);
-
-ALTER TABLE `role` ADD FOREIGN KEY (`tyro_id`) REFERENCES `typerole` (`tyro_id`);
-
-ALTER TABLE `inscriptions` ADD FOREIGN KEY (`ans_id`) REFERENCES `an_exercice` (`ans_id`);
+CREATE TABLE IF NOT EXISTS `brouillon`(
+  `brou_id` int,
+  `brou_nom` varchar(255),
+  `brou_prenom` varchar(255),
+  `brou_portable` char(10),
+  `brou_email` varchar(255),
+  `brou_commune` varchar(255),
+  `brou_adh` float,
+  `brou_act` float,
+  `brou_reglement` char(3),
+  `brou_code` varchar(255),
+  `brou_CP` varchar(255),
+  `brou_annee` char(9),
+  `brou_date_adh` char(10),
+  `brou_date_naiss`char(10),
+  `brou_titre` varchar(255),
+  `brou_telephone` char(15)
+);

@@ -1,5 +1,5 @@
 <?php
-$db = 'gestionccr';
+$db = 'cerclecetest';
 $dbHost = 'localhost';
 $dbUser = 'root';
 $dbMdp = '';
