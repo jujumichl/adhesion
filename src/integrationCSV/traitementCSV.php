@@ -279,10 +279,7 @@ function parseAndStoreData($pdo){
                 ]);
                 $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-                $dateAdh = stringToDate(
-                    substr($data[0]['brou_date_adh'], 0,-8),
-                    substr($data[0]['brou_date_adh'], 3, -5),
-                    substr($data[0]['brou_date_adh'], -4));
+                
                 $datenaiss = stringToDate(
                     substr($data[0]['brou_date_naiss'], 0,-8),
                     substr($data[0]['brou_date_naiss'], 3, -5),
@@ -292,6 +289,10 @@ function parseAndStoreData($pdo){
                 
                 // *** Check date and mreg validity
                 foreach ($data as $line){
+                    $dateAdh = stringToDate(
+                    substr($line['brou_date_adh'], 0,-8),
+                    substr($line['brou_date_adh'], 3, -5),
+                    substr($line['brou_date_adh'], -4));
 
                     // Check date
                     if (strtotime($dateAdh) === false){
@@ -323,11 +324,30 @@ function parseAndStoreData($pdo){
                     // print "Il y a " . $res['tot'] . " de ligne(s)";
                     case 1:
                         $message .= "La ligne traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
-                        addOneLine($data[0], $per_id,$dateAdh, $datenaiss);
+                        addOneLine($data[0], $per_id,$dateAdh, $pdo);
                         break;
                     case 2:
+                        
+                        if ($data[0]["brou_date_adh"] === $data[1]["brou_date_adh"]){
+                           if ($data[0]['mreg_id'] === $data[1]['mreg_id']){
+                                addTwoLines($data, $per_id, $dateAdh, $pdo);
+                                $message .= "La ligne double traitée car identique -- " . $res['brou_email'] .'<br>';
+                                
+                           }
+                           else{
+                                foreach ($data as $line){
+                                    addOneLine($line, $per_id, $dateAdh, $pdo);
+                                }
+                                $message .= "La ligne double traitée car mode de règlement différents -- " . $res['brou_email'] .'<br>';
+                            }
+                        }
 
-                        $message .= "La ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        else{
+                            foreach ($data as $line){
+                                addOneLine($line, $per_id, $dateAdh, $pdo);
+                            }
+                            $message .= "La ligne double traitée car date différentes -- " . $res['brou_email'] .'<br>';
+                        }
                         break;
                     default:
                         $message .= "La ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
@@ -365,27 +385,64 @@ function parseAndStoreData($pdo){
  * @return void
  */
 function addOneLine($data,$per_id, $dateAdh, $pdo){
-    
+    $total = (int)$data['brou_adh'] + (int)$data['brou_act'];
     $reg_id = getamount(
         $per_id,
-        $data['brou_adh'],
-        $data['brou_act'],
-        $data['brou_date_adh'],
+        $total,
+        $dateAdh,
         $data['mreg_code'],
         $pdo);
 
     // print "Il n'y a qu'une seule ligne";
     if ($data['brou_code'] !== ''){
-        createAct($data,$per_id, $reg_id, $dateAdh, $pdo);
+       createAct($data,$per_id, $reg_id, $dateAdh, $pdo);
         // $message .= "Création d'une activitées...";
     }
 
-    if ($data[0]['brou_adh']>0){
-        $data[0]['codeADH'] = 'AUT01';
+    if ($data['brou_adh']>0){
+        $data['codeADH'] = 'AUT01';
         createSubscription($data,$per_id, $reg_id, $dateAdh, $pdo);
         // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
     }
 }
+
+/**
+ * Use to add two lines
+ * @param mixed $data one array of two line
+ * @param mixed $per_id id of person
+ * @param mixed $dateAdh date of payment
+ * @param mixed $pdo pdo login
+ * @throws \Exception if we haven't got activity and subscription
+ * @return void
+ */
+function addTwoLines($data, $per_id, $dateAdh, $pdo){
+    $total = 0;
+    foreach($data as $line){
+        $total += (int)$line['brou_adh'] + (int)$line['brou_act'];
+    }
+    $reg_id = getamount(
+        $per_id,
+        $total,
+        $dateAdh,
+        $data[0]['mreg_code'],
+        $pdo);
+    foreach ($data as $line){
+        if ($line['brou_code'] !== ''){
+            $id_act = createAct($line,$per_id, $reg_id, $dateAdh, $pdo);
+            // $message .= "Création d'une activitées...";
+        }
+
+        if ($line['brou_adh']>0 && !isset($adh_id)){
+            $line['codeADH'] = 'AUT01';
+            $adh_id = createSubscription($line,$per_id, $reg_id, $dateAdh, $pdo);
+            // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
+        }
+    }
+    if (!isset($id_act)){
+        throw new Exception("Pas de code d'activité pour " . $data[0]['brou_email']);
+    }
+}
+
 /**
  * use to create only one people
  * @param mixed $result data of people
@@ -486,6 +543,7 @@ function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
         ':ins_montant' => (float)$data['brou_adh'],
         ':ans_id' => (int)$data['ans_id']
     ]);
+    return $pdo->lastInsertId(); 
 }
 
 /**
@@ -527,6 +585,8 @@ function createAct($data, $per_id, $reg_id, $dateAdh, $pdo){
         ':ins_montant' => (float)$data['brou_act'],
         ':ans_id' => (int)$data['ans_id']
     ]);
+    return $pdo->lastInsertId();
+
 }
 
 /**
@@ -556,13 +616,12 @@ function getIDActivity($code, $pdo){
  * @throws \Exception if the method of payment is unknown
  * @return int return reg_id of amount
  */
-function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pdo){
+function createPayment($total, $dateAdh, $mreg, $per_id, $pdo){
     $sql = 'select mreg_id from modereglement where mreg_code = :mreg';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([ ':mreg' => $mreg]);
     $mregID = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    $total = (int)$montant_act + (int)$montant_adh;
-    if (!$mregID[0]['mreg_id']) {
+    if (empty($mregID[0]['mreg_id'])) {
         throw new Exception ("Modèle de règlement non connu ou invalide pour la personne identifier : " . $per_id);
     }
     else {
@@ -608,7 +667,7 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
  * @param mixed $pdo pdo login
  * @return int return reg_id of the payment
  */
-function getamount($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
+function getamount($per_id, $total, $dateAdh, $mreg, $pdo){
     $sql = 'select reg_id from inscriptions where per_id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $per_id]);
@@ -617,8 +676,7 @@ function getamount($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     // If $amoutid is empty, it means no registration was found, so create a new payment.
     if (empty($amoutid)){
         return createPayment(
-            $montant_adh,
-            $montant_act,
+            $total,
             $dateAdh,
             $mreg,
             $per_id,
@@ -631,25 +689,6 @@ function getamount($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
         return $amoutid[0]['reg_id'];
     }
 }
-
-/**
- * use to process multiple lines
- * @param mixed $person data on one person
- * @param mixed $pdo pdo login
- * @return void
- * 
- */
-function multipleLignesComput($person, $per_id, $reg_id, $pdo){
-    if (count($person) === 2){
-
-    }
-}
-
-
-
-
-
-
 
 
 // /**
