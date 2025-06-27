@@ -1,5 +1,5 @@
 - [ ] Valider le modèle de connées avec YB
-- [ ] Ajout d'un champ annee d'exercice
+- [x] Ajout d'un champ annee d'exercice
 # Si une ligne :
 - [x] faire fonction qui passe les donnée du csv a la table brouillon
 - [x] creer adherent ou MAJ donnée adherent hormi email
@@ -19,7 +19,6 @@
 - [ ] Renommer la table an_exercice par saison
 
 
-pt-0 sur le bandeau 
 # Fonction de Vérfication de la cohérence du fichier CSV
 - [ ] Vérifier si on a tous les modes de règlements
 - [ ] faire une condition qui ne récupère que les lignes complètes

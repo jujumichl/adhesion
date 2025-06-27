@@ -279,46 +279,50 @@ function parseAndStoreData($pdo){
                 ]);
                 $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
+                $dateAdh = stringToDate(
+                    substr($data[0]['brou_date_adh'], 0,-8),
+                    substr($data[0]['brou_date_adh'], 3, -5),
+                    substr($data[0]['brou_date_adh'], -4));
+                $datenaiss = stringToDate(
+                    substr($data[0]['brou_date_naiss'], 0,-8),
+                    substr($data[0]['brou_date_naiss'], 3, -5),
+                    substr($data[0]['brou_date_naiss'], -4));
                 // *** Create the person and get back the ID of person this person
-                $per_id = createPers($data[0], $pdo);
+                $per_id = createPers($data[0], $datenaiss, $pdo);
                 
                 // *** Check date and mreg validity
                 foreach ($data as $line){
 
                     // Check date
-                    if (strtotime($line['brou_date_adh']) === false){
-                        throw new Exception("Date d'adhésion invalide" . $line['brou_email']);
+                    if (strtotime($dateAdh) === false){
+                        throw new Exception("Date d'adhésion invalide " . $line['brou_email'] . '<br>');
                     }
                     
 
                     // check mreg 
                     if (is_null($line['mreg_id'])){
-                        throw new Exception("Mode de règlement invalide" . $line['brou_email']);
+                        throw new Exception("Mode de règlement invalide " . $line['brou_email'] . '<br>');
                     }
                     
 
                     //check act code
                     if (is_null($line['act_ext_key'])){
-                        throw new Exception("Code d'activité invalide" . $line['brou_email']);
+                        throw new Exception("Code d'activité invalide " . $line['brou_email'] . '<br>');
                     }
 
                     if (is_null($line['ans_id'])){
-                        throw new Exception("Libellé d'année invalide" . $line['brou_email']);
+                        throw new Exception("Libellé d'année invalide " . $line['brou_email'] . '<br>');
 
                     }
                 }
                 
-                $checkIns = true;
-                // $sql = "select ans_id from inscriptions
-                // LEFT JOIN personnes ON personnes.per_id = inscriptions.per_id
-                // where";
                 // *** Choose treatment of according to the numbre of line
                 switch ($res['tot']){
                     // print "La date et le mode de règlement sont correctes";
                     // print "Vérification du nombre de lignes...";
                     // print "Il y a " . $res['tot'] . " de ligne(s)";
                     case 1:
-                        $message .= "ligne traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        $message .= "La ligne traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
                         $reg_id = getamount(
                             $per_id,
                             $data[0]['brou_adh'],
@@ -328,22 +332,20 @@ function parseAndStoreData($pdo){
                             $pdo);
                         // print "Il n'y a qu'une seule ligne";
                         if ($data[0]['brou_code'] !== ''){
-                            if ($checkIns){
-                                createAct($data[0],$per_id, $reg_id, $pdo);
-                                // print "Création d'une activitées...";
-                            }
+                            createAct($data[0],$per_id, $reg_id, $dateAdh, $pdo);
+                            // $message .= "Création d'une activitées...";
                         }
                         if ($data[0]['brou_adh']>0){
                             $data[0]['codeADH'] = 'AUT01';
-                            createSubscription($data[0],$per_id, $reg_id, $pdo);
-                            // print "Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
+                            createSubscription($data[0],$per_id, $reg_id, $dateAdh, $pdo);
+                            // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
                         }
                         break;
                     case 2:
-                        $message .= "ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        $message .= "La ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
                         break;
                     default:
-                        $message .= "ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        $message .= "La ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
                 }
                     
                     
@@ -375,7 +377,7 @@ function parseAndStoreData($pdo){
  * @param mixed $pdo pdo login
  * @return mixed 
  */
-function createPers($data, $pdo){
+function createPers($data,$date_naiss, $pdo){
     //check if person isn't in db
     $sql = 'SELECT per_id FROM personnes WHERE per_email = :email';
     $stmt = $pdo->prepare($sql);
@@ -421,7 +423,7 @@ function createPers($data, $pdo){
             ':mail'=>$data['brou_email'],
             ':cp'=>$data['brou_CP'],
             ':ville'=>$data['brou_commune'],
-            ':naiss'=>$data['brou_date_naiss']
+            ':naiss'=>$date_naiss
         ]);
         $per_id = $pdo->lastInsertId();
         return $per_id;
@@ -436,7 +438,7 @@ function createPers($data, $pdo){
  * @param array $data data of createPers
  * @param mixed $pdo PDO login
  */
-function createSubscription($data, $per_id, $reg_id, $pdo){
+function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
     $act_id = getIDActivity($data['codeADH'], $pdo);
     $sql = 'INSERT INTO `inscriptions`(
         per_id,
@@ -445,7 +447,8 @@ function createSubscription($data, $per_id, $reg_id, $pdo){
         reg_id,
         ins_debut,
         ins_fin,
-        ins_montant
+        ins_montant,
+        ans_id
         )VALUES(
         :per_id,
         :act_id,
@@ -458,10 +461,6 @@ function createSubscription($data, $per_id, $reg_id, $pdo){
     )
     ';
     $stmt = $pdo->prepare($sql);
-    $dateAdh = stringToDate(
-            substr($data['brou_date_adh'], 0,-8),
-            substr($data['brou_date_adh'], 3, -5),
-            substr($data['brou_date_adh'], -4));
     $stmt->execute([
         ':per_id' => $per_id,
         ':act_id' => $act_id,
@@ -469,8 +468,8 @@ function createSubscription($data, $per_id, $reg_id, $pdo){
         ':reg_id' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
         ':ins_fin' => getEndOfSeasonDate($dateAdh),
-        ':ins_montant' => $data['brou_adh'],
-        ':ans_id' => $data['brou_annee']
+        ':ins_montant' => (float)$data['brou_adh'],
+        ':ans_id' => (int)$data['ans_id']
     ]);
 }
 
@@ -479,9 +478,8 @@ function createSubscription($data, $per_id, $reg_id, $pdo){
  * @param mixed $data data of createPers
  * @param mixed $pdo PDO login
  */
-function createAct($data, $per_id, $reg_id, $pdo){
+function createAct($data, $per_id, $reg_id, $dateAdh, $pdo){
     $act_id = getIDActivity($data['brou_code'], $pdo);
-
     $sql = 'INSERT INTO `inscriptions`(
     per_id,
     act_id,
@@ -503,10 +501,6 @@ function createAct($data, $per_id, $reg_id, $pdo){
     )
     ';
     $stmt = $pdo->prepare($sql);
-    $dateAdh = stringToDate(
-            substr($data['brou_date_adh'], 0,-8),
-            substr($data['brou_date_adh'], 3, -5),
-            substr($data['brou_date_adh'], -4));
     
     $stmt->execute([
         ':per_id' => $per_id,
@@ -515,8 +509,8 @@ function createAct($data, $per_id, $reg_id, $pdo){
         ':reg_id' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
         ':ins_fin' => getEndOfSeasonDate($dateAdh),
-        ':ins_montant' => $data['brou_act'],
-        ':ans_id' => $data['brou_annee']
+        ':ins_montant' => (float)$data['brou_act'],
+        ':ans_id' => (int)$data['ans_id']
     ]);
 }
 
