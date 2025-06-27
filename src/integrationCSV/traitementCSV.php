@@ -22,7 +22,7 @@ function uploadCSV() {
     $csvFileType = strtolower(pathinfo($_FILES["fileToUpload"]["name"],PATHINFO_EXTENSION));
     //named the file with the year, month, day and hour, minute and seconde
     $target_file = $target_dir . date('YmdHis') . '.' . $csvFileType;
-    // Check if CSV file is a actual CSV or fake CSV
+    // *** Check if CSV file is a actual CSV or fake CSV
     if (is_uploaded_file($tmp_name) && in_array($csvFileType, $type)){
         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file);
         return $target_file;
@@ -275,6 +275,11 @@ function parseAndStoreData($pdo){
                 $sql = "select * from brouillon
                         LEFT JOIN modereglement ON modereglement.mreg_code = brouillon.brou_reglement
                         where brouillon.brou_email = :mail;";
+                        // FAIRE UN LEFT JOIN SUR LE CODE D'ACT POUR VERIFICATION AVANT DE TRAITER
+                        // METTRE TOUTE LES FONCTION DE PRÉ VÉRIFICATION DANS UNE FONCTION ET
+                        // LA FONCTION RENVOIE TRUE SI TOUTE LES CONDITIONS SONT VALIDE SINON FALSE
+                        // SI TRUE ON TRAITE
+                        // SI FALSE ON TRAITE PAS 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
                     ':mail' => $res['brou_email']
