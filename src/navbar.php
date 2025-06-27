@@ -7,8 +7,9 @@ function displayNavbar(){
     <!-- Logo à gauche -->
     <a class="navbar-brand" href="#">
       <img src="./images/logo-bandeau-blanc.jpg" alt="Logo" width="200" height="auto">
+      <span class="fs-4" style="margin-left:20px; color:#d07d29">DYB App</span>
     </a>
-
+    
     <!-- Bouton Menu à droite -->
     <button
       class="navbar-toggler"
