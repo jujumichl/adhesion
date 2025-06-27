@@ -71,7 +71,19 @@ export async function getExportPersonListViewDisplay(htlmPartId) {
             // let personsList = await getPersonforCriteria(document.querySelector("#searchString").value);
             console.log("btnSaveList");
             let CSVString = getCSVString(personsList);
-            navigator.clipboard.writeText(CSVString);
+
+            // const queryOpts = { name: 'clipboard-read', allowWithoutGesture: false };
+            // const permissionStatus = await navigator.permissions.query(queryOpts);
+
+            await navigator.clipboard.writeText(CSVString);
+
+
+            // const type = "text/plain";
+            // const clipboardItemData = {
+            //     [type]: CSVString,
+            // };
+            // const clipboardItem = new ClipboardItem(clipboardItemData);
+            // await navigator.clipboard.write([clipboardItem]);
 
             editModal.hide();
         };
