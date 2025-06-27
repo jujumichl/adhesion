@@ -1,9 +1,5 @@
 <?php
 
-use Dom\Element;
-
-
-
 /**************** CONTROLLER ****************************** */
 /**
  * Controller for the Selection page
@@ -272,14 +268,11 @@ function parseAndStoreData($pdo){
             if (filter_var($res['brou_email'], FILTER_VALIDATE_EMAIL)) {
                 // *** Get the lines of one person
                 //SQL request who takes all line of one person who is identify by her email
-                $sql = "select * from brouillon
-                        LEFT JOIN modereglement ON modereglement.mreg_code = brouillon.brou_reglement
+                $sql = "select * from brouillon 
+                        LEFT JOIN modereglement ON modereglement.mreg_code = brouillon.brou_reglement 
+                        LEFT JOIN activites ON activites.act_ext_key = brouillon.brou_code 
+                        LEFT JOIN an_exercice ON an_exercice.ans_libelle = brouillon.brou_annee
                         where brouillon.brou_email = :mail;";
-                        // FAIRE UN LEFT JOIN SUR LE CODE D'ACT POUR VERIFICATION AVANT DE TRAITER
-                        // METTRE TOUTE LES FONCTION DE PRÉ VÉRIFICATION DANS UNE FONCTION ET
-                        // LA FONCTION RENVOIE TRUE SI TOUTE LES CONDITIONS SONT VALIDE SINON FALSE
-                        // SI TRUE ON TRAITE
-                        // SI FALSE ON TRAITE PAS 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
                     ':mail' => $res['brou_email']
@@ -294,7 +287,7 @@ function parseAndStoreData($pdo){
 
                     // Check date
                     if (strtotime($line['brou_date_adh']) === false){
-                        throw new Exception("Date d'adhésion invalide invalide" . $line['brou_email']);
+                        throw new Exception("Date d'adhésion invalide" . $line['brou_email']);
                     }
                     
 
@@ -303,9 +296,22 @@ function parseAndStoreData($pdo){
                         throw new Exception("Mode de règlement invalide" . $line['brou_email']);
                     }
                     
+
+                    //check act code
+                    if (is_null($line['act_ext_key'])){
+                        throw new Exception("Code d'activité invalide" . $line['brou_email']);
+                    }
+
+                    if (is_null($line['ans_id'])){
+                        throw new Exception("Libellé d'année invalide" . $line['brou_email']);
+
+                    }
                 }
                 
-
+                $checkIns = true;
+                // $sql = "select ans_id from inscriptions
+                // LEFT JOIN personnes ON personnes.per_id = inscriptions.per_id
+                // where";
                 // *** Choose treatment of according to the numbre of line
                 switch ($res['tot']){
                     // print "La date et le mode de règlement sont correctes";
@@ -313,10 +319,19 @@ function parseAndStoreData($pdo){
                     // print "Il y a " . $res['tot'] . " de ligne(s)";
                     case 1:
                         $message .= "ligne traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        $reg_id = getamount(
+                            $per_id,
+                            $data[0]['brou_adh'],
+                            $data[0]['brou_act'],
+                            $data[0]['brou_date_adh'],
+                            $data[0]['mreg_code'],
+                            $pdo);
                         // print "Il n'y a qu'une seule ligne";
                         if ($data[0]['brou_code'] !== ''){
-                            createAct($data[0],$per_id, $reg_id, $pdo);
-                            // print "Création d'une activitées...";
+                            if ($checkIns){
+                                createAct($data[0],$per_id, $reg_id, $pdo);
+                                // print "Création d'une activitées...";
+                            }
                         }
                         if ($data[0]['brou_adh']>0){
                             $data[0]['codeADH'] = 'AUT01';
@@ -343,7 +358,7 @@ function parseAndStoreData($pdo){
             }
         }catch (Exception $e){
             if ($data !== null){
-                $message .= "Erreur : " . $e->getMessage() . ' -- ' . $data[0]['brou_nom']."</br>";
+                $message .= "Erreur : " . $e->getMessage() . ' -- ' . $data[0]['brou_email']."</br>";
             }
             else {
                 $message .= "Erreur : " . $e->getMessage() ."</br>";
@@ -420,7 +435,6 @@ function createPers($data, $pdo){
  * create one subscription
  * @param array $data data of createPers
  * @param mixed $pdo PDO login
- * @return array id of reglement, id of person
  */
 function createSubscription($data, $per_id, $reg_id, $pdo){
     $act_id = getIDActivity($data['codeADH'], $pdo);
@@ -439,7 +453,8 @@ function createSubscription($data, $per_id, $reg_id, $pdo){
         :reg_id,
         :ins_debut,
         :ins_fin,
-        :ins_montant
+        :ins_montant,
+        :ans_id
     )
     ';
     $stmt = $pdo->prepare($sql);
@@ -454,16 +469,15 @@ function createSubscription($data, $per_id, $reg_id, $pdo){
         ':reg_id' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
         ':ins_fin' => getEndOfSeasonDate($dateAdh),
-        ':ins_montant' => $data['brou_adh']
+        ':ins_montant' => $data['brou_adh'],
+        ':ans_id' => $data['brou_annee']
     ]);
-    return [$reg_id, $per_id];
 }
 
 /**
  * Create one activity
  * @param mixed $data data of createPers
  * @param mixed $pdo PDO login
- * @return array return id of reglement and id of person
  */
 function createAct($data, $per_id, $reg_id, $pdo){
     $act_id = getIDActivity($data['brou_code'], $pdo);
@@ -475,7 +489,8 @@ function createAct($data, $per_id, $reg_id, $pdo){
     reg_id,
     ins_debut,
     ins_fin,
-    ins_montant
+    ins_montant,
+    ans_id
     )VALUES(
     :per_id,
     :act_id,
@@ -483,7 +498,8 @@ function createAct($data, $per_id, $reg_id, $pdo){
     :reg_id,
     :ins_debut,
     :ins_fin,
-    :ins_montant
+    :ins_montant,
+    :ans_id
     )
     ';
     $stmt = $pdo->prepare($sql);
@@ -491,6 +507,7 @@ function createAct($data, $per_id, $reg_id, $pdo){
             substr($data['brou_date_adh'], 0,-8),
             substr($data['brou_date_adh'], 3, -5),
             substr($data['brou_date_adh'], -4));
+    
     $stmt->execute([
         ':per_id' => $per_id,
         ':act_id' => $act_id,
@@ -498,9 +515,9 @@ function createAct($data, $per_id, $reg_id, $pdo){
         ':reg_id' => (int)$reg_id,
         ':ins_debut' => $dateAdh,
         ':ins_fin' => getEndOfSeasonDate($dateAdh),
-        ':ins_montant' => $data['brou_act']
+        ':ins_montant' => $data['brou_act'],
+        ':ans_id' => $data['brou_annee']
     ]);
-    return [$reg_id, $per_id];
 }
 
 /**
@@ -517,23 +534,6 @@ function getIDActivity($code, $pdo){
     $act_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     return $act_id[0]['act_id'];
 }
-
-
-/**
- * get back the id of one person by his email
- * @param mixed $email the email of this person
- * @param mixed $pdo pdo login
- */
-function getIdPerson($email, $pdo){
-    $sql = 'select per_id from personnes where per_nom = :email';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':email'=> $email
-        ]);
-    $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    return $per_id[0]['per_id'];
-}
-
 
 
 /**
@@ -574,6 +574,15 @@ function createPayment($montant_adh, $montant_act, $dateAdh, $mreg, $per_id, $pd
             ':dateAdh' => $dateAdh
         ]);
         $reg_id = $pdo->lastInsertId();
+
+        $sql = 'UPDATE inscriptions
+        SET reg_id = :reg_id
+        WHERE per_id = :per_id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':reg_id' => $reg_id,
+            ':per_id' => $per_id
+        ]);
         return $reg_id;
     }
 }
@@ -595,7 +604,7 @@ function getamount($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $per_id]);
     $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
+    
     // If $amoutid is empty, it means no registration was found, so create a new payment.
     if (empty($amoutid)){
         return createPayment(
@@ -609,7 +618,7 @@ function getamount($per_id, $montant_adh, $montant_act, $dateAdh, $mreg, $pdo){
     }
     // If $amoutid is NOT empty, it means a registration was found, so return its reg_id.
     else {
-        // print json_encode($amoutid[0]['reg_id']) . '<br>';
+        //print json_encode($amoutid) . '<br>';
         return $amoutid[0]['reg_id'];
     }
 }
@@ -626,3 +635,25 @@ function multipleLignesComput($person, $per_id, $reg_id, $pdo){
 
     }
 }
+
+
+
+
+
+
+
+
+// /**
+//  * get back the id of one person by his email
+//  * @param mixed $email the email of this person
+//  * @param mixed $pdo pdo login
+//  */
+// function getIdPerson($email, $pdo){
+//     $sql = 'select per_id from personnes where per_nom = :email';
+//     $stmt = $pdo->prepare($sql);
+//     $stmt->execute([
+//         ':email'=> $email
+//         ]);
+//     $per_id = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+//     return $per_id[0]['per_id'];
+// }
