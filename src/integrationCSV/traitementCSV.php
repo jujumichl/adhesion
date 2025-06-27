@@ -323,25 +323,10 @@ function parseAndStoreData($pdo){
                     // print "Il y a " . $res['tot'] . " de ligne(s)";
                     case 1:
                         $message .= "La ligne traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
-                        $reg_id = getamount(
-                            $per_id,
-                            $data[0]['brou_adh'],
-                            $data[0]['brou_act'],
-                            $data[0]['brou_date_adh'],
-                            $data[0]['mreg_code'],
-                            $pdo);
-                        // print "Il n'y a qu'une seule ligne";
-                        if ($data[0]['brou_code'] !== ''){
-                            createAct($data[0],$per_id, $reg_id, $dateAdh, $pdo);
-                            // $message .= "Création d'une activitées...";
-                        }
-                        if ($data[0]['brou_adh']>0){
-                            $data[0]['codeADH'] = 'AUT01';
-                            createSubscription($data[0],$per_id, $reg_id, $dateAdh, $pdo);
-                            // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
-                        }
+                        addOneLine($data[0], $per_id,$dateAdh, $datenaiss);
                         break;
                     case 2:
+
                         $message .= "La ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
                         break;
                     default:
@@ -371,6 +356,36 @@ function parseAndStoreData($pdo){
     return $message;
 }
 
+/**
+ * Use to add one line
+ * @param mixed $data data of one line
+ * @param mixed $per_id id of one person
+ * @param mixed $dateAdh the date of payment
+ * @param mixed $pdo pdo login
+ * @return void
+ */
+function addOneLine($data,$per_id, $dateAdh, $pdo){
+    
+    $reg_id = getamount(
+        $per_id,
+        $data['brou_adh'],
+        $data['brou_act'],
+        $data['brou_date_adh'],
+        $data['mreg_code'],
+        $pdo);
+
+    // print "Il n'y a qu'une seule ligne";
+    if ($data['brou_code'] !== ''){
+        createAct($data,$per_id, $reg_id, $dateAdh, $pdo);
+        // $message .= "Création d'une activitées...";
+    }
+
+    if ($data[0]['brou_adh']>0){
+        $data[0]['codeADH'] = 'AUT01';
+        createSubscription($data,$per_id, $reg_id, $dateAdh, $pdo);
+        // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
+    }
+}
 /**
  * use to create only one people
  * @param mixed $result data of people
