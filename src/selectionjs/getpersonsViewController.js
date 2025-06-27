@@ -15,8 +15,8 @@ const editModaleString = `
                         <p>Some text in the modal.</p>
                     </div>
 
-                <div class="modal-footer">
-              </div>
+                    <div class="modal-footer">
+                    </div>
 
                 </div>
             </div>
@@ -31,7 +31,7 @@ export async function getpersonsViewDisplay(htlmPartId) {
 
     try {
         // *** Display main part of the page
-        jQuery("#" + htlmPartId).append(editModaleString);
+        document.querySelector("#" + htlmPartId).innerHTML = editModaleString;
 
         let personsList = [] // await getPersonforCriteria("");
         // console.log(json_encode(personsList));
@@ -60,35 +60,35 @@ export async function getpersonsViewDisplay(htlmPartId) {
         // outpuStr += displayResultList(personsList);
 
         // *** Display string
-        outpuStr += displayResultList(personsList);
-
+        // outpuStr += displayResultList(personsList);
         document.querySelector("#modalbodyPack").innerHTML = outpuStr;
 
-        // document.querySelector("#btnSave").onclick = async function (event) {
-        //     document.getElementById('formPack').submit();
-        //     console.log("Save clicked");
-        // };
-
         document.querySelector("#buttonSearch").onclick = async function (event) {
+            // *** Get data with criteria
             let personsList = await getPersonforCriteria(document.querySelector("#searchString").value);
             console.log("buttonSearch");
+            // *** Display data
             let outpuStr = displayResultList(personsList);
             document.querySelector("#searchResultPart").innerHTML = outpuStr;
-            // getpersonsViewDisplay(htlmPartId);
+            // *** Add event listener
+            document.getElementById("mainCheckSub").addEventListener('change', function (e) {
+                const cbox = document.querySelectorAll(".personcheckSub");
+                for (let i = 0; i < cbox.length; i++) {
+                    cbox[i].checked = e.target.checked;
+                }
+            });
         };
 
         document.querySelector("#btnSaveList").onclick = async function (event) {
             // let personsList = await getPersonforCriteria(document.querySelector("#searchString").value);
-            console.log("btnSaveList");
+            //  console.log("btnSaveList");
 
             let subList = getCheckedPersonList();
             addList(subList);
+
             // *** Display list
-            // let outpuStr = displayResultList(personsList);
-            // document.querySelector("#searchResultPart").innerHTML = outpuStr;
             editModal.hide();
             displaySelectionjsContent("mainActiveSection");
-
         };
 
         // *** Initialisation
@@ -97,25 +97,11 @@ export async function getpersonsViewDisplay(htlmPartId) {
         editModal.show({ backdrop: 'static', keyboard: false });
         // });
 
-
-        // *** Main checkboxe change => change person checkbox
-        document.getElementById("mainCheckSub").addEventListener('change', function (e) {
-            const cbox = document.querySelectorAll(".personcheckSub");
-            for (let i = 0; i < cbox.length; i++) {
-                cbox[i].checked = e.target.checked;
-            }
-        });
-
-
     } catch (error) {
         // console.log(`Error: ${ error } `);
         document.querySelector("#" + htlmPartId).innerHTML = `<div class="alert alert-danger" style = "margin-top:30px" role = "alert" > ${error}</div > `;
     }
 }
-
-
-
-
 
 /**
  * 
@@ -143,7 +129,6 @@ function displayResultList(personsList) {
      <div class="col-12 "> ${personsList.length} résultats dans la liste
     </div >
 
- 
     <table class="table table-striped">
     <thead>
         <tr>
@@ -166,7 +151,6 @@ function displayResultList(personsList) {
         </div>
         <td>  ${person.per_nom} ${person.per_prenom}</td>
         <td> ${person.per_email}</td>
-         
          </tr>`;
     });
     outpuStr += `</tbody>
@@ -174,72 +158,3 @@ function displayResultList(personsList) {
     `;
     return outpuStr;
 }
-
-// /**
-//  *
-//  * @param {*} mo_id
-//  * @returns
-//  */
-// async function getMaterialOrder(mo_id, getAPIKey, getAPIPath) {
-
-//     //   let getAPIKey = '4OldYZ1V4zecXMvDRh7o9046pWpF6Oa1'
-//     //   let getAPIPath = "http://localhost/dolibarr_prodchoco/api/index.php/"
-//     console.log("getMO");
-
-//     var wsUrl = `${ getAPIPath } mos / ${ mo_id }?DOLAPIKEY = ${ getAPIKey } `;
-//     let params = `& sortorder=ASC & limit=100 & active=1`;
-//     let responsefr = await fetch(wsUrl + params);
-
-//     if (responsefr.ok) {
-//         // *** Get the data and save in the sessionStorage
-//         const data = await responsefr.json();
-//         // console.log(JSON.stringify(data));
-//         sessionStorage.setItem("materialOdrer", JSON.stringify(data));
-//         return (data);
-
-//     } else {
-//         console.log(`intakePlaces Error: ${ JSON.stringify(responsefr) } `);
-//         throw new Error("getProdintakePlacesucts Error message : " + responsefr.status + " " + responsefr.statusText);
-//     }
-
-// }
-// /**
-//  *
-//  * @param {*} getAPIKey
-//  * @param {*} getAPIPath
-//  * @returns
-//  */
-// async function getProducts(getAPIKey, getAPIPath) {
-
-//     // let getAPIKey = '4OldYZ1V4zecXMvDRh7o9046pWpF6Oa1'
-//     //  let getAPIPath = "http://localhost/dolibarr_prodchoco/api/index.php/"
-//     console.log("getProducts Service start");
-
-//     var wsUrl = `${ getAPIPath } products ? DOLAPIKEY = ${ getAPIKey }& limit=5000`;
-//     let responsefr = await fetch(wsUrl);
-
-//     if (responsefr.ok) {
-//         // *** Get the data and save in the sessionStorage
-//         let data = await responsefr.json();
-//         sessionStorage.setItem("products", JSON.stringify(data));
-
-//         return (data);
-//     } else {
-//         console.log(`getProducts Error: ${ JSON.stringify(responsefr) } `);
-//         throw new Error("getProducts Error message : " + responsefr.status + " " + responsefr.statusText);
-//     }
-
-// }
-// function getProduct(prod_id) {
-
-//     console.log("getProduct : " + prod_id)
-//     let productsJson = sessionStorage.getItem("products");
-//     let products = JSON.parse(productsJson);
-
-//     let trouve = products.find(product => product.id == prod_id);
-
-//     return trouve
-// }
-
-
-
