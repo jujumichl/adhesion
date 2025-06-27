@@ -134,8 +134,10 @@ function displayResultList(personsList) {
 function getCSVString(personsList) {
     let outpuStr = '';
     personsList.map((person, index) => {
-        outpuStr += `${person.per_id};${person.per_nom.trim()};${person.per_prenom.trim()};${person.per_email.trim()};${person.per_tel.trim()} \n`
+        outpuStr += `${person.per_id};${person.per_nom.trim()};${person.per_prenom.trim()};${person.per_email.trim()};${person.per_tel.trim()}\n\r`
 
     })
     return outpuStr;
 }
+
+

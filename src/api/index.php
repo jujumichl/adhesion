@@ -52,7 +52,7 @@ switch ($domain) {
         $body=getSearchWS($pdo,$uri[6]);
         break;
 
-    case 'searchpersonfromactivity' : 
+    case 'searchpersonbyactivity' : 
         require_once('./personController.php');
         $body=getInscriptionPersonListToActivityWS($pdo,$uri[6]);
         break;

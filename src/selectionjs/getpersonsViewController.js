@@ -1,5 +1,5 @@
 
-import { getPersonforCriteria, getSubList, addList } from './selectionService.js'
+import { getPersonforCriteria, getPersonforActivity, getSubList, addList, getActivities } from './selectionService.js'
 import { displayPersonList, displaySelectionjsContent } from './selectjsViewController.js'
 const editModaleString = `
         <div class="modal fade " id="myModalgetPerson" role="dialog" data-bs-backdrop="static"
@@ -35,13 +35,44 @@ export async function getpersonsViewDisplay(htlmPartId) {
 
         let personsList = [] // await getPersonforCriteria("");
         // console.log(json_encode(personsList));
+        let activities = await getActivities();
         let outpuStr = `
         <!--<h1 class="modal-title fs-5" id="exampleModalLabel">Listes des personnes</h1>-->
         <div class="row">
-            <div class="col-12">
+            <div class="col-4">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="" id="searchString" name="searchString" aria-label="" aria-describedby="" value="">
                     <button type="" value=""  class="btn btn-outline-secondary" id="buttonSearch">Chercher</button>
+                </div>
+            </div>
+
+            <div class="col-6" style="margin-right:5px">
+               <div class="dropdown" >
+                    <a class="btn btn-outline-secondary dropdown-toggle"  href="#" role="button" id="activiteList" data-bs-toggle="dropdown" aria-expanded="false">
+                        Recherches définies
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="activityChoice">
+                    `;
+        activities.map((activity, index) => {
+            outpuStr += `<li class="dropdown-item" id="${activity.act_id}">${activity.act_libelle}</li>`
+        });
+
+        outpuStr += `</ul>
+                </div>
+            <!--</div>
+
+            <div class="col-1"> -->
+               <div class="dropdown">
+                    <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Année
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">Par défaut - année en cours</a></li>
+                        <li><a class="dropdown-item" href="#">2024-2025</a></li>
+                        <li><a class="dropdown-item" href="#">2023-2024</a></li>
+                        <li><a class="dropdown-item" href="#">Tout</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -63,6 +94,25 @@ export async function getpersonsViewDisplay(htlmPartId) {
         // outpuStr += displayResultList(personsList);
         document.querySelector("#modalbodyPack").innerHTML = outpuStr;
 
+        // *** Search with activity choice
+        document.querySelector("#activityChoice").onclick = async function (event) {
+            // *** Get data with criteria
+            let act_id = event.target.id;
+            let personsList = await getPersonforActivity(act_id);
+            console.log("buttonSearch");
+            // *** Display data
+            let outpuStr = displayResultList(personsList);
+            document.querySelector("#searchResultPart").innerHTML = outpuStr;
+            // *** Add event listener
+            document.getElementById("mainCheckSub").addEventListener('change', function (e) {
+                const cbox = document.querySelectorAll(".personcheckSub");
+                for (let i = 0; i < cbox.length; i++) {
+                    cbox[i].checked = e.target.checked;
+                }
+            });
+        }
+
+        // *** Search with string criteria
         document.querySelector("#buttonSearch").onclick = async function (event) {
             // *** Get data with criteria
             let personsList = await getPersonforCriteria(document.querySelector("#searchString").value);
@@ -125,7 +175,7 @@ function getCheckedPersonList() {
  * @returns 
  */
 function displayResultList(personsList) {
-    let outpuStr = `       </hr>
+    let outpuStr = `</hr>
      <div class="col-12 "> ${personsList.length} résultats dans la liste
     </div >
 
@@ -158,3 +208,4 @@ function displayResultList(personsList) {
     `;
     return outpuStr;
 }
+
