@@ -28,7 +28,7 @@ CREATE TABLE `personnes` (
   `per_adresse` varchar(255),
   `per_code_postal` varchar(255),
   `per_ville` varchar(255),
-  `per_dat_naissance` datetime
+  `per_dat_naissance` date
 );
 
 CREATE TABLE `civilites` (
@@ -67,8 +67,8 @@ CREATE TABLE `tarifs` (
 CREATE TABLE `an_exercice` (
   `ans_id` int,
   `ans_libelle` varchar(255) COMMENT '2019-2020, 2020-2021,...',
-  `ans_date_debut` datetime,
-  `ans_date_fin` datetime
+  `ans_date_debut` date,
+  `ans_date_fin` date
 );
 
 CREATE TABLE `inscriptions` (
@@ -77,8 +77,8 @@ CREATE TABLE `inscriptions` (
   `act_id` int,
   `ins_date_inscription` date NOT NULL,
   `reg_id` int,
-  `ins_debut` datetime COMMENT 'début d''activité de la ligne',
-  `ins_fin` datetime COMMENT 'fin''activité de la ligne',
+  `ins_debut` date COMMENT 'début d''activité de la ligne',
+  `ins_fin` date COMMENT 'fin''activité de la ligne',
   `ins_montant` float,
   `ans_id` int
 );

@@ -35,7 +35,7 @@ Table personnes {
   per_adresse varchar
   per_code_postal varchar
   per_ville varchar
-  per_dat_naissance datetime
+  per_dat_naissance date
 }
 
 Table civilites {
@@ -77,8 +77,8 @@ Table tarifs {
 Table an_exercice {
   ans_id int 
   ans_libelle varchar [note:"2019-2020, 2020-2021,..."]
-  ans_date_debut datetime
-  ans_date_fin datetime
+  ans_date_debut date
+  ans_date_fin date
 }
 
 Table inscriptions {
@@ -87,8 +87,8 @@ Table inscriptions {
   act_id int 
   ins_date_inscription date [not null]
   reg_id int
-  ins_debut datetime [note : "début d'activité de la ligne"]
-  ins_fin datetime [note : "fin'activité de la ligne"]
+  ins_debut date [note : "début d'activité de la ligne"]
+  ins_fin date [note : "fin'activité de la ligne"]
   ins_montant float
   ans_id int
 }
