@@ -109,11 +109,11 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         throw new Exception("Colonne courriel introuvable");
     }
     //Drop and create table brouillon
-    $sql = "drop table brouillon";
+    $sql = "DROP TABLE IF EXISTS `brouillon`;";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $sql = "CREATE TABLE IF NOT EXISTS `brouillon`(
-        `brou_id` int,
+        `brou_id` int NOT NULL AUTO_INCREMENT,
         `brou_nom` varchar(255),
         `brou_prenom` varchar(255),
         `brou_portable` char(10),
@@ -128,10 +128,28 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         `brou_date_adh` char(10),
         `brou_date_naiss`char(10),
         `brou_titre` varchar(255),
-        `brou_telephone` char(10)
+        `brou_telephone` char(10), 
+         UNIQUE KEY `brou_id` (`brou_id`)
     );";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
+
+    
+    $sql = "DROP TABLE IF EXISTS `integrationerrors`";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $sql = "CREATE TABLE IF NOT EXISTS `integrationerrors` (
+        `interr` int NOT NULL AUTO_INCREMENT,
+        `textError` varchar(255) DEFAULT NULL,
+        `linedata` TEXT DEFAULT NULL,
+         UNIQUE KEY `interr` (`interr`)
+        )  CHARSET=utf8 COLLATE=utf8_general_ci;
+        ;";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+
+
 
     // Data processing
     while (($ligne = fgetcsv($handle, 0, $separateur)) !== false) {
@@ -250,7 +268,7 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
  *       ) 
  */
 function parseAndStoreData($pdo){
-    (string)$message = "";
+    (string)$message = "</br></br></br></br></br></br></br>";
     $data = null;
     //$count=0;
     //$count1=0;
@@ -262,7 +280,7 @@ function parseAndStoreData($pdo){
         // $res = Array ( [brou_email] => - [tot] => 17 )
         try{
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////// MAIN FUNCTION WHO MAKES DECISIONS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////// MAIN FUNCTION ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // check email
             if (filter_var($res['brou_email'], FILTER_VALIDATE_EMAIL)) {
@@ -277,9 +295,9 @@ function parseAndStoreData($pdo){
                 $stmt->execute([
                     ':mail' => $res['brou_email']
                 ]);
+                print "</br>*** line : " . $res['brou_email'] . " : ";
                 $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-                
+               
                 $datenaiss = stringToDate(
                     substr($data[0]['brou_date_naiss'], 0,-8),
                     substr($data[0]['brou_date_naiss'], 3, -5),
@@ -296,80 +314,90 @@ function parseAndStoreData($pdo){
 
                     // Check date
                     if (strtotime($dateAdh) === false){
-                        throw new Exception("Date d'adhésion invalide " . $line['brou_email'] . '<br>');
+                        throw new Exception("***** Date d'adhésion invalide " . $line['brou_email'] . '<br>');
                     }
                     
-
                     // check mreg 
                     if (is_null($line['mreg_id'])){
-                        throw new Exception("Mode de règlement invalide " . $line['brou_email'] . '<br>');
+                        throw new Exception("***** Mode de règlement invalide " . $line['brou_email'] . '<br>');
                     }
                     
-
                     //check act code
                     if (is_null($line['act_ext_key'])){
-                        throw new Exception("Code d'activité invalide " . $line['brou_email'] . '<br>');
+                        throw new Exception("***** Code d'activité invalide " . $line['brou_email'] . '<br>');
                     }
 
                     if (is_null($line['ans_id'])){
-                        throw new Exception("Libellé d'année invalide " . $line['brou_email'] . '<br>');
-
+                        throw new Exception("***** saison invalide " . $line['brou_email'] . '<br>');
                     }
                 }
                 
                 // *** Choose treatment of according to the numbre of line
-                switch ($res['tot']){
+                switch (count($data)){
                     // print "La date et le mode de règlement sont correctes";
                     // print "Vérification du nombre de lignes...";
                     // print "Il y a " . $res['tot'] . " de ligne(s)";
                     case 1:
-                        $message .= "La ligne traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
-                        addOneLine($data[0], $per_id,$dateAdh, $pdo);
+                        // $message .= "Ligne simple traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        print ("Ligne simple (1) - ");
+                        addRegistrationLines($data, $per_id,$dateAdh, $pdo);
                         break;
                     case 2:
-                        
-                        if ($data[0]["brou_date_adh"] === $data[1]["brou_date_adh"]){
-                           if ($data[0]['mreg_id'] === $data[1]['mreg_id']){
-                                addTwoLines($data, $per_id, $dateAdh, $pdo);
-                                $message .= "La ligne double traitée car identique -- " . $res['brou_email'] .'<br>';
-                                
-                           }
-                           else{
-                                foreach ($data as $line){
-                                    addOneLine($line, $per_id, $dateAdh, $pdo);
-                                }
-                                $message .= "La ligne double traitée car mode de règlement différents -- " . $res['brou_email'] .'<br>';
-                            }
-                        }
-
-                        else{
-                            foreach ($data as $line){
-                                addOneLine($line, $per_id, $dateAdh, $pdo);
-                            }
-                            $message .= "La ligne double traitée car date différentes -- " . $res['brou_email'] .'<br>';
+                        print ("Ligne double (2) - ");
+                       
+                        if (($data[0]["brou_date_adh"] === $data[1]["brou_date_adh"]) && ($data[0]['mreg_id'] === $data[1]['mreg_id'])) {
+                            print ("cas double");
+                            addRegistrationLines($data, $per_id, $dateAdh, $pdo);
+                                // $message .= "Double traitée car date et règlements identiques -- " . $res['brou_email'] .'<br>';
+                        } else {
+                            // foreach ($data as $line){
+                                print ("2 cas simples : ");
+                                 $newarray=[];
+                                 addRegistrationLines(array_slice($data,0,1), $per_id, $dateAdh, $pdo);
+                                 addRegistrationLines(array_slice($data,1,1), $per_id, $dateAdh, $pdo);
+                               //  addRegistrationLines($data[0], $per_id, $dateAdh, $pdo);
+                                // addRegistrationLines($data[1], $per_id, $dateAdh, $pdo);
+                            // }
+                            //$message .= "Double traitée car dates différentes -- " . $res['brou_email'] .'<br>';
                         }
                         break;
                     default:
-                        $message .= "La ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>';
+                        print ("Ligne multiple (".count($data).") - ");
+                         computeMultipleLines($data, $per_id, $dateAdh, $pdo);
+                         // throw new Exception( "La ligne non traitée car " . $res["tot"] . ' ' . $res['brou_email'] .'<br>');
                 }
-                    
-                    
-                
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////// MAIN FUNCTION WHO MAKES DECISIONS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             else {
-                throw new Exception("Email invalide " . $res['brou_email']);
+                throw new Exception(" ***** Email invalide " . $res['brou_email']);
             }
-        }catch (Exception $e){
-            if ($data !== null){
-                $message .= "Erreur : " . $e->getMessage() . ' -- ' . $data[0]['brou_email']."</br>";
-            }
-            else {
-                $message .= "Erreur : " . $e->getMessage() ."</br>";
-            }
+        } catch (Exception $e){
+            // if ($data !== null){
+            //     // $message .= "Erreur : " . $e->getMessage() . ' -- ' . $data[0]['brou_email']."</br>";
+            //     $sql = "insert into `integrationerrors` ( textError,lineData ) Values ( :texte, :linedata)";
+            //     $stmt = $pdo->prepare($sql);
+            //     $stmt->execute([
+            //     ':texte'=>$e->getMessage(),
+            //     ':linedata'=>json_encode($data)]);               
+            //     $stmt->execute();
+            
+            // }
+            // else {
+                // $message .= "Erreur : " . $e->getMessage() ."</br>";
+                // print "Erreur" . $e->getMessage();
+                print $e->getMessage();
+                $sql = "insert into `integrationerrors` ( textError,lineData ) Values ( :message, :linedata)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                ':message'=>$e->getMessage(),
+                ':linedata'=>json_encode($data)]);               
+                $stmt->execute();
+                // print ("Ligne multiple  Fin") ;
+
+            // }
         }
     }
     //echo $count . "/" . $count1;
@@ -384,27 +412,34 @@ function parseAndStoreData($pdo){
  * @param mixed $pdo pdo login
  * @return void
  */
-function addOneLine($data,$per_id, $dateAdh, $pdo){
-    $total = (int)$data['brou_adh'] + (int)$data['brou_act'];
-    $reg_id = getamount(
-        $per_id,
-        $total,
-        $dateAdh,
-        $data['mreg_code'],
-        $pdo);
+// function addOneLine($data,$per_id, $dateAdh, $pdo){
+//     $dateAdh = stringToDate(
+//         substr($data['brou_date_adh'], 0,-8),
+//         substr($data['brou_date_adh'], 3, -5),
+//         substr($data['brou_date_adh'], -4));
 
-    // print "Il n'y a qu'une seule ligne";
-    if ($data['brou_code'] !== ''){
-       createAct($data,$per_id, $reg_id, $dateAdh, $pdo);
-        // $message .= "Création d'une activitées...";
-    }
+    
+//     $total = (int)$data['brou_adh'] + (int)$data['brou_act'];
+//     $reg_id = createPayment($total, $dateAdh, $data['mreg_code'], $per_id, $pdo);
+//     // $reg_id = getamount(
+//     //     $per_id,
+//     //     $total,
+//     //     $dateAdh,
+//     //     $data['mreg_code'],
+//     //     $pdo);
 
-    if ($data['brou_adh']>0){
-        $data['codeADH'] = 'AUT01';
-        createSubscription($data,$per_id, $reg_id, $dateAdh, $pdo);
-        // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
-    }
-}
+//     // print "Il n'y a qu'une seule ligne";
+//     if ($data['brou_code'] !== ''){
+//        createAct($data,$per_id, $reg_id, $dateAdh, $pdo);
+//         // $message .= "Création d'une activitées...";
+//     }
+
+//     if ($data['brou_adh']>0){
+//         $data['codeADH'] = 'AUT01';
+//         createSubscription($data,$per_id, $reg_id, $dateAdh, $pdo);
+//         // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
+//     }
+// }
 
 /**
  * Use to add two lines
@@ -415,23 +450,37 @@ function addOneLine($data,$per_id, $dateAdh, $pdo){
  * @throws \Exception if we haven't got activity and subscription
  * @return void
  */
-function addTwoLines($data, $per_id, $dateAdh, $pdo){
+function addRegistrationLines($data, $per_id, $dateAdh, $pdo){
+   // print json_encode($data);
+    $dateAdh = stringToDate(
+        substr($data[0]['brou_date_adh'], 0,-8),
+        substr($data[0]['brou_date_adh'], 3, -5),
+        substr($data[0]['brou_date_adh'], -4));
+
+    // *** Compute total 
     $total = 0;
     foreach($data as $line){
         $total += (int)$line['brou_adh'] + (int)$line['brou_act'];
     }
-    $reg_id = getamount(
-        $per_id,
-        $total,
-        $dateAdh,
-        $data[0]['mreg_code'],
-        $pdo);
+
+    // *** Create payment
+    $reg_id = createPayment($total, $dateAdh,  $data[0]['mreg_code'], $per_id, $pdo);
+
+    // $reg_id = getamount(
+    //     $per_id,
+    //     $total,
+    //     $dateAdh,
+    //     $data[0]['mreg_code'],
+    //     $pdo);
+
     foreach ($data as $line){
+        // *** Create Activity
         if ($line['brou_code'] !== ''){
             $id_act = createAct($line,$per_id, $reg_id, $dateAdh, $pdo);
             // $message .= "Création d'une activitées...";
         }
 
+        // *** Create subscription
         if ($line['brou_adh']>0 && !isset($adh_id)){
             $line['codeADH'] = 'AUT01';
             $adh_id = createSubscription($line,$per_id, $reg_id, $dateAdh, $pdo);
@@ -443,6 +492,213 @@ function addTwoLines($data, $per_id, $dateAdh, $pdo){
     }
 }
 
+/**
+ * use to compute multiple lines (more thzn 2)
+ */
+function computeMultipleLines($data,$per_id, $dateAdh, $pdo) {
+
+    $tempLines=$data;
+   //  print "</br>Multiple line before treatment sqsdff" . json_encode($tempLines) ."</br></br>";
+    print "Multiple line : ";
+    // *** Try to extract single lines
+    while ($tempLine= getSingleLine($tempLines)) {
+        if ($tempLine) {
+            // Find the line 
+            for ( $i=0; $i<count($tempLines);++$i) {
+                if ($tempLines[$i]['brou_id'] == $tempLine['brou_id'])
+                    $foundIndex= $i;
+            }
+            // delete the line
+            if ($foundIndex>=0) {
+                addRegistrationLines($tempLines, $per_id, $dateAdh, $pdo);
+                array_splice($tempLines,$foundIndex,1);
+            }
+        }
+    }
+    // ** *Try to extract doube lines
+    while ($tempDoubleLine= getDoubleLines($tempLines)) {
+        // *** Add inscription lines
+        addRegistrationLines($tempDoubleLine, $per_id, $dateAdh, $pdo);
+
+       // print "</br>Base=: " . json_encode($tempLines) ."</br>"; 
+       // print "</br>GetDoubleLIne : " . json_encode($tempDoubleLine) ."</br>"; 
+        // *** Delete lines in the temp tab
+        if (count($tempDoubleLine)>1) {
+            for ($tempi=0;$tempi<count($tempDoubleLine);++ $tempi) {
+                $foundIndex= getLineIndex($tempLines,$tempDoubleLine[$tempi]);
+               if ($foundIndex>-1) {
+                    print "supprime foundIndex".$tempLines[$foundIndex]['brou_id']; 
+                    array_splice($tempLines,$foundIndex,1);
+                }
+            }
+        }
+
+        //    $foundIndex1= getLineIndex($tempLines,$tempDoubleLine[1]);
+        //     if ($foundIndex1>-1) {
+        //         print "supprime foundindex1: " .$tempLines[$foundIndex1]['brou_id']; 
+        //         array_splice($tempLines,$foundIndex1,1);
+        //     }
+
+        
+    }
+
+        // ** *Try to extract doube lines
+    
+        while ($tempTripleLine= getTripleLines($tempLines)) {
+            if(count($tempLines)>=3) {
+                    // *** Add inscription lines
+                addRegistrationLines($tempTripleLine, $per_id, $dateAdh, $pdo);
+                // print "</br>Triple line before treatment" . json_encode($tempLines) ."</br></br>";
+
+                // // *** Delete lines in the temp tab
+
+                if (count($tempTripleLine)>1) {
+                    for ($tempi=0;$tempi<count($tempTripleLine);++ $tempi) {
+                        $foundIndex= getLineIndex($tempLines,$tempTripleLine[$tempi]);
+                       if ($foundIndex>-1) {
+                            print "supprime foundIndex".$tempLines[$foundIndex]['brou_id']; 
+                            array_splice($tempLines,$foundIndex,1);
+                        }
+                    }
+                }
+        
+                // $foundIndex= -1;
+                // if ($tempTripleLine) {
+                //     // Find the 1rst line 
+                //     for ( $i=0; $i<count($tempLines);++$i) {
+                //         if ($tempLines[$i]['brou_id'] == $tempTripleLine[0]['brou_id'])
+                //             $foundIndex= $i;
+                //     }
+                //     if ($foundIndex>=0) {
+                //         array_splice($tempLines,$foundIndex,1);
+                //     }
+
+                // // delete the 2nd line
+                // $foundIndex= -1;
+                //     for ( $i=0; $i<count($tempLines);++$i) {
+                //         if ($tempLines[$i]['brou_id'] == $tempTripleLine[1]['brou_id'])
+                //             $foundIndex= $i;
+                //     }
+                //     // delete the line
+                //     if ($foundIndex>=0) {
+                //             array_splice($tempLines,$foundIndex,1);
+                //     }
+
+                // // delete the 2nd line
+                // $foundIndex= -1;
+                // for ( $i=0; $i<count($tempLines);++$i) {
+                //     if ($tempLines[$i]['brou_id'] == $tempTripleLine[2]['brou_id'])
+                //         $foundIndex= $i;
+                // }
+                // // delete the line
+                // if ($foundIndex>=0) {
+                //         array_splice($tempLines,$foundIndex,1);
+                // }
+                
+                // }
+            }
+            
+        }   
+    
+    if (count($tempLines)>0)
+        throw new Exception("Reste après intégration multiple lines " . json_encode($tempLines)); 
+}
+
+function getLineIndex($baseTab,$line) {
+    $foundIndex= -1;
+    for ( $i=0; $i<count($baseTab);++$i) {
+        if ($baseTab[$i]['brou_id'] == $line['brou_id'])
+            $foundIndex= $i;
+    }
+    // print "Found index" .  $foundIndex ."</br>";
+    return  $foundIndex;
+    
+
+}
+/**
+* Return the first single line found
+*/
+function getSingleLine($tempLines) {
+
+    // print "HetSingleline : " . json_encode($tempLines). "</br></br>" ;
+
+    $foundDouble=false;
+    // for ($line=0; $line<count($tempLines)-1;++$line) {
+    for ($i=1; $i<count($tempLines);++$i) {
+        if ($tempLines[0]['brou_date_adh']== $tempLines[$i]['brou_date_adh'] && ($tempLines[0]['mreg_id']== $tempLines[$i]['mreg_id'])) {
+            $foundDouble=true;
+        }
+    }
+    
+    if (!$foundDouble && count($tempLines)>0) {
+       // print "Found single : " . json_encode($tempLines[0]). "</br></br>" ;
+         print "Found single line, ";
+        return $tempLines[0];
+    } else { 
+        return null;
+    }
+}
+
+/**
+* Return the first single linge found
+*/
+function getDoubleLines($tempLines) {
+
+    // print "HetSingleline : " . json_encode($tempLines). "</br></br>" ;
+    $returnTab=[];
+
+    $foundDouble=-1;
+    // for ($line=0; $line<count($tempLines)-1;++$line) {
+    for ($i=1; $i<count($tempLines);++$i) {
+        if ($tempLines[0]['brou_date_adh']== $tempLines[$i]['brou_date_adh'] && ($tempLines[0]['mreg_id']== $tempLines[$i]['mreg_id'])) {
+            if ($foundDouble==-1)
+                $foundDouble=$i;
+            else
+                $foundDouble=-1;    // the is more than 2 lines, this function can't compute this case
+        }
+    }
+    
+    if ($foundDouble>0 ) {
+        array_push($returnTab,$tempLines[0]);
+        array_push($returnTab,$tempLines[$foundDouble]);
+        // print "Found double : " . json_encode($returnTab). "</br></br>" ;
+        print " Found double line,";
+        return $returnTab;
+    } else { 
+        return null;
+    }
+}
+
+
+/**
+* Return the first triple line found
+*/
+function getTripleLines($tempLines) {
+
+    // print "HetTripleline : " . json_encode($tempLines). "</br></br>" ;
+
+    if (count($tempLines)<3)
+        return null;
+    print "test triple"; 
+    $returnTab=[];
+    // $indexTab=[];
+
+    array_push($returnTab,$tempLines[0]);
+    // for ($line=0; $line<count($tempLines)-1;++$line) {
+    for ($i=1; $i<count($tempLines);++$i) {
+        if ($tempLines[0]['brou_date_adh']== $tempLines[$i]['brou_date_adh'] && ($tempLines[0]['mreg_id']== $tempLines[$i]['mreg_id'])) {
+            array_push($returnTab,$tempLines[$i]);            
+        }
+    }
+    // print "count". count($indexTab);
+    print "returnTab" .  json_encode($returnTab). "</br></br>";
+    if (count($returnTab)==3 ) {
+        print "Found triple line, ". count($returnTab) ."</br>"; 
+        return $returnTab;
+    } else { 
+        return null;
+    }
+}
 /**
  * use to create only one people
  * @param mixed $result data of people
@@ -667,28 +923,28 @@ function createPayment($total, $dateAdh, $mreg, $per_id, $pdo){
  * @param mixed $pdo pdo login
  * @return int return reg_id of the payment
  */
-function getamount($per_id, $total, $dateAdh, $mreg, $pdo){
-    $sql = 'select reg_id from inscriptions where per_id = :id';
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id' => $per_id]);
-    $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+// function getamount($per_id, $total, $dateAdh, $mreg, $pdo){
+//     $sql = 'select reg_id from inscriptions where per_id = :id';
+//     $stmt = $pdo->prepare($sql);
+//     $stmt->execute([':id' => $per_id]);
+//     $amoutid = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     
-    // If $amoutid is empty, it means no registration was found, so create a new payment.
-    if (empty($amoutid)){
-        return createPayment(
-            $total,
-            $dateAdh,
-            $mreg,
-            $per_id,
-            $pdo
-        );
-    }
-    // If $amoutid is NOT empty, it means a registration was found, so return its reg_id.
-    else {
-        //print json_encode($amoutid) . '<br>';
-        return $amoutid[0]['reg_id'];
-    }
-}
+//     // If $amoutid is empty, it means no registration was found, so create a new payment.
+//     if (empty($amoutid)){
+//         return createPayment(
+//             $total,
+//             $dateAdh,
+//             $mreg,
+//             $per_id,
+//             $pdo
+//         );
+//     }
+//     // If $amoutid is NOT empty, it means a registration was found, so return its reg_id.
+//     else {
+//         //print json_encode($amoutid) . '<br>';
+//         return $amoutid[0]['reg_id'];
+//     }
+// }
 
 
 // /**
