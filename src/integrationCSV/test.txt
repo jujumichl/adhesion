@@ -1,3 +1,0 @@
-tyac_famille	sum(ins_montant)
-1	79263.7
-2	21642

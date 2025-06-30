@@ -1,23 +1,18 @@
 <?php
 
-
-
-
-
-
-
 /**************** VIEW ****************************** */
 /**
  * Display integration form of the integration page
  */
-function displayIntegrationCsv($resultat = "En attente de fichier...", $nomFichiers = "Aucun fichier sélectionné") {
+function displayIntegrationCsvBar($resultat = "En attente de fichier...", $nomFichiers = "Aucun fichier sélectionné") {
     $output = '
     <div style="margin-top:100px">
     <div class="row">
+        <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
         <div class="h5" style="color:#d07d29">Intégration fichier CSV </div>
         <hr/>
         <div class="col-6">
-        <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
+        
             <div class="input-group w-100 float-end">
                 <input
                     type="file"
@@ -29,23 +24,22 @@ function displayIntegrationCsv($resultat = "En attente de fichier...", $nomFichi
                 ';
     if ($nomFichiers !== "Aucun fichier sélectionné"){
         $output .= '</div>
-        <small class="form-text text-muted">Dernier fichier importer : ' . htmlspecialchars($nomFichiers) . '</small>
+        <small class="form-text text-muted">Dernier fichier importé : ' . htmlspecialchars($nomFichiers) . '</small>
         <div class="input-group w-100 float-end">';
     }
     $output .= '</div>
         </div>
-            <div class="col-6">
-                <button type="submit" class="btn btn-outline-secondary">Vérifier fichier CSV</button>
-                <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>
+            <div class="col-6">             
+                <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>                
             </div>
-        </form>
         </div>
+        </form>
     <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l\'intégration</div>
         <hr/>
-        ' . $resultat . '</div>';
+        </div>';
     return $output;
 }
-
+//  ' . $resultat .
 /**
  * Use to display all data in our database
  * @param mixed $donnees

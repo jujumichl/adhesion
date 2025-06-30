@@ -69,6 +69,7 @@ function getPersonSubscriptions($per_id, $pdo) {
   LEFT JOIN reglements ON reglements.reg_id = inscriptions.reg_id
   LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+  LEFT JOIN an_exercice ON an_exercice.ans_id=inscriptions.ans_id
   WHERE typeactivite.tyac_famille=2 and per_id=".$per_id."");
   $stmt->execute();
   $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -82,8 +83,9 @@ function getPersonInscriptions($per_id, $pdo) {
   $stmt = $pdo->prepare("SELECT * FROM inscriptions 
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN reglements ON reglements.reg_id = inscriptions.reg_id
-      LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
+  LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+  LEFT JOIN an_exercice ON an_exercice.ans_id=inscriptions.ans_id
   WHERE typeactivite.tyac_famille=1 and per_id=".$per_id."");
   $stmt->execute();
   $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -96,10 +98,11 @@ function getPersonInscriptions($per_id, $pdo) {
  */
 function getPersonPayments($per_id, $pdo) {
   $stmt = $pdo->prepare('SELECT reglements.reg_id, reglements.reg_montant, reglements.reg_date, mreg_code,  GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br> ") as reg_details FROM reglements 
-LEFT JOIN inscriptions ON inscriptions.reg_id=reglements.reg_id
+  LEFT JOIN inscriptions ON inscriptions.reg_id=reglements.reg_id
   LEFT JOIN modereglement ON reglements.mreg_id=modereglement.mreg_id
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+  LEFT JOIN an_exercice ON an_exercice.ans_id=inscriptions.ans_id
   where per_id='.$per_id.' ');
   $stmt->execute();
   $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -254,7 +257,8 @@ function displaypersonSubscriptions($personSubscriptions) {
         <table class="table table-striped">
           <thead>
             <tr>
-             <th scope="col">Adhésion</th>
+              <th scope="col">Saison</th>
+              <th scope="col">Adhésion</th>
               <th scope="col">Date Adhésion</th>
               <th scope="col">Montant</th>
               <th scope="col">Date début</th> 
@@ -267,12 +271,12 @@ function displaypersonSubscriptions($personSubscriptions) {
           if (count($personSubscriptions) >0) {
             foreach ($personSubscriptions as $personSubscription ) {
             $output.='<tr>
-
-            <td>'.$personSubscription['act_libelle'].'</td>
-                <td >'.$personSubscription['ins_date_inscription'].' </td>
+                <td >'.$personSubscription['ans_libelle'].' </td>
+                <td>'.$personSubscription['act_libelle'].'</td>
+                <td >'.date("d/m/Y", strtotime( $personSubscription['ins_date_inscription'])).'</td>
                 <td>'.$personSubscription['ins_montant'].'€</td>
-                <td>'.$personSubscription['ins_debut'].'</td>
-                <td>'.$personSubscription['ins_fin'].'</td>
+                <td>'.date("d/m/Y", strtotime($personSubscription['ins_debut'])).'</td>
+                <td>'.date("d/m/Y", strtotime($personSubscription['ins_fin'])).'</td>                              
                 <td>'.$personSubscription['reg_montant'].'€ - '. $personSubscription['reg_date'].' - '. $personSubscription['mreg_code'].'</td>
               </tr>';
             }
@@ -283,9 +287,8 @@ function displaypersonSubscriptions($personSubscriptions) {
           </tbody>
         </table>
       </div>
-
     ';
-return $output;
+  return $output;
   }
 
 
@@ -315,6 +318,7 @@ function displaypersonInscriptions($personInscriptions) {
           <table class="table table-striped">
             <thead>
               <tr>
+               <th scope="col">Saison</th>
                 <th scope="col">Date inscription</th>
                 <th scope="col">Activité</th>
                 <th scope="col">Montant</th>
@@ -328,13 +332,12 @@ function displaypersonInscriptions($personInscriptions) {
             if (count($personInscriptions) >0) {
               foreach ($personInscriptions as $personInscription ) {
               $output.='<tr>
-  
-               <td >'.$personInscription['ins_date_inscription'].' </td>
-                <td>'.$personInscription['act_libelle'].'</td>
-                 
+                  <td >'.$personInscription['ans_libelle'].' </td>
+                  <td >'.date("d/m/Y", strtotime($personInscription['ins_date_inscription'])).' </td>
+                  <td>'.$personInscription['act_libelle'].'</td>                
                   <td>'.$personInscription['ins_montant'].'€</td>
-                  <td>'.$personInscription['ins_debut'].'</td>
-                  <td>'.$personInscription['ins_fin'].'</td>
+                  <td>'.date("d/m/Y", strtotime($personInscription['ins_debut'])).'</td>
+                  <td>'.date("d/m/Y", strtotime($personInscription['ins_fin'])).'</td>
                   <td>'.$personInscription['reg_montant'].'€ - '. $personInscription['reg_date'].' - '. $personInscription['mreg_code'].'</td>
                 </tr>';
               }

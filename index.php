@@ -25,7 +25,7 @@
  
         require_once './src/navbar.php';
 
-        require_once './src/integrationCSV/integrationCSV.php';
+       //  require_once './src/integrationCSV/integrationCSV.php';
 
         // require_once './src/selection/brevo/brevo-modal.php';
 
@@ -65,15 +65,27 @@
                 print displayNavbar();
                 include './src/mooc.php';
                 break;
-            case 'CSV':
-                print displayNavbar(). 
-                displayIntegrationCsv();
-                break;
+            // case 'CSV':
+            //     print displayNavbar(). 
+            //     print displayIntegrationCsvBar();
+            //     break;
             case 'upload':
-                require_once './src/integrationCSV/traitementCSV.php';
-                print displayNavbar().
-                 displayIntegrationCsv($msgErr, $filename);
+                require_once './src/integrationCSV/integrationTraitementCSV.php';
+                require_once './src/integrationCSV/integrationControllerCSV.php';
+                require_once './src/integrationCSV/integrationUploadCSV.php';
+                print displayNavbar();
+                print displayIntegrationCsvBar();
+                print launchIntegration ($pdo);
+                // displayIntegrationCsv($msgErr, $filename);
                 break;
+            // case 'uploadcheck':
+            //     require_once './src/integrationCSV/traitementCSV.php';
+            //     print displayNavbar().
+            //     checkBrouillonValidity($pdo);
+            //     break;
+    
+
+                
             default:
                 include './src/connexion.php';
                 break;
