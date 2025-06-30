@@ -65,10 +65,13 @@
                 print displayNavbar();
                 include './src/mooc.php';
                 break;
-            // case 'CSV':
-            //     print displayNavbar(). 
-            //     print displayIntegrationCsvBar();
-            //     break;
+            case 'CSV':
+                require_once './src/integrationCSV/integrationTraitementCSV.php';
+                require_once './src/integrationCSV/integrationControllerCSV.php';
+                require_once './src/integrationCSV/integrationUploadCSV.php';
+               print displayNavbar(). 
+                print displayIntegrationCsvBar();
+                break;
             case 'upload':
                 require_once './src/integrationCSV/integrationTraitementCSV.php';
                 require_once './src/integrationCSV/integrationControllerCSV.php';
@@ -76,16 +79,7 @@
                 print displayNavbar();
                 print displayIntegrationCsvBar();
                 print launchIntegration ($pdo);
-                // displayIntegrationCsv($msgErr, $filename);
-                break;
-            // case 'uploadcheck':
-            //     require_once './src/integrationCSV/traitementCSV.php';
-            //     print displayNavbar().
-            //     checkBrouillonValidity($pdo);
-            //     break;
-    
-
-                
+                break;               
             default:
                 include './src/connexion.php';
                 break;

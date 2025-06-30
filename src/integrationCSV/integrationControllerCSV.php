@@ -6,40 +6,43 @@
  */
 function displayIntegrationCsvBar($resultat = "En attente de fichier...", $nomFichiers = "Aucun fichier sélectionné") {
     $output = '
-    <div style="margin-top:100px">
-    <div class="row">
-        <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
-        <div class="h5" style="color:#d07d29">Intégration fichier CSV </div>
-        <hr/>
-        <div class="col-6">
-        
-            <div class="input-group w-100 float-end">
-                <input
-                    type="file"
-                    id="fileToUpload"
-                    name="fileToUpload"
-                    class="form-control"
-                    placeholder="Choisir un fichier .csv"
-                />
-                ';
-    if ($nomFichiers !== "Aucun fichier sélectionné"){
-        $output .= '</div>
-        <small class="form-text text-muted">Dernier fichier importé : ' . htmlspecialchars($nomFichiers) . '</small>
-        <div class="input-group w-100 float-end">';
-    }
-    $output .= '</div>
+    <div class="container" style="margin-top:100px">
+        <div class="row">
+            <div class="h5" style="color:#d07d29">Intégration fichier CSV </div>
+            <hr/>
+            Veuillez noter que cette fonction intègre toutes les lignes du fichier choisi mais uniquement celles de l\'année  correspondant à la première ligne du fichier.
+            Donc la 1ère ligne du fichier CSV doit porter l\'année à intégrer :
+            Le début du fichier CSV ci-dessous, n\'intègrera que les lignes de l\'année 2024-2025 : 
+            Nbr,<b>Année</b>,Statut,Nom,Prénom, ... 
+            1,<b>2024-2025</b>,RENOU,AUVIGNE,Florence, ...
+            </br>
         </div>
-            <div class="col-6">             
-                <button type="submit" class="btn btn-outline-secondary">Lancer l\'intégration</button>                
+        <div class="row" style="margin-top:10px">
+            <hr/>
+            <div class="col-6" style="margin-top:20px">
+            </hr>
+                <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
+                    <div class="input-group w-100 float-end">
+                        <input
+                            type="file"
+                            id="fileToUpload"
+                            name="fileToUpload"
+                            class="form-control"
+                            placeholder="Choisir un fichier .csv"
+                        />
+                        <button type="submit" class="btn btn-outline-secondary" style ="margin-left:5px">Lancer l\'intégration</button>                               
+                    </div>
+                </form>
             </div>
         </div>
-        </form>
+    
+        
     <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l\'intégration</div>
         <hr/>
-        </div>';
+        ';
     return $output;
 }
-//  ' . $resultat .
+
 /**
  * Use to display all data in our database
  * @param mixed $donnees

@@ -304,9 +304,16 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
     $stmt->execute();
 
     // Data processing
+    $nbLine=0;
     while (($ligne = fgetcsv($handle, 0, $separateur)) !== false) {
-        
         $data = array_combine($entetes, $ligne);
+
+        if ($nbLine==0) {
+            $currentYear = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$annKey] ?? ''));
+            print "année en cours" . $currentYear;
+        }
+        ++$nbLine;
+
         $nom = trim(preg_replace( '/^\xEF\xBB\xBF/', '', $data[$nomKey] ?? ''));
         $prenom = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$prenomKey] ?? ''));
         $port = formatPhoneNumber($data[$portKey]);
@@ -323,57 +330,59 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         $titre = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$titreKey] ?? ''));
         $tel = formatPhoneNumber($data[$telKey]);
         
-        if ($nom !== ''){
-            $sql = "INSERT INTO $nomTable(
-            brou_nom,
-            brou_prenom,
-            brou_portable,
-            brou_email,
-            brou_commune,
-            brou_adh,
-            brou_act,
-            brou_reglement,
-            brou_code,
-            brou_CP,
-            brou_annee,
-            brou_date_adh,
-            brou_date_naiss,
-            brou_titre,
-            brou_telephone
-            ) Values (
-            :nom,
-            :prenom,
-            :portable,
-            :email,
-            :commune,
-            :adh,
-            :act,
-            :reglement,
-            :code,
-            :cp,
-            :annee,
-            :date_adh,
-            :date_naiss,
-            :titre,
-            :telephone)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                ':nom' => $nom,
-                ':prenom' => $prenom,
-                ':portable' => $port,
-                ':email' => $email,
-                ':commune' => $commune,
-                ':adh' => $adh,
-                ':act' => $act,
-                ':reglement' => $reg,
-                ':code' => $code,
-                ':cp' => $CP,
-                ':annee' => $annee,
-                ':date_adh' => $Dadh,
-                ':date_naiss' => $naiss,
-                ':titre' => $titre,
-                ':telephone' => $tel
-            ]);
+        if ($annee== $currentYear) {
+            if ($nom !== ''){
+                $sql = "INSERT INTO $nomTable(
+                brou_nom,
+                brou_prenom,
+                brou_portable,
+                brou_email,
+                brou_commune,
+                brou_adh,
+                brou_act,
+                brou_reglement,
+                brou_code,
+                brou_CP,
+                brou_annee,
+                brou_date_adh,
+                brou_date_naiss,
+                brou_titre,
+                brou_telephone
+                ) Values (
+                :nom,
+                :prenom,
+                :portable,
+                :email,
+                :commune,
+                :adh,
+                :act,
+                :reglement,
+                :code,
+                :cp,
+                :annee,
+                :date_adh,
+                :date_naiss,
+                :titre,
+                :telephone)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom' => $nom,
+                    ':prenom' => $prenom,
+                    ':portable' => $port,
+                    ':email' => $email,
+                    ':commune' => $commune,
+                    ':adh' => $adh,
+                    ':act' => $act,
+                    ':reglement' => $reg,
+                    ':code' => $code,
+                    ':cp' => $CP,
+                    ':annee' => $annee,
+                    ':date_adh' => $Dadh,
+                    ':date_naiss' => $naiss,
+                    ':titre' => $titre,
+                    ':telephone' => $tel
+                ]);
+            }
         }
     }
     fclose($handle);

@@ -33,6 +33,7 @@ function parseAndStoreData($pdo){
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    // *** Set the year 
     foreach ($result as $res){
         try{
             // check email
@@ -123,7 +124,7 @@ function getLinesIndexFromKey($baseTab,$key,$per_id) {
             array_push($returntab,$baseTab[$i]);
         }
     }
-    print "Trouvé".json_encode( $returntab)."</br>";
+   //  print "Trouvé".json_encode( $returntab)."</br>";
     return  $returntab;
 }
 /**
@@ -132,37 +133,48 @@ function getLinesIndexFromKey($baseTab,$key,$per_id) {
  * for example : within a year, double lines are lines created the same day with the same payment mode 
  * The main loop 
  */
-function computeMultipleLines($data,$per_id, $dateAdh, $pdo) {
+function computeMultipleLines($tempLines,$per_id, $dateAdh, $pdo) {
 
-    $tempLines=$data;
-
+    // *** Compute  the keys of each line 
     $temptab=[];
     for ($line=0; $line<count($tempLines);++$line) {
         array_push($temptab,$per_id.$tempLines[$line]['brou_date_adh'].$tempLines[$line]['mreg_id'].$tempLines[$line]['ans_id']);
     }
 
-    print $tempLines[0]['brou_id']." ".$tempLines[0]['brou_email']."</br>";
+    // *** Compute the nb of line per key
     $countValues=array_count_values($temptab);
-   //  print "</br>Multiple line before treatment sqsdff" . json_encode($tempLines) ."</br></br>";
-   print " countValues" . var_dump( $countValues)."</br>"; ;
 
-//    for ($i=0;$i<count($countValues);++$i) { 
-//         print $countValues[$i]."</br>";
-//    }
-
+   // *** Create each registration line needed
    foreach ($countValues as $key =>$countValue) {
         print  " key = ". $key;
         print " value = ". $countValue."</br>";
         $lineToCompute=getLinesIndexFromKey($tempLines,$key, $per_id );
         print "Lines to compute : ". json_encode( $lineToCompute)."</br></br>";
-
         addRegistrationLines($lineToCompute, $per_id, $pdo);
-   }
+     }
+}
+
+/**
+ * 
+ */
+function checkAllreadyExists($per_id,$act_id,$ans_id,$pdo) {
+           // *** Get the lines of one person
+  //  print" check allready exists per_id='".$per_id."' and act_id='".$act_id."' and ans_id='".$ans_id."'";
+           $sql = "select * from inscriptions where per_id='".$per_id."' and act_id='".$act_id."' and ans_id='".$ans_id."'";
+    $stmt = $pdo->prepare($sql);
+   $stmt->execute();
+  //  print "</br>*** line : " . $res['brou_email'] . " : ";
+   $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+   print "Data " .json_encode( $data );
+   if (count($data )>0)
+        return true;
+    else
+        return false;
 }
 
 
 /**
- * Use to add two lines
+ * Use to add several registration lines
  * @param mixed $data one array of two line
  * @param mixed $per_id id of person
  * @param mixed $dateAdh date of payment
@@ -171,7 +183,7 @@ function computeMultipleLines($data,$per_id, $dateAdh, $pdo) {
  * @return void
  */
 function addRegistrationLines($data, $per_id, $pdo){
-    // print json_encode($data);
+    // print "addRegistrationLines" . json_encode($data). "</br>";
      $dateAdh = stringToDate(
          substr($data[0]['brou_date_adh'], 0,-8),
          substr($data[0]['brou_date_adh'], 3, -5),
@@ -282,6 +294,13 @@ function createPers($data,$date_naiss, $pdo){
  */
 function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
     $act_id = getIDActivity($data['codeADH'], $pdo);
+
+    // *** Check if the line allready exists in the database
+    if (checkAllreadyExists($per_id,$act_id,$data['ans_id'],$pdo)==true) {
+        print "Allready exists in the database" . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>";
+        return;
+    }
+
     $sql = 'INSERT INTO `inscriptions`(
         per_id,
         act_id,
@@ -323,6 +342,13 @@ function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
  */
 function createAct($data, $per_id, $reg_id, $dateAdh, $pdo){
     $act_id = getIDActivity($data['brou_code'], $pdo);
+
+        // *** Check if the line allready exists in the database
+    if (checkAllreadyExists($per_id,$act_id,$data['ans_id'],$pdo)==true) {
+        throw new Exception("Allready exists in the database" . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>");
+        return;
+    }
+    
     $sql = 'INSERT INTO `inscriptions`(
     per_id,
     act_id,
