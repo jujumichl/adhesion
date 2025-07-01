@@ -6,16 +6,17 @@
  */
 function displayIntegrationCsvBar($resultat = "En attente de fichier...", $nomFichiers = "Aucun fichier sélectionné") {
     $output = '
-    <div class="container" style="margin-top:100px">
+    <div class="container" style="margin-top:20px">
         <div class="row">
-            <div class="h5" style="color:#d07d29">Intégration fichier CSV </div>
-            <hr/>
-            Veuillez noter que cette fonction intègre toutes les lignes du fichier choisi mais uniquement celles de l\'année  correspondant à la première ligne du fichier.
-            Donc la 1ère ligne du fichier CSV doit porter l\'année à intégrer :
-            Le début du fichier CSV ci-dessous, n\'intègrera que les lignes de l\'année 2024-2025 : 
-            Nbr,<b>Année</b>,Statut,Nom,Prénom, ... 
-            1,<b>2024-2025</b>,RENOU,AUVIGNE,Florence, ...
-            </br>
+            <div class="col-12" style="">
+                <div class="h5" style="color:#d07d29">Intégration fichier CSV </div>
+                <hr/>
+                Veuillez noter que cette fonction intègre toutes les lignes du fichier choisi mais uniquement celles de l\'année  correspondant à la première ligne du fichier.
+                </br>Donc la 1ère ligne du fichier CSV doit porter l\'année à intégrer :
+                Le début du fichier CSV ci-dessous, n\'intègrera que les lignes de l\'année 2024-2025 : 
+                Nbr,<b>Année</b>,Statut,Nom,Prénom, ... 1,<b>2024-2025</b>,RENOU,AUVIGNE,Florence, ...
+                </br>
+            </div>
         </div>
         <div class="row" style="margin-top:10px">
             <hr/>

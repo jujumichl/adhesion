@@ -31,8 +31,13 @@ function creationController ($pdo) {
             } else {
                 throw new Exception ("Error : getpersonnes without searchString");
             }
+        } else {
+          throw new Exception ("Cette fonction n'est pas encore disponible");
         }
+    }else {
+      throw new Exception ("Cette fonction n'est pas encore disponible");
     }
+
     // print json_encode($output);
     return $output;
 
@@ -55,7 +60,7 @@ function getPerson($per_id, $pdo) {
     throw new Exception ("La personne n'a pas été trouvée dans la base de données. id : ". $per_id);
   else 
     if (count($result) >1)
-      throw new Exception ("Plus d'une personne avec l'id : ". $per_id. " -" .print json_encode($person) );
+      throw new Exception ("Plus d'une personne avec l'id : ". $per_id. " -" . json_encode($person) );
     else 
       return $result[0];
 }
@@ -103,7 +108,9 @@ function getPersonPayments($per_id, $pdo) {
   LEFT JOIN activites ON activites.act_id=inscriptions.act_id
   LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
   LEFT JOIN an_exercice ON an_exercice.ans_id=inscriptions.ans_id
-  where per_id='.$per_id.' ');
+  where per_id='.$per_id.'
+    GROUP BY reglements.reg_id, reglements.reg_montant, reglements.reg_date, mreg_code
+    order by reglements.reg_date');
   $stmt->execute();
   $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
   return $result;
@@ -113,7 +120,7 @@ function getPersonPayments($per_id, $pdo) {
 
 function displayPerson($person) {
  $output='
-  <div style="margin-top:100px">
+  <div style="margin-top:20px">
     <div class="h3" style="color:#d07d29">Personne</div>
     <hr/>
     <div class="row">
@@ -133,7 +140,7 @@ function displayPerson($person) {
       <hr/>
       <div class="col-6">
         <div class="row align-items-center">
-            <div class="col-2 mb-3">
+            <div class="col-2 mb-1">
               <label for="exampleFormControlInput1" class="col-form-label">Civilité
               </label>
             </div>
@@ -143,7 +150,7 @@ function displayPerson($person) {
           </div>
 
           <div class="row align-items-center">
-            <div class="col-2 mb-3">
+            <div class="col-2 mb-1">
               <label for="exampleFormControlInput1" class="col-form-label">Nom
               </label>
             </div>
@@ -153,17 +160,17 @@ function displayPerson($person) {
           </div>
 
           <div class="row align-items-center">
-            <div class="col-2 mb-3">
+            <div class="col-2 mb-1">
               <label for="exampleFormControlInput1" class="col-form-label">Prénom
               </label>
             </div>
-            <div class="col-8 mb-3">
+            <div class="col-8 mb-1">
             <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="" value="'.$person['per_prenom'].'">
             </div>
           </div>
 
           <div class="row align-items-center">
-            <div class="col-2 mb-3">
+            <div class="col-2 mb-1">
               <label for="exampleFormControlInput1" class="col-form-label">Email
               </label>
             </div>
@@ -195,9 +202,8 @@ function displayPerson($person) {
         
         </div>
         <div class="col-6">
-
           <div class="row align-items-center">
-            <div class="col-2 mb-3">
+            <div class="col-2 mb-1">
               <label for="exampleFormControlInput1" class="col-form-label">Adresse
               </label>
             </div>
@@ -207,7 +213,7 @@ function displayPerson($person) {
           </div>
 
           <div class="row align-items-center">   
-            <div class="col-2 mb-3">
+            <div class="col-2 mb-1">
               <label for="exampleFormControlInput1" class="col-form-label">Code postal
               </label>
             </div>
@@ -217,7 +223,7 @@ function displayPerson($person) {
           </div>
 
           <div class="row align-items-center">   
-            <div class="col-2 mb-3">
+            <div class="col-2 mb-1">
               <label for="exampleFormControlInput1" class="col-form-label">Ville
               </label>
             </div>
@@ -358,7 +364,7 @@ function displaypersonInscriptions($personInscriptions) {
  */
 function displayPersonPayments($personPayments) {
 
-  print json_encode($personPayments);
+  // print json_encode($personPayments);
   $output=' <!-- Adhésions --->
      <div class="row" style="margin-top:30px">
        <div class="col-12">
@@ -392,7 +398,7 @@ function displayPersonPayments($personPayments) {
              foreach ($personPayments as $personPayment ) {
              $output.='<tr>
  
-              <td >'.$personPayment['reg_date'].' </td>                
+              <td >'.date("d/m/Y", strtotime($personPayment['reg_date'])).' </td>                
                  <td>'.$personPayment['reg_montant'].'€</td>
                  <td>'.$personPayment['mreg_code'].'</td>
                  <td>'.$personPayment['reg_details'].'</td>

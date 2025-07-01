@@ -24,6 +24,7 @@ export async function exportPersonListtoBrevoMVC(htlmPartId) {
 
     // *** Variable that keeps the modal object
     let editModal = null;
+    //  throw new Error("Cette fonction n'est pas encore disponible");
 
     try {
         // *** Display main part of the page

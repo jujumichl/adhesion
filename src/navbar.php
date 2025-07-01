@@ -1,7 +1,7 @@
 <?php
 function displayNavbar(){
   return 
-  '<nav class="navbar navbar-expand-xxxl  fixed-top pt-0">
+  '<nav class="navbar navbar-expand-xxxl pt-0">
   <div class="container-fluid d-flex justify-content-between align-items-center" style="background-color:#eeeeed">
     
     <!-- Logo à gauche -->
@@ -30,7 +30,7 @@ function displayNavbar(){
   aria-labelledby="offcanvassLabel"
 >
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvassLabel" style="color:#d07d29">CC Rennes</h5>
+    <h5 class="offcanvas-title" id="offcanvassLabel" style="color:#d07d29">CC Rennes - </br>DYB v1.0 du 01/07/2025</h5>
     <button
       type="button"
       class="btn-close"
@@ -45,7 +45,7 @@ function displayNavbar(){
       <li><a class="dropdown-item" href="index.php?uc=selecjs">Listes de personnes</a></li>
       <li><a class="dropdown-item" href="index.php?uc=crea">Création personne</a></li>
       <hr/>
-      <li><a class="dropdown-item" href="index.php?uc=TB">Tableau de bord</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=report">Tableau de bord</a></li>
       <li><a class="dropdown-item" href="index.php?uc=mooc">horaires animateurs</a></li>
       <hr/>
       <li><a class="dropdown-item" href="index.php?uc=CSV">Intégration fichier CSV</a></li>
@@ -53,6 +53,8 @@ function displayNavbar(){
       <hr/>
       <li><a class="dropdown-item" href="index.php?uc=mooc">MOOC</a></li>
       <li><a class="dropdown-item" href="index.php?uc=log">Historique</a></li>
+      <hr/>
+      <li><a class="dropdown-item" href="index.php?uc=doc">Historique</a></li>
       <hr/>
     </ul>
   </div>

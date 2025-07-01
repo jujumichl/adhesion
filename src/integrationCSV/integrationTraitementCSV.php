@@ -54,6 +54,7 @@ function parseAndStoreData($pdo){
            //  print "</br>*** line : " . $res['brou_email'] . " : ";
             $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             
+     // print "base.". json_encode($baseTab)." </br>";           
             $datenaiss = stringToDate(
                 substr($data[0]['brou_date_naiss'], 0,-8),
                 substr($data[0]['brou_date_naiss'], 3, -5),
@@ -137,6 +138,7 @@ function computeMultipleLines($tempLines,$per_id, $dateAdh, $pdo) {
 
     // *** Compute  the keys of each line 
     $temptab=[];
+   // print "Start tab Tab :' " . json_encode($tempLines)."</br>";;
     for ($line=0; $line<count($tempLines);++$line) {
         array_push($temptab,$per_id.$tempLines[$line]['brou_date_adh'].$tempLines[$line]['mreg_id'].$tempLines[$line]['ans_id']);
     }
@@ -145,13 +147,16 @@ function computeMultipleLines($tempLines,$per_id, $dateAdh, $pdo) {
     $countValues=array_count_values($temptab);
 
    // *** Create each registration line needed
+   // print "counvalue Tab :' " . json_encode($countValues)."</br>";;
+   $compte=0;
    foreach ($countValues as $key =>$countValue) {
         print  " key = ". $key;
         print " value = ". $countValue."</br>";
         $lineToCompute=getLinesIndexFromKey($tempLines,$key, $per_id );
-        print "Lines to compute : ". json_encode( $lineToCompute)."</br></br>";
+        print "</br></br>Lines to compute : ". json_encode( $lineToCompute)."</br>";
         addRegistrationLines($lineToCompute, $per_id, $pdo);
-     }
+       }
+
 }
 
 /**
@@ -183,7 +188,7 @@ function checkAllreadyExists($per_id,$act_id,$ans_id,$pdo) {
  * @return void
  */
 function addRegistrationLines($data, $per_id, $pdo){
-    // print "addRegistrationLines" . json_encode($data). "</br>";
+    print "addRegistrationLines" .  "</br>"; // json_encode($data).
      $dateAdh = stringToDate(
          substr($data[0]['brou_date_adh'], 0,-8),
          substr($data[0]['brou_date_adh'], 3, -5),
@@ -196,8 +201,9 @@ function addRegistrationLines($data, $per_id, $pdo){
      }
  
      // *** Create payment
+    
      $reg_id = createPayment($total, $dateAdh,  $data[0]['mreg_code'], $per_id, $pdo);
- 
+     print "Create Payment " .  $reg_id."</br>"; // json_encode($data). " - " .
      // $reg_id = getamount(
      //     $per_id,
      //     $total,
@@ -279,6 +285,7 @@ function createPers($data,$date_naiss, $pdo){
             ':ville'=>$data['brou_commune'],
             ':naiss'=>$date_naiss
         ]);
+
         $per_id = $pdo->lastInsertId();
         return $per_id;
     }
@@ -300,6 +307,7 @@ function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
         print "Allready exists in the database" . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>";
         return;
     }
+    print "</br>Create subs: " .  $reg_id."</br>"; // json_encode($data) . " - " .
 
     $sql = 'INSERT INTO `inscriptions`(
         per_id,
@@ -331,7 +339,8 @@ function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
         ':ins_fin' => getEndOfSeasonDate($dateAdh),
         ':ins_montant' => (float)$data['brou_adh'],
         ':ans_id' => (int)$data['ans_id']
-    ]);
+    ]);  
+  
     return $pdo->lastInsertId(); 
 }
 
@@ -348,7 +357,7 @@ function createAct($data, $per_id, $reg_id, $dateAdh, $pdo){
         throw new Exception("Allready exists in the database" . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>");
         return;
     }
-    
+    print "</br>Create Activity : " .  $reg_id."</br>"; // json_encode($data) . " - " .
     $sql = 'INSERT INTO `inscriptions`(
     per_id,
     act_id,
@@ -381,6 +390,8 @@ function createAct($data, $per_id, $reg_id, $dateAdh, $pdo){
         ':ins_montant' => (float)$data['brou_act'],
         ':ans_id' => (int)$data['ans_id']
     ]);
+
+
     return $pdo->lastInsertId();
 }
 
@@ -437,14 +448,14 @@ function createPayment($total, $dateAdh, $mreg, $per_id, $pdo){
         ]);
         $reg_id = $pdo->lastInsertId();
 
-        $sql = 'UPDATE inscriptions
-        SET reg_id = :reg_id
-        WHERE per_id = :per_id';
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':reg_id' => $reg_id,
-            ':per_id' => $per_id
-        ]);
+        // $sql = 'UPDATE inscriptions
+        // SET reg_id = :reg_id
+        // WHERE per_id = :per_id';
+        // $stmt = $pdo->prepare($sql);
+        // $stmt->execute([
+        //     ':reg_id' => $reg_id,
+        //     ':per_id' => $per_id
+        // ]);
         return $reg_id;
     }
 }

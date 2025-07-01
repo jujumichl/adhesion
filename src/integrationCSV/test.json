@@ -1,6 +1,6 @@
 [
     {
-        "brou_id": 349,
+        "brou_id": 328,
         "brou_nom": "LE TOQUIN",
         "brou_prenom": "Anne",
         "brou_portable": "+336504697",
@@ -31,7 +31,7 @@
         "ans_date_fin": "2025-08-31"
     },
     {
-        "brou_id": 348,
+        "brou_id": 327,
         "brou_nom": "LE TOQUIN",
         "brou_prenom": "Anne",
         "brou_portable": "+336504697",
@@ -60,36 +60,5 @@
         "ans_libelle": "2024-2025",
         "ans_date_debut": "2024-09-01",
         "ans_date_fin": "2025-08-31"
-    },
-    {
-        "brou_id": 652,
-        "brou_nom": "LE TOQUIN",
-        "brou_prenom": "Anne",
-        "brou_portable": "+336504697",
-        "brou_email": "a.letoquin@laposte.net",
-        "brou_commune": "VERN SUR SEICHE",
-        "brou_adh": 0,
-        "brou_act": 0,
-        "brou_reglement": "CHE",
-        "brou_code": "D02",
-        "brou_CP": "35770",
-        "brou_annee": "2023-2024",
-        "brou_date_adh": "06\/10\/2023",
-        "brou_date_naiss": "13\/04\/1985",
-        "brou_titre": "Madame",
-        "brou_telephone": "",
-        "mreg_id": 4,
-        "mreg_code": "CHE",
-        "mreg_Libelle": "Ch\u00e8que",
-        "act_id": 129,
-        "act_ext_key": "D02",
-        "act_libelle": "Danse bretonne d\u00e9butants - mercredi",
-        "act_mode_rem": null,
-        "dom_id": 8,
-        "tyac_id": 1,
-        "ans_id": 2,
-        "ans_libelle": "2023-2024",
-        "ans_date_debut": "2023-09-01",
-        "ans_date_fin": "2024-08-31"
     }
 ]

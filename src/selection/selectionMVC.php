@@ -55,7 +55,7 @@ function displaySelectionHeader($pdo) {
         $searchString = $_GET['searchString'];
     
     $output='
-        <div style="margin-top:100px">
+        <div style="margin-top:20px">
    <!-- Recherche -->
     
         <form  method="get"  href="index.php">   
@@ -87,20 +87,7 @@ function displaySelectionHeader($pdo) {
                 </div>               
             </div>
 
-            <div class="col-1">
-               <div class="dropdown">
-                    <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        Année
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="#">Par défaut - année en cours</a></li>
-                        <li><a class="dropdown-item" href="#">2024-2025</a></li>
-                        <li><a class="dropdown-item" href="#">2023-2024</a></li>
-                        <li><a class="dropdown-item" href="#">Tout</a></li>
-                    </ul>
-                </div>
-            </div>
-        
+          
     </div>
     </form>
 </div>
@@ -109,6 +96,20 @@ function displaySelectionHeader($pdo) {
 
     return $output;
 }
+
+// <div class="col-1">
+// <div class="dropdown">
+//      <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+//          Année
+//      </a>
+//      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+//      <li><a class="dropdown-item" href="#">Par défaut - année en cours</a></li>
+//          <li><a class="dropdown-item" href="#">2024-2025</a></li>
+//          <li><a class="dropdown-item" href="#">2023-2024</a></li>
+//          <li><a class="dropdown-item" href="#">Tout</a></li>
+//      </ul>
+//  </div>
+// </div>
 
 /**
  * 

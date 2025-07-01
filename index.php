@@ -21,7 +21,6 @@
     try {
         require_once './outils/utils.php';
 
-        require_once './src/selection/selectionMVC.php';
  
         require_once './src/navbar.php';
 
@@ -31,14 +30,20 @@
 
         require_once './src/creation/creationMVC.php';
 
-        require_once './config.php';
-        $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
+       include './config.php';
+       $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
+
+    //    if ($pdo ==null)
+    //      throw new Exception("pdo not intitialised");
+
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
             case 'selec':
-                print displayNavbar().
-                displaySelectionHeader($pdo).
-                selectionController($pdo);
+                require_once './src/selection/selectionMVC.php';
+ 
+                print displayNavbar();
+                print displaySelectionHeader($pdo);
+                print selectionController($pdo);
                 break;
             case 'selecjs':
                 header('Location: src/selectionjs/selectionjs.html');
@@ -69,8 +74,11 @@
                 require_once './src/integrationCSV/integrationTraitementCSV.php';
                 require_once './src/integrationCSV/integrationControllerCSV.php';
                 require_once './src/integrationCSV/integrationUploadCSV.php';
-               print displayNavbar(). 
-                print displayIntegrationCsvBar();
+                print displayNavbar();
+                // throw new Exception ("Dans une première version, cette fonction n'est disponible que pour les administrateurs");
+
+                print displayNavbar();
+               print displayIntegrationCsvBar();
                 break;
             case 'upload':
                 require_once './src/integrationCSV/integrationTraitementCSV.php';
@@ -79,7 +87,28 @@
                 print displayNavbar();
                 print displayIntegrationCsvBar();
                 print launchIntegration ($pdo);
-                break;               
+                break;    
+                
+            case 'report':
+                print displayNavbar();
+                 require_once './src/report/tableau-bord.php';
+                 print getReportCAbyYear($pdo);
+                break;
+                case 'reportactivite':
+                    print displayNavbar();
+                    require_once './src/report/tableau-bord.php';
+                    print getReportCAbyYear($pdo);
+                    break;
+                case 'reportintegration':
+                    print displayNavbar();
+                    require_once './src/report/tableau-bord.php';
+                    print getReportIntegration($pdo);
+                    break;
+                case 'doc':
+                    require_once './src/documentation/documentation.php';
+                    print displayNavbar();
+                    print getDocumentation();
+                    break;               
             default:
                 include './src/connexion.php';
                 break;
@@ -93,5 +122,6 @@
 
 ?>
         </div>
+
     </body>
 </html>

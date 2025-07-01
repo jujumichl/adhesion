@@ -14,7 +14,7 @@
     $validity = checkBrouillonValidity($pdo);
     
     if ($validity!="") {
-        print "Input lile validity :".$validity." </br>";
+        print "Input lile validity : </br>".$validity." </br>";
         throw new Exception("Le fichier proposé n'est pas valide pour une intégration, merci de corriger les erreurs");
     } else {
         print "Input lile validity : file verified and ok.</br>";
@@ -38,11 +38,11 @@ function checkBrouillonValidity($pdo){
     // $message.= "</br>";
 
     // *** Check same emails with differents names 
-    $sql = "SELECT  brou_email, COUNT(*) from
-        (SELECT brou_email,brou_nom,brou_prenom  FROM brouillon
+    $sql = "SELECT  brou_id,brou_email,brou_nom, COUNT(*) from
+        (SELECT brou_id,brou_email,brou_nom,brou_prenom  FROM brouillon
         GROUP by brou_email,brou_nom,brou_prenom
         ORDER BY brou_email) AS subq
-        GROUP BY brou_email
+        GROUP BY brou_id,brou_email,brou_nom
         having COUNT(*) >1";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -52,7 +52,7 @@ function checkBrouillonValidity($pdo){
             $message.= "************************ ";
             $message.= "Même email pour 2 personnes (nom, prenom) : " .count($data) ."</br>";
            foreach ($data as $line) {
-            $message.= $line['brou_email'] ."</br>";
+            $message.= $line['brou_email'] . " -  " . $line['brou_nom'] . $line['brou_id'] ."</br>";
            }
         }
 
@@ -83,7 +83,7 @@ function checkBrouillonValidity($pdo){
          foreach ($data as $line) {
             if (!filter_var($line['brou_email'], FILTER_VALIDATE_EMAIL)) {
                 $globalValidity=false;       
-                $messageEmail.= $line['brou_email'] . "Proposition :  ". $line['brou_nom']. "." . $line['brou_prenom']  ."@inconnu.fr</br>";
+                $messageEmail.= $line['brou_email'] . "Proposition :  ". filter_var($line['brou_nom']. "." . $line['brou_prenom']  ."@inconnu.fr</br>", FILTER_SANITIZE_EMAIL);
             }
         }
         

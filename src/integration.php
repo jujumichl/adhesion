@@ -1,3 +1,6 @@
+<?php 
+  throw new Exception ("Cette fonction n'est pas encore disponible");
+  ?>
 <div style="margin-top:100px">
     <div class="row">
     <div class="h5" style="color:#d07d29">intégration HelloAsso</div>
