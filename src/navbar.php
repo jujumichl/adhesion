@@ -54,7 +54,7 @@ function displayNavbar(){
       <li><a class="dropdown-item" href="index.php?uc=mooc">MOOC</a></li>
       <li><a class="dropdown-item" href="index.php?uc=log">Historique</a></li>
       <hr/>
-      <li><a class="dropdown-item" href="index.php?uc=doc">Historique</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=doc">Documentation</a></li>
       <hr/>
     </ul>
   </div>

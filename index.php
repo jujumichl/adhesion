@@ -110,7 +110,9 @@
                     print getDocumentation();
                     break;               
             default:
-                include './src/connexion.php';
+               //  include './src/connexion.php';
+               print displayNavbar();
+
                 break;
         }
 
