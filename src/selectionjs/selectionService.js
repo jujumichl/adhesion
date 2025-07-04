@@ -158,12 +158,18 @@ export function getPathFromserver() {
  */
 export function getAppPath() {
     let appName = '';
-    var path = location.pathname.split('/');
-    if (path[0] == "")
-        appName = path[1]
-    else
-        appName = path[0]
+    if (window.location.hostname == 'localhost') {
+        var path = location.pathname.split('/');
+        if (path[0] == "")
+            appName = path[1]
+        else
+            appName = path[0]
+        return window.location.protocol + "//" + window.location.hostname + '/' + appName;
 
-    return window.location.protocol + "//" + window.location.hostname + '/' + appName;
+    } else {
+        return window.location.protocol + "//" + window.location.hostname;
+    }
+
+
 
 }

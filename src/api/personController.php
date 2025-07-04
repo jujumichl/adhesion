@@ -1,5 +1,6 @@
 <?php
 /**************** MODEL ****************************** */
+// *** Theses functions gives the data management functions for the API
 /* 
  * Search personnes
  */

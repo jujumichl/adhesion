@@ -24,7 +24,7 @@
  *           )
  *       ) 
  */
-function parseAndStoreData($pdo){
+function parseAndStoreData($pdo,$modetest){
     (string)$message = "";
     $data = null;
     //$count=0;
@@ -51,16 +51,16 @@ function parseAndStoreData($pdo){
             $stmt->execute([
                 ':mail' => $res['brou_email']
             ]);
-           //  print "</br>*** line : " . $res['brou_email'] . " : ";
+           print "</br>*** line : " . $res['brou_email'] . " : ";
             $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             
-     // print "base.". json_encode($baseTab)." </br>";           
+            // print "base.". json_encode($baseTab)." </br>";           
             $datenaiss = stringToDate(
                 substr($data[0]['brou_date_naiss'], 0,-8),
                 substr($data[0]['brou_date_naiss'], 3, -5),
                 substr($data[0]['brou_date_naiss'], -4));
 
-            // *** Create the person and get back the ID of person this person
+            // *** Create the person and return the ID of person this person
             $per_id = createPers($data[0], $datenaiss, $pdo);
             
             // *** Check date and mreg validity
@@ -91,10 +91,10 @@ function parseAndStoreData($pdo){
             }
 
             // *** main computation
-            computeMultipleLines($data,$per_id, $dateAdh, $pdo);
+            computeMultipleLines($data,$per_id, $dateAdh, $pdo,$modetest);
             
           } catch (Exception $e){
-                 print $e->getMessage();
+                print $e->getMessage();
                 $sql = "insert into `integrationerrors` ( textError,lineData ) Values ( :message, :linedata)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
@@ -105,7 +105,6 @@ function parseAndStoreData($pdo){
             // }
         }
     }
-    //echo $count . "/" . $count1;
     return $message;
 }
 
@@ -134,7 +133,7 @@ function getLinesIndexFromKey($baseTab,$key,$per_id) {
  * for example : within a year, double lines are lines created the same day with the same payment mode 
  * The main loop 
  */
-function computeMultipleLines($tempLines,$per_id, $dateAdh, $pdo) {
+function computeMultipleLines($tempLines,$per_id, $dateAdh, $pdo,$modetest) {
 
     // *** Compute  the keys of each line 
     $temptab=[];
@@ -153,8 +152,8 @@ function computeMultipleLines($tempLines,$per_id, $dateAdh, $pdo) {
         print  " key = ". $key;
         print " value = ". $countValue."</br>";
         $lineToCompute=getLinesIndexFromKey($tempLines,$key, $per_id );
-        print "</br></br>Lines to compute : ". json_encode( $lineToCompute)."</br>";
-        addRegistrationLines($lineToCompute, $per_id, $pdo);
+       //  print "Lines to compute : ". json_encode( $lineToCompute)."</br>";
+        addRegistrationLines($lineToCompute, $per_id, $pdo,$modetest);
        }
 
 }
@@ -165,13 +164,12 @@ function computeMultipleLines($tempLines,$per_id, $dateAdh, $pdo) {
 function checkAllreadyExists($per_id,$act_id,$ans_id,$pdo) {
            // *** Get the lines of one person
   //  print" check allready exists per_id='".$per_id."' and act_id='".$act_id."' and ans_id='".$ans_id."'";
-           $sql = "select * from inscriptions where per_id='".$per_id."' and act_id='".$act_id."' and ans_id='".$ans_id."'";
+    $sql = "select * from inscriptions where per_id='".$per_id."' and act_id='".$act_id."' and ans_id='".$ans_id."'";
     $stmt = $pdo->prepare($sql);
-   $stmt->execute();
-  //  print "</br>*** line : " . $res['brou_email'] . " : ";
-   $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-   print "Data " .json_encode( $data );
-   if (count($data )>0)
+    $stmt->execute();
+    $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    // print "Data " .json_encode( $data );
+    if (count($data )>0)
         return true;
     else
         return false;
@@ -187,7 +185,7 @@ function checkAllreadyExists($per_id,$act_id,$ans_id,$pdo) {
  * @throws \Exception if we haven't got activity and subscription
  * @return void
  */
-function addRegistrationLines($data, $per_id, $pdo){
+function addRegistrationLines($data, $per_id, $pdo,$modetest){
     print "addRegistrationLines" .  "</br>"; // json_encode($data).
      $dateAdh = stringToDate(
          substr($data[0]['brou_date_adh'], 0,-8),
@@ -202,27 +200,20 @@ function addRegistrationLines($data, $per_id, $pdo){
  
      // *** Create payment
     
-     $reg_id = createPayment($total, $dateAdh,  $data[0]['mreg_code'], $per_id, $pdo);
-     print "Create Payment " .  $reg_id."</br>"; // json_encode($data). " - " .
-     // $reg_id = getamount(
-     //     $per_id,
-     //     $total,
-     //     $dateAdh,
-     //     $data[0]['mreg_code'],
-     //     $pdo);
+     $reg_id = createPayment($total, $dateAdh,  $data[0]['mreg_code'], $per_id, $pdo,$modetest);
+     // print "Create Payment " .  $reg_id."</br>"; // json_encode($data). " - " .
  
      foreach ($data as $line){
          // *** Create Activity
          if ($line['brou_code'] !== ''){
-             $id_act = createAct($line,$per_id, $reg_id, $dateAdh, $pdo);
+             $id_act = createAct($line,$per_id, $reg_id, $dateAdh, $pdo,$modetest);
              // print "Create activity : " . json_encode($line) . "</br>";
-             // $m   essage .= "Création d'une activitées...";
          }
  
          // *** Create subscription
          if ($line['brou_adh']>0 && !isset($adh_id)){
              $line['codeADH'] = 'AUT01';
-             $adh_id = createSubscription($line,$per_id, $reg_id, $dateAdh, $pdo);   
+             $adh_id = createSubscription($line,$per_id, $reg_id, $dateAdh, $pdo,$modetest);   
              // $message .="Création d'une adhésion pour " . $data[0]['brou_nom'] . " " . $data[0]["brou_prenom"] . " identifier " . $per_id;
          }
      }
@@ -238,6 +229,7 @@ function addRegistrationLines($data, $per_id, $pdo){
  * @return mixed 
  */
 function createPers($data,$date_naiss, $pdo){
+    print "Create person : " .$data['brou_email']. "</br>";
     //check if person isn't in db
     $sql = 'SELECT per_id FROM personnes WHERE per_email = :email';
     $stmt = $pdo->prepare($sql);
@@ -301,13 +293,14 @@ function createPers($data,$date_naiss, $pdo){
  */
 function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
     $act_id = getIDActivity($data['codeADH'], $pdo);
+    print "Create Subscription : " . $per_id . " - " . $reg_id . " - " . $data['codeADH']." - " . $data['brou_adh']. "</br>";
 
     // *** Check if the line allready exists in the database
     if (checkAllreadyExists($per_id,$act_id,$data['ans_id'],$pdo)==true) {
-        print "Allready exists in the database" . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>";
+        print "Subs allready exists in the database : " . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>";
         return;
     }
-    print "</br>Create subs: " .  $reg_id."</br>"; // json_encode($data) . " - " .
+    // print "</br>Create subs: " .  $reg_id."</br>"; // json_encode($data) . " - " .
 
     $sql = 'INSERT INTO `inscriptions`(
         per_id,
@@ -351,13 +344,14 @@ function createSubscription($data, $per_id, $reg_id, $dateAdh, $pdo){
  */
 function createAct($data, $per_id, $reg_id, $dateAdh, $pdo){
     $act_id = getIDActivity($data['brou_code'], $pdo);
+    print "Create activity : " . $per_id . " - " . $reg_id . " - " . $data['act_id']. " - " . $data['brou_act']. "</br>";
 
         // *** Check if the line allready exists in the database
     if (checkAllreadyExists($per_id,$act_id,$data['ans_id'],$pdo)==true) {
-        throw new Exception("Allready exists in the database" . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>");
+        throw new Exception(" Act allready exists in the database : " . $per_id ." - " .$act_id." - " .$data['ans_id']. "</br>");
         return;
     }
-    print "</br>Create Activity : " .  $reg_id."</br>"; // json_encode($data) . " - " .
+    // print "</br>Create Activity : " .  $reg_id."</br>"; // json_encode($data) . " - " .
     $sql = 'INSERT INTO `inscriptions`(
     per_id,
     act_id,
@@ -422,6 +416,7 @@ function getIDActivity($code, $pdo){
  * @return int return reg_id of amount
  */
 function createPayment($total, $dateAdh, $mreg, $per_id, $pdo){
+    print "Create payment : " . $per_id . " - " . $mreg . " - " .$total. "</br>";
     $sql = 'select mreg_id from modereglement where mreg_code = :mreg';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([ ':mreg' => $mreg]);
@@ -448,20 +443,12 @@ function createPayment($total, $dateAdh, $mreg, $per_id, $pdo){
         ]);
         $reg_id = $pdo->lastInsertId();
 
-        // $sql = 'UPDATE inscriptions
-        // SET reg_id = :reg_id
-        // WHERE per_id = :per_id';
-        // $stmt = $pdo->prepare($sql);
-        // $stmt->execute([
-        //     ':reg_id' => $reg_id,
-        //     ':per_id' => $per_id
-        // ]);
         return $reg_id;
     }
 }
 
 
-
+///*************** TRASH */
 // /**
 //  * get back reg_id and check if he is already inside our database or not, add it if not in
 //  * @param mixed $per_id id of one person

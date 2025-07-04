@@ -1,16 +1,43 @@
 <?php
 
 /**************** CONTROLLER ****************************** */
-/**
- * Controller for the Selection page
- */
 
+/**
+ * Load the csv file in the drfaft table 
+ */
+function loadfileInDraftTable($pdo) {
+
+    $csvPath = uploadCSV();
+    $filename = $_FILES["fileToUpload"]["name"];
+    $result = CSVToSQL($csvPath,  'brouillon', $pdo);
+
+    return " - Chargement effectué";
+
+}
+
+/**
+ * Chack the data validity in the draft table
+ */
+function checkDrafttable($pdo) {
+    $check = checkBrouillonValidity($pdo);
+    if (strlen($check) > 0) {
+        return $check;
+    } else {
+        return "Vérification Ok, pas d'erreur";
+    }
+}
+
+
+/**
+ * Launch the complete integration process
+ */
  function launchIntegration ($pdo) {
         
     $csvPath = uploadCSV();
     $filename = $_FILES["fileToUpload"]["name"];
     $result = CSVToSQL($csvPath,  'brouillon', $pdo);
 
+    print "</br> ** Check file validity : .</br>"; 
     $validity = checkBrouillonValidity($pdo);
     
     if ($validity!="") {
@@ -21,12 +48,16 @@
     }
     // *** Load data if validity ok
     $msgErr='';
-    $msgErr = parseAndStoreData($pdo);
+    $modetest= false;
+    $msgErr = parseAndStoreData($pdo,$modetest);
     if ($msgErr=='')
         print "Résultat de l'intégration : Pas d'erreur." ;
     else
         print "Résultat de l'intégration : " .$msgErr;
 }
+
+
+//*** FUNCTIONS */
 
 /**
  * @return : true if vallidity is OK
@@ -49,8 +80,8 @@ function checkBrouillonValidity($pdo){
         $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         if (count($data ) > 0) {
             $globalValidity=false;
-            $message.= "************************ ";
-            $message.= "Même email pour 2 personnes (nom, prenom) : " .count($data) ."</br>";
+           //  $message.= "************************ ";
+            $message.= "** Même email pour 2 personnes (nom, prenom) : " .count($data) ."</br>";
            foreach ($data as $line) {
             $message.= $line['brou_email'] . " -  " . $line['brou_nom'] . $line['brou_id'] ."</br>";
            }
@@ -66,37 +97,38 @@ function checkBrouillonValidity($pdo){
     $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     if (count($data ) > 0) {
         $globalValidity=false;
-        $message.= "</br>************************ ";
-        $message.= "Même activité, la même année pour un email  : " .count($data) ."</br>";
+        // $message.= "</br>**** ";
+        $message.= "** Dans la même année, un email est affecté à plusieurs nom/prénom  : " .count($data) ."</br>";
        foreach ($data as $line) {
             $message.= $line['brou_email'] ."</br>";
        }
     }
 
     // *** Check  emails validity
-    $sql = "SELECT brou_email, brou_nom,brou_prenom FROM brouillon";
+    $sql = "SELECT brou_id,brou_email, brou_nom,brou_prenom FROM brouillon";
      $stmt = $pdo->prepare($sql);
      $stmt->execute();
      $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-     $messageEmail="";
+     // $messageEmail="";
      if (count($data ) > 0) {
          foreach ($data as $line) {
+             // print "test email . " . $line['brou_email']."</br>";
             if (!filter_var($line['brou_email'], FILTER_VALIDATE_EMAIL)) {
+               //   print "Email invalide  " . $line['brou_email']. " - Ligne : ".$line['brou_id']. "</br>";
                 $globalValidity=false;       
-                $messageEmail.= $line['brou_email'] . "Proposition :  ". filter_var($line['brou_nom']. "." . $line['brou_prenom']  ."@inconnu.fr</br>", FILTER_SANITIZE_EMAIL);
+                $message.= "** Email invalide  ". $line['brou_email'] . " Ligne : ".$line['brou_id']. " - Proposition :  ". preg_replace('/[^a-zA-Z0-9_ -]/s', '',strtolower($line['brou_nom']). "." . strtolower($line['brou_prenom']) ) ."@inconnu.fr" . "</br>";
             }
         }
-        
-    if ($messageEmail!="") {
-        $message."</br>************************ ";
-        $message."Email invalides  : </br>". $messageEmail;
     }
+
+  // if ($messageEmail!="") {
+    //     $message.="</br>************************ ";
+    //     $message.="Email invalides  : </br>". $messageEmail;
+    // }
         // } else {
         //     // print "</br></br>************************";
         //     // print "Email valides  : " .count($data) ."</br>";
         // }
-    }
-
    //  if ($globalValidity==true)
    //     return "";
    // else
@@ -126,39 +158,40 @@ function checkBrouillonValidity($pdo){
 
                 // Check date
         if (is_null($line['act_libelle'])){
-            $message."***** Date d'adhésion invalide " . $line['brou_email'] . '<br>';
+            $message.="** Code d'activité invalide (libellé) :  " . $line['brou_email'] . " ligne : " . $line['brou_id'].  "<br>";
         }
-           
+        //check act code
+        if (is_null($line['act_ext_key'])) {
+            $message.="** Code d'activité invalide (Code):  " . $line['brou_email'] . " - ligne : " . $line['brou_id'].  "<br>";
+        }
+
+       
         // Check date
         if (strtotime($dateAdh) === false){
-         $message."***** Date d'adhésion invalide " . $line['brou_email'] . '<br>';
+         $message.="** Date d'adhésion invalide " . $line['brou_email'] . " - ligne : " . $line['brou_id'].  "<br>";
         }
 
         // check mreg 
         if (is_null($line['mreg_id'])){
-            $message."***** Mode de règlement invalide " . $line['brou_email'] . '<br>';
+            $message.="** Mode de règlement invalide " . $line['brou_email'] . " - ligne : " . $line['brou_id'].  "<br>";
         }
         if (is_null($line['mreg_Libelle'])){
-            $message."***** Mode de règlement inconnu " . $line['brou_email'] . '<br>';
+            $message.="** Mode de règlement inconnu " . $line['brou_email'] . " - ligne : " . $line['brou_id'].  "<br>";
         }
 
         if (is_null($line['brou_nom']) || empty($line['brou_nom']) || $line['brou_nom']==='') {
-            $message."***** Nom incorrect " . $line['brou_email'] . '<br>';
+            $message.="** Nom incorrect " . $line['brou_email'] . " - ligne : " . $line['brou_id'].  "<br>";
         }
         // if (isnull($line['mreg_prenom']) || empty($line['mreg_prenom']) || $line['mreg_prenom']==='') {
         //     $message."***** Nom incorrect " . $line['brou_email'] . '<br>';
         // }
 
-        //check act code
-        if (is_null($line['act_ext_key'])) {
-            $message."***** Code d'activité invalide " . $line['brou_email'] . '<br>';
-        }
-
-        if (is_null($line['ans_id'])){
-            $message."***** saison invalide " . $line['brou_email'] . '<br>';
+           if (is_null($line['ans_id'])){
+            $message.="** Saison invalide " . $line['brou_email'] . " - ligne : " . $line['brou_id'].  "<br>";
         }
     }
 
+    // print $message;
 
     // *** End checkBrouillonValidity
     return $message;
@@ -183,7 +216,7 @@ function uploadCSV() {
         return $target_file;
     }
     else {
-        throw new Exception("Veuillez vérifier le que vous avez bien exporter votre fichier au format CSV encoder en UTF-8.");
+        throw new Exception("Veuillez vérifier votre fichier au format CSV encodé en UTF-8.");
     }
 }
 
@@ -310,7 +343,7 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
 
         if ($nbLine==0) {
             $currentYear = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$annKey] ?? ''));
-            print "année en cours" . $currentYear;
+            print "année en cours : " . $currentYear ."</br>";
         }
         ++$nbLine;
 

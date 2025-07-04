@@ -15,7 +15,11 @@ function displayIntegrationCsvBar($resultat = "En attente de fichier...", $nomFi
                 </br>Donc la 1ère ligne du fichier CSV doit porter l\'année à intégrer :
                 Le début du fichier CSV ci-dessous, n\'intègrera que les lignes de l\'année 2024-2025 : 
                 Nbr,<b>Année</b>,Statut,Nom,Prénom, ... 1,<b>2024-2025</b>,RENOU,AUVIGNE,Florence, ...
-                </br>
+                </br></br>
+                <ul>
+                    <li>Le bouton \'lancer l\'intégration\' effectue toutes les opérations d\'intégration</li>
+                    <li>Les boutons suivants permettent d\'activer chacunes des opérations de l\'intégration (Chargement du fichier CSV, vérification du fichier CSV, intégration )               
+                </ul>
             </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -24,19 +28,23 @@ function displayIntegrationCsvBar($resultat = "En attente de fichier...", $nomFi
             </hr>
                 <form action="index.php?uc=upload" method="post" enctype="multipart/form-data">
                     <div class="input-group w-100 float-end">
-                        <input
+                        <input                            
                             type="file"
                             id="fileToUpload"
                             name="fileToUpload"
                             class="form-control"
                             placeholder="Choisir un fichier .csv"
                         />
-                        <button type="submit" class="btn btn-outline-secondary" style ="margin-left:5px">Lancer l\'intégration</button>                               
+                        <input type="submit" class="btn btn-outline-secondary" name="btSubmit" value="Lancer l\'intégration">
                     </div>
+                    <div class="input-group w-100 float-end" style="margin-top:20px">
+                        <input type="submit" class="btn btn-outline-secondary" style="margin-left:20px" name="btSubmit" value="Charger le fichier">
+                        <input type="submit" class="btn btn-outline-secondary"  name="btSubmit" value="Tester le fichier">
+                        <input type="submit" class="btn btn-outline-secondary" name="btSubmit" value="Intégrer">                                
+                    </div></div>                   
                 </form>
             </div>
         </div>
-    
         
     <div class="h6" style="color:#d07d29; margin-top:20px">Résultat de l\'intégration</div>
         <hr/>

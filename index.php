@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gestion CC Rennes</title>
+  <title>CCRennes - DYB</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,38 +20,30 @@
     ini_set( 'display_errors', 1 ); // a enlever en prod
     try {
         require_once './outils/utils.php';
-
- 
         require_once './src/navbar.php';
-
-       //  require_once './src/integrationCSV/integrationCSV.php';
-
-        // require_once './src/selection/brevo/brevo-modal.php';
-
         require_once './src/creation/creationMVC.php';
 
        include './config.php';
        $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
 
-    //    if ($pdo ==null)
-    //      throw new Exception("pdo not intitialised");
-
         $uc = lireDonneeUrl('uc');
         switch ($uc) {
+
+            // *** Search
             case 'selec':
                 require_once './src/selection/selectionMVC.php';
- 
                 print displayNavbar();
                 print displaySelectionHeader($pdo);
                 print selectionController($pdo);
                 break;
+
+            // *** Person lists management
             case 'selecjs':
                 header('Location: src/selectionjs/selectionjs.html');
                 break;
-    
+            // ***    
             case 'crea':
                 print displayNavbar();
-               //  displaySelectionHeader();
                 print creationController($pdo);
                 break;
             case 'integ':
@@ -70,14 +62,14 @@
                 print displayNavbar();
                 include './src/mooc.php';
                 break;
+
+            // *** CSv file integration 
             case 'CSV':
                 require_once './src/integrationCSV/integrationTraitementCSV.php';
                 require_once './src/integrationCSV/integrationControllerCSV.php';
                 require_once './src/integrationCSV/integrationUploadCSV.php';
                 print displayNavbar();
                 // throw new Exception ("Dans une première version, cette fonction n'est disponible que pour les administrateurs");
-
-                print displayNavbar();
                print displayIntegrationCsvBar();
                 break;
             case 'upload':
@@ -86,9 +78,20 @@
                 require_once './src/integrationCSV/integrationUploadCSV.php';
                 print displayNavbar();
                 print displayIntegrationCsvBar();
-                print launchIntegration ($pdo);
-                break;    
-                
+                $subAction= $_POST['btSubmit'];
+                if ($subAction=='Tester le fichier') {
+                    print "Rapport d'erreur : </br>" . checkDrafttable($pdo);
+                } elseif ($subAction=='Lancer l\'intégration') {
+                    print "Lance l'intégration  </br>";
+                    print launchIntegration ($pdo);
+                } elseif ($subAction=='Charger le fichier') {
+                    print loadfileInDraftTable($pdo);
+                } else {
+                    print "Action non reconnue";
+                }                                              
+                break;
+                    
+            // *** Reporting
             case 'report':
                 print displayNavbar();
                  require_once './src/report/tableau-bord.php';
@@ -112,7 +115,6 @@
             default:
                //  include './src/connexion.php';
                print displayNavbar();
-
                 break;
         }
 

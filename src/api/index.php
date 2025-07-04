@@ -1,5 +1,5 @@
 <?php
-// require "../bootstrap.php";
+// *** Main entry for the API
 use Src\Controller\PersonController;
 
 header("Access-Control-Allow-Origin: *");
@@ -14,69 +14,56 @@ $body="Request not found";
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode( '/', $uri );
 
-if (count($uri)<6) {
+$apiIndex = array_search("api",$uri);
+if (count($uri)<($apiIndex+2)) {
     header("HTTP/1.1 404 Not Found");
-    echo "Url incorrecte";
-exit();
+    echo "Incorrect url";
+    exit();
 }
 
-// print json_encode($_SESSION);
-
+// *** Get the main request (the verb)
+$domain=$uri [$apiIndex+2];
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
+/** Open database */
  require_once '../../outils/utils.php';
  require_once '../../config.php';
  $pdo = init_pdo($dbHost, $db, $dbUser, $dbMdp);
 
-if (isset($uri[5])) {
-    $domain=$uri[5];
-} else {
-    header("HTTP/1.1 404 Not Found");
-    echo "Url incorrecte";
-}
-
-// $userId=1;
-
- // print json_encode($uri)."\n";
 switch ($domain) {
     case 'person':
         require_once('./personController.php');
-        if (isset($uri[6])) {
-        require_once('../creation/creationMVC.php');
-        $body=getPerson($pdo,$uri[6]);
+        if (isset($uri[5])) {
+            require_once('../creation/creationMVC.php');
+            $body=getPerson($pdo,$uri[5]);
         }
         break;
 
     case 'searchperson' : 
         require_once('./personController.php');
-        $body=getSearchWS($pdo,$uri[6]);
+        $body=getSearchWS($pdo,$uri[5]);
         break;
 
     case 'searchpersonbyactivity' : 
         require_once('./personController.php');
-        $body=getInscriptionPersonListToActivityWS($pdo,$uri[6]);
+        $body=getInscriptionPersonListToActivityWS($pdo,$uri[5]);
         break;
     
     case 'activities':
         require_once('./personController.php');
         $body=getActivitesWS($pdo);
-            // require_once('./PersonController.php');
+        require_once('../creation/creationMVC.php');
+        break;   
+    default:
+        header("HTTP/1.1 404 Not Found");
+        echo "Incorrect url, unknowned verb : " . $domain;
+        exit();
+}
 
-    require_once('../creation/creationMVC.php');
-        // $body=json_encode($_SESSION['PersonList']);
-    break;    }
-
-// the user id is, of course, optional and must be a number:
-// $userId = null;
-// if (isset($uri[2])) {
-//     $userId = (int) $uri[2];
-// }
-
-// // pass the request method and user ID to the PersonController and process the HTTP request:
+// *** Send the response
 $response['body'] = json_encode($body );
 
 $response['status_code_header'] = 'HTTP/1.1 200 OK';
 header($response['status_code_header']);
-//if ($response['body']) {
-   echo $response['body'];
-//}
+echo $response['body'];
+

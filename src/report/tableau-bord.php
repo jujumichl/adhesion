@@ -2,18 +2,6 @@
   <div class="row">
         <div class="h5" style="color:#d07d29">Tableaux de bord</div>
         <hr/>
-        <!-- <div class="col-6">
-            <div class="input-group w-100 float-end"
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Recherche"
-                />
-                <span class="input-group-text" id="basic-addon2">
-                    <img src="./images/search.svg" alt="Search">
-                </span>
-            </div>
-        </div> -->
         <div class="col-6">
             <div class="dropdown">
                 <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,7 +11,6 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li><a class="dropdown-item" href="index.php?uc=reportactivite">Participants et montants par activité pour l'année 2024-2025</a></li>
                     <li><a class="dropdown-item" href="index.php?uc=reportintegration">Rapport d'intégration</a></li>
-               
                 </ul>
             </div>
         </div>
@@ -36,8 +23,9 @@
     <?php
     
 
-
-
+/**
+ * Tableau de bord de l'intégration des fichiers YB
+ */
 function getReportIntegration($pdo){
     $output="";
     // *** Get current year
@@ -51,7 +39,6 @@ function getReportIntegration($pdo){
         throw new Exception ("the brouillon table is empty");    
 
     $currentYear=$data[0]['ans_id'];
-
 
     $sql = "SELECT activites.act_ext_key, activites.act_libelle,sum(ins_montant) AS  act_montant,brou_act AS broui_montant , sum(ins_montant)-brou_act AS delta,
      COUNT(*) AS act_nb, nbbroui as broui_nb , brou_adh FROM inscriptions
@@ -108,27 +95,19 @@ function getReportIntegration($pdo){
                 $broui_nb=0;
                 $brou_adh=0;
 
-                // $delta+=$checkline['delta'];
-                // $act_nb+=$checkline['act_nb'];
-                // $broui_nb+=$checkline['broui_nb'];
-                // $brou_adh+=$checkline['brou_adh'];
-
                 foreach($dataCheck as $checkline) {
                     $output.=' <tr>';
                     $output.='<td>'.$checkline['act_ext_key'].'</td>';
                     $output.='<td>'.$checkline['act_libelle'].'</td>';
                     $output.='<td>'.($checkline['act_montant']>0 ? $checkline['act_montant'].'€' : '').'</td>';
                     $output.='<td>'.($checkline['broui_montant']>0 ? $checkline['broui_montant'].'€' : '').'€</td>';
-                    //$output.='<td>'.$checkline['act_montant']-$checkline['broui_montant'].'</td>';
                     $output.='<td>'.$checkline['act_nb'].'</td>';
                     $output.='<td>'.$checkline['broui_nb'].'</td>';                    
-                    // $output.='<td>'.(int)$checkline['act_nb']-(int)$checkline['broui_nb'].'</td>';
                     $output.='<td>'.$checkline['brou_adh'].'€</td>';
                     $output.=' </tr>';
 
                     $act_montant+=$checkline['act_montant'];
                     $broui_montant+=$checkline['broui_montant'];
-                    // $delta+=$checkline['act_montant']-$checkline['broui_montant'];
                     $act_nb+=$checkline['act_nb'];
                     $broui_nb+=$checkline['broui_nb'];
                     $brou_adh+=$checkline['brou_adh'];
@@ -142,7 +121,6 @@ function getReportIntegration($pdo){
                     
                     $output.='<td><b>'. $act_nb.'</b></td>';
                     $output.='<td><b>'.$broui_nb.'</b></td>';
-                   // $output.='<td><b>'.$act_nb-$broui_nb.'</b></td>';
                     $output.='<td><b>'.$brou_adh.'€</b></td>';
                     $output.=' </tr>';
   
@@ -154,7 +132,7 @@ function getReportIntegration($pdo){
 }
 
 /**
- * 
+ * Report of the current year
  */
 function getReportCAbyYear($pdo){
     $output="";
@@ -166,7 +144,7 @@ function getReportCAbyYear($pdo){
   
     $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     if (!count($data )>0)
-        throw new Exception ("the brouillon table is empty");    
+        throw new Exception ("the draft table is empty");    
 
     $currentYear=$data[0]['ans_id'];
 
@@ -213,22 +191,18 @@ function getReportCAbyYear($pdo){
                     $output.='<td>'.$checkline['act_ext_key'].'</td>';
                     $output.='<td>'.$checkline['act_libelle'].'</td>';
                     $output.='<td >'.($checkline['act_montant']>0 ? number_format($checkline['act_montant'],0).'€' : '').'</td>';
-                    //$output.='<td>'.$checkline['act_montant']-$checkline['broui_montant'].'</td>';
-                    $output.='<td >'.$checkline['act_nb'].'</td>';
+                     $output.='<td >'.$checkline['act_nb'].'</td>';
                      $output.=' </tr>';
-
                      $act_montant+= $checkline['act_montant'];
-                     $act_nb+=$checkline['act_nb'];
-     
+                     $act_nb+=$checkline['act_nb'];    
                 }
 
-                   $output.=' <tr>';
-                    $output.='<td></td>';
-                    $output.='<td><b>Total</b></td>';
-                    $output.='<td><b>'.number_format($act_montant, 0).'€</b></td>';             
-                    $output.='<td><b>'. number_format($act_nb, 0).'</b></td>';
-                    $output.=' </tr>';
-  
+                $output.=' <tr>';
+                $output.='<td></td>';
+                $output.='<td><b>Total</b></td>';
+                $output.='<td><b>'.number_format($act_montant, 0).'€</b></td>';             
+                $output.='<td><b>'. number_format($act_nb, 0).'</b></td>';
+                $output.=' </tr>';
                 $output.='</tbody>
             </table>
         </div>

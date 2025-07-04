@@ -27,16 +27,12 @@ function selectionController ($pdo) {
                     $output .= displayPersonList($personsList);
                 }
             }
-        }
-        
-        // $output .= displayPersonList($personsList);
+        }      
           
     }
- 
+    // *** JS script for functions
     $output.='<script type="text/javascript" src="./src/selection/brevoViewController/exportPersonListtoBrevoMVC.js"></script>';
     $output.='<script type="text/javascript" src="./src/selection/exportViewController/exportPersonListViewController.js"></script>';
-  
-
     
     return $output;
 
@@ -55,42 +51,38 @@ function displaySelectionHeader($pdo) {
         $searchString = $_GET['searchString'];
     
     $output='
-        <div style="margin-top:20px">
-   <!-- Recherche -->
-    
+    <div style="margin-top:20px">
+            <!-- Recherche -->   
         <form  method="get"  href="index.php">   
             <input type="hidden"  value="selec" name="uc" >
             <input type="hidden"  value="getpersonnes" name="action" >
             <div class="h5" style="color:#d07d29">Recherche</div>
             <hr/>
-<div class="row">
-            <div class="col-4">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="" id="searchString" name="searchString" aria-label="" aria-describedby="" value="'.$searchString.'">
-                   <button type="submit" value="Submit"  class="btn btn-outline-secondary" id="button-addon1">Chercher</button>
-                   </div>            
-            </div>
-           <div class="col-4" style="margin-right:30px">
-               <div class="dropdown" >
-                    <a class="btn btn-outline-secondary dropdown-toggle"  href="#" role="button" id="activiteList" data-bs-toggle="dropdown" aria-expanded="false">
-                        Recherches définies
-                    </a>
+            <div class="row">
+                <div class="col-4">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="" id="searchString" name="searchString" aria-label="" aria-describedby="" value="'.$searchString.'">
+                    <button type="submit" value="Submit"  class="btn btn-outline-secondary" id="button-addon1">Chercher</button>
+                    </div>            
+                </div>
+                <div class="col-4" style="margin-right:30px">
+                    <div class="dropdown" >
+                        <a class="btn btn-outline-secondary dropdown-toggle"  href="#" role="button" id="activiteList" data-bs-toggle="dropdown" aria-expanded="false">
+                            Recherches définies
+                        </a>
 
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    ';
-                    foreach ($activitesList as $activite) {
-                        $output.='
-                        <li style=""><a class="dropdown-item" href="index.php?uc=selec&action=getActList&act_id='. $activite['act_id'].' ">'.$activite['act_libelle'].'</a></li>
-                        ';
-                    }
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+                        foreach ($activitesList as $activite) {
+                            $output.='
+                            <li style=""><a class="dropdown-item" href="index.php?uc=selec&action=getActList&act_id='. $activite['act_id'].' ">'.$activite['act_libelle'].'</a></li>
+                            ';
+                        }
                         $output.='</ul>
-                </div>               
+                    </div>               
+                </div>
             </div>
-
-          
+        </form>
     </div>
-    </form>
-</div>
     ';
     $output.= ' <div id="modalRecordPack"></div>';
 
@@ -177,15 +169,9 @@ function displayPersonList($personList) {
                     <th scope="col">Activités</th>            
                     </tr>
                 </thead>
-                <tbody>';
-                // if(isset($_COOKIE['user_id'])){
-                //     echo 'Votre ID de session est le ' .$_COOKIE['user_id'];
-                // } else  
-                //     echo " Pas de cookie user_id";
-            
+                <tbody>';            
             
                 foreach($personList as $person) {
-                    // print json_encode($person);
                     $output.="<tr>
                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">".  $person['per_nom']." ". $person['per_prenom']. "</a></td>
                      <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['per_email']."</a></td>
@@ -209,7 +195,7 @@ function displayPersonList($personList) {
 
 /**************** MODEL ****************************** */
 /* 
- * Search personnes
+ * Search personnes by firstname, lastname, email 
  */
 function getSearch($searchString, $pdo) {
  
@@ -231,50 +217,44 @@ LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_li
  order by per_nom');
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    // print " Résultats " . json_encode($result) ."</br>";
-   // $_SESSION['personList']= json_encode($result) ;
-   //  setcookie('personListCook', '1234' ); 
-    // setcookie('user_id', '1234');
     return $result;
 }
 
-
+/**
+ * Get the list of persons for an activity
+ */
 function getInscriptionPersonListToActivity($act_id, $pdo) {
  
     $stmt = $pdo->prepare('select personnes.per_id, per_nom, per_prenom, per_email, per_tel, subscrCOncat, inscrptCOncat from personnes      
-LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS inscrptCOncat from inscriptions 
-       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
-       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
-       WHERE typeactivite.tyac_famille=1
-       GROUP BY per_id) AS inscrp ON inscrp.per_id= personnes.per_id
-       
-LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS subscrCOncat from inscriptions 
-       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
-       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
-       WHERE typeactivite.tyac_famille=2
-       GROUP BY per_id) AS subscr ON subscr.per_id= personnes.per_id
-left join inscriptions on inscriptions.per_id=personnes.per_id
+        LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS inscrptCOncat from inscriptions 
+            LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+            LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+            WHERE typeactivite.tyac_famille=1
+            GROUP BY per_id) AS inscrp ON inscrp.per_id= personnes.per_id
+            
+        LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS subscrCOncat from inscriptions 
+            LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+            LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+            WHERE typeactivite.tyac_famille=2
+            GROUP BY per_id) AS subscr ON subscr.per_id= personnes.per_id
+        left join inscriptions on inscriptions.per_id=personnes.per_id
 
-WHERE inscriptions.act_id='.$act_id.'
-order by per_nom'); //
+        WHERE inscriptions.act_id='.$act_id.'
+        order by per_nom'); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    // print " Résultats " . json_encode($result) ."</br>";
-    // $_SESSION['personList']= json_encode($result) ;
-   // setcookie('personList', json_encode($result));
     return $result;
 }
 
 
 /* 
- * Search personnes
+ * Get the list of all activities
  */
 function getActivites( $pdo) {
  
     $stmt = $pdo->prepare("select * from activites order by act_libelle"); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    // print " Résultats " . json_encode($result) ."</br>";
 
     return $result;
 }

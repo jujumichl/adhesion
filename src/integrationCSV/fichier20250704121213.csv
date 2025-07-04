@@ -1,0 +1,48 @@
+﻿act_ext_key,act_libelle,Montant,Soutien,Reste ,Ateliers,Domaines,Sections-1,NUM
+D01,Danse bretonne le mardi,40.00,0.00,40.00,Danses,Danses,ESKEMM,1
+D02,Danse bretonne débutants - mercredi,40.00,0.00,40.00,Danses,Danses,ESKEMM,2
+D03,Danse bretonne tous niveaux - jeudi matin,0.00,0.00,0.00,Danses,Danses,PER ROY,3
+D04,Danse bretonne débutants - jeudi ,40.00,0.00,40.00,Danses,Danses,PER ROY,4
+D05,Danse bretonne non-débutants - mercredi,40.00,0.00,40.00,Danses,Danses,ESKEMM,5
+D06,Danse bretonne non-débutants - jeudi,40.00,0.00,40.00,Danses,Danses,PER ROY,6
+D07,Danse écossaise / Folk,40.00,0.00,40.00,Danses,Danses,ESKEMM,7
+D08,Danse irlandaise,60.00,0.00,60.00,Danses,Danses,ESKEMM,8
+D09,Multi-activités enfant,100.00,0.00,100.00,Danses,Danses,ESKEMM,9
+D10,Sensibilisation à l'animation,0.00,0.00,0.00,Danses,Danses,ESKEMM,10
+M01,Accordéon diatonique,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,11
+M02,Biniou kozh/ Veuze,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,12
+M03,Bohdran,130.00,0.00,130.00,Pratiques musicales,Musiques,ESKEMM,13
+M04,Bombarde,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,14
+M05,Clarinette,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,15
+M06,Cornemuse,0.00,0.00,0.00,Pratiques musicales,Musiques,ESKEMM,16
+M06a,Flûte - Tin Whistle,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,17
+M06b,Flûte - Low Whistle,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,18
+M07,Flûte traversière,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,19
+M08,Guitare,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,20
+M09,Harpe celtique,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,21
+M10,Saxophone,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,22
+M11,Violon,335.00,0.00,335.00,Pratiques musicales,Musiques,ESKEMM,23
+M12,Musique bretonne en ensemble - Ado,0.00,0.00,0.00,Pratiques d'ensemble,Musiques,ESKEMM,24
+M13,Musique bretonne en ensemble ,335.00,100.00,235.00,Pratiques d'ensemble,Musiques,ESKEMM,25
+M14,Musique bretonne en acoustique,335.00,100.00,235.00,Pratiques d'ensemble,Musiques,ESKEMM,26
+M15,Musique irlandaise en ensemble,335.00,100.00,235.00,Pratiques d'ensemble,Musiques,ESKEMM,27
+M16,Sonneurs de couple biniou - bombarde,335.00,0.00,335.00,Pratiques d'ensemble,Musiques,ESKEMM,28
+M17,Sonneurs de couple cornemuse - bombarde,0.00,0.00,0.00,Pratiques d'ensemble,Musiques,ESKEMM,29
+M18,Musique écossaise,140.00,0.00,140.00,Pratiques musicales,Musiques,ESKEMM,30
+C01,Chant traditionnel en breton,130.00,0.00,130.00,Chants,Chants,ESKEMM,31
+C02,Chant traditionnel Haute-Bretagne,130.00,0.00,130.00,Chants,Chants,ESKEMM,32
+C03,Chorale en breton,130.00,40.00,90.00,Chants,Chants,ESKEMM,33
+C04,Chant marin,40.00,0.00,40.00,Chants,Chants,PER ROY,34
+L01,Cours de langue bretonne,150.00,0.00,150.00,Langues,Langues,ESKEMM,35
+L02,Cours de langue gallèse,150.00,70.00,80.00,Langues,Langues,ESKEMM,36
+L03,Stages de Gallo avec Nânon,150.00,70.00,80.00,Langues,Langues,ESKEMM,37
+AS01,Astour - Danse (Adhésion Astour),40.00,40.00,0.00,Astour,Art populaire,ESKEMM,38
+AS02,Astour - Musique,40.00,40.00,0.00,Astour,Art populaire,ESKEMM,39
+AS03,Astour- Soutien logistique,40.00,40.00,0.00,Astour,Art populaire,ESKEMM,40
+A01,Broderie,40.00,0.00,40.00,Art traditionnel,Art traditionnel,ESKEMM,41
+A02,Sensibilisation aux contes,190.00,0.00,190.00,Art traditionnel,Art traditionnel,ESKEMM,42
+A03,Activité culinaire de Bretagne et d'ailleurs,0.00,0.00,0.00,Art traditionnel,Art traditionnel,PER ROY,43
+A04,Répétitions ,0.00,0.00,0.00,Répétitions,Répétitions,ESKEMM,44
+A05,Autres ,0.00,0.00,0.00,Autres,Autres,ESKEMM,45
+A06,Théâtre,0.00,0.00,0.00,Art traditionnel,Art traditionnel,PER ROY,46
+-,-,0.00,0.00,0.00,-,-,-,-
