@@ -31,21 +31,26 @@
 
             // *** Search
             case 'selec':
-                require_once './src/selection/selectionMVC.php';
-                print displayNavbar();
-                print displaySelectionHeader($pdo);
-                print selectionController($pdo);
+                // require_once './src/selection/selectionMVC.php';
+                // print displayNavbar();
+                // print displaySelectionHeader($pdo);
+                // print selectionController($pdo);
+                // break;
+                header('Location: src/search/search.html');
                 break;
-
+ 
+            case 'selecv2':
+                header('Location: src/search/search.html');
+                break;
             // *** Person lists management
             case 'selecjs':
                 header('Location: src/selectionjs/selectionjs.html');
                 break;
             // ***    
-            case 'crea':
-                print displayNavbar();
-                print creationController($pdo);
-                break;
+            // case 'crea':
+            //     print displayNavbar();
+            //     print creationController($pdo);
+            //     break;
             case 'integ':
                 print displayNavbar();
                 include './src/integration.php';
@@ -56,7 +61,7 @@
                 break;
             case 'TB':
                 print displayNavbar();
-                include './src/tableau-bord.php';
+                include './src/report/tableau-bord.php';
                 break;
             case 'mooc':
                 print displayNavbar();
@@ -114,7 +119,9 @@
                     break;               
             default:
                //  include './src/connexion.php';
-               print displayNavbar();
+                // require_once './src/selection/selectionMVC.php';
+                print displayNavbar();
+                header('Location: src/search/search.html');
                 break;
         }
 

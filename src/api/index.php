@@ -33,20 +33,41 @@ $requestMethod = $_SERVER["REQUEST_METHOD"];
 switch ($domain) {
     case 'person':
         require_once('./personController.php');
-        if (isset($uri[5])) {
+        if (isset($uri[$apiIndex+3])) {
             require_once('../creation/creationMVC.php');
-            $body=getPerson($pdo,$uri[5]);
+            $body=getPersonApi($uri[$apiIndex+3], $pdo);
         }
         break;
-
+    case 'personSubscriptions':
+        require_once('./personController.php');
+        if (isset($uri[5])) {
+            require_once('../creation/creationMVC.php');
+            $body=getPersonSubscriptionsApi($uri[$apiIndex+3], $pdo);
+        }
+        break;
+    case 'personInscriptions':
+        require_once('./personController.php');
+        if (isset($uri[5])) {
+            require_once('../creation/creationMVC.php');
+            $body=getPersonInscriptionsApi($uri[$apiIndex+3], $pdo);
+        }
+        break;
+    case 'personpayments':
+        require_once('./personController.php');
+        if (isset($uri[5])) {
+            require_once('../creation/creationMVC.php');
+            $body=getPersonPaymentsApi($uri[$apiIndex+3], $pdo);
+        }
+        break;
+    
     case 'searchperson' : 
         require_once('./personController.php');
-        $body=getSearchWS($pdo,$uri[5]);
+        $body=getSearchWS($pdo,$uri[$apiIndex+3]);
         break;
 
     case 'searchpersonbyactivity' : 
         require_once('./personController.php');
-        $body=getInscriptionPersonListToActivityWS($pdo,$uri[5]);
+        $body=getInscriptionPersonListToActivityWS($pdo,$uri[$apiIndex+3]);
         break;
     
     case 'activities':
@@ -54,6 +75,7 @@ switch ($domain) {
         $body=getActivitesWS($pdo);
         require_once('../creation/creationMVC.php');
         break;   
+        
     default:
         header("HTTP/1.1 404 Not Found");
         echo "Incorrect url, unknowned verb : " . $domain;

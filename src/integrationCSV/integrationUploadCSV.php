@@ -297,14 +297,14 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         throw new Exception("Colonne courriel introuvable");
     }
     //Drop and create table brouillon
-    $sql = "DROP TABLE IF EXISTS `brouillon`;";
+    $sql = "DROP TABLE `brouillon`;";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $sql = "CREATE TABLE IF NOT EXISTS `brouillon`(
         `brou_id` int NOT NULL AUTO_INCREMENT,
         `brou_nom` varchar(255),
         `brou_prenom` varchar(255),
-        `brou_portable` char(10),
+        `brou_portable` char(20),
         `brou_email` varchar(255),
         `brou_commune` varchar(255),
         `brou_adh` float,
@@ -316,7 +316,7 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         `brou_date_adh` char(10),
         `brou_date_naiss`char(10),
         `brou_titre` varchar(255),
-        `brou_telephone` char(10), 
+        `brou_telephone` char(20), 
          UNIQUE KEY `brou_id` (`brou_id`)
     );";
     $stmt = $pdo->prepare($sql);
@@ -349,7 +349,8 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
 
         $nom = trim(preg_replace( '/^\xEF\xBB\xBF/', '', $data[$nomKey] ?? ''));
         $prenom = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$prenomKey] ?? ''));
-        $port = formatPhoneNumber($data[$portKey]);
+        // $port = formatPhoneNumber($data[$portKey]);
+        $port=trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$portKey] ?? ''));
         $email = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$emailKey] ?? ''));
         $commune = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$commKey] ?? ''));
         $adh = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$adhKey] ?? ''));
@@ -361,7 +362,8 @@ function CSVToSQL($cheminFichierCSV, $nomTable, $pdo){
         $Dadh = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$DadhKey] ?? ''));
         $naiss = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$naissKey] ?? ''));
         $titre = trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$titreKey] ?? ''));
-        $tel = formatPhoneNumber($data[$telKey]);
+// $tel = formatPhoneNumber($data[$telKey]);
+        $tel =trim(preg_replace('/^\xEF\xBB\xBF/', '', $data[$telKey] ?? ''));
         
         if ($annee== $currentYear) {
             if ($nom !== ''){

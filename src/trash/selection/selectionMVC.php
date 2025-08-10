@@ -174,12 +174,13 @@ function displayPersonList($personList) {
                 foreach($personList as $person) {
                     $output.="<tr>
                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">".  $person['per_nom']." ". $person['per_prenom']. "</a></td>
-                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['per_email']."</a></td>
-                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['per_tel']."</a></td> 
+                   <td><a href=\"src/person/person.html?per_id=". $person['per_id']."\">". $person['per_email']."</a></td> 
+                      <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['per_tel']."</a></td> 
                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['subscrCOncat']."</a></td> 
                      <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['inscrptCOncat']."</a></td>                        
                     </tr>";                
                 }
+//                     <td><a href=\"index.php?uc=crea&action=getpersonne&per_id=". $person['per_id']."\">". $person['per_email']."</a></td>
 
     $output.='</tbody>
             </table>

@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `brouillon`(
   `brou_id` int,
   `brou_nom` varchar(255),
   `brou_prenom` varchar(255),
-  `brou_portable` char(10),
+  `brou_portable` char(50),
   `brou_email` varchar(255),
   `brou_commune` varchar(255),
   `brou_adh` float,
@@ -103,5 +103,5 @@ CREATE TABLE IF NOT EXISTS `brouillon`(
   `brou_date_adh` char(10),
   `brou_date_naiss`char(10),
   `brou_titre` varchar(255),
-  `brou_telephone` char(15)
+  `brou_telephone` char(50)
 );
