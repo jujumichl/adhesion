@@ -37,7 +37,7 @@ export async function displayPersonContent(htlmPartId, per_id) {
       <div class="row" style="margin-top:100px">
         <div class="col-12">
           <div class="d-flex justify-content-between" style="backgournd-color:">
-              <div class="h5" style="color:#d07d29">Personne
+              <div class="h5" style="color:#d07d29">Personne JS
               </div>
 
            <!--   <div class="d-flex justify-content-end" >
@@ -304,7 +304,6 @@ function displayPersonSubscriptions(person) {
     </tr > `;
     }
   } else {
-    [subs]
     output += '<tr><td>Pas d\'adhésion pour cette personne</td></tr>';
   }
   output += `

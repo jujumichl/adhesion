@@ -1,0 +1,942 @@
+[
+    {
+        "id": 2,
+        "username": "admin",
+        "firstname": "Dominique",
+        "lastname": "Bouloré",
+        "fullname": "Dominique Bouloré",
+        "email": "d.boulore@orange.fr",
+        "department": "",
+        "firstaccess": 1721394930,
+        "lastaccess": 1755510647,
+        "lastcourseaccess": 1755510283,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 3,
+                "name": "",
+                "shortname": "editingteacher",
+                "sortorder": 0
+            }
+        ],
+        "preferences": [
+            {
+                "name": "auth_manual_passwordupdatetime",
+                "value": "1725956944"
+            },
+            {
+                "name": "core_message_migrate_data",
+                "value": "1"
+            },
+            {
+                "name": "core_user_welcome",
+                "value": "1721396362"
+            },
+            {
+                "name": "coursesectionspreferences_10",
+                "value": "{\"indexcollapsed\":{\"1\":49}}"
+            },
+            {
+                "name": "coursesectionspreferences_2",
+                "value": "{\"indexcollapsed\":[]}"
+            },
+            {
+                "name": "coursesectionspreferences_3",
+                "value": "{\"indexcollapsed\":[8],\"contentcollapsed\":[8]}"
+            },
+            {
+                "name": "coursesectionspreferences_4",
+                "value": "{\"contentcollapsed\":[]}"
+            },
+            {
+                "name": "coursesectionspreferences_5",
+                "value": "{\"contentcollapsed\":[]}"
+            },
+            {
+                "name": "coursesectionspreferences_6",
+                "value": "{\"indexcollapsed\":[23]}"
+            },
+            {
+                "name": "coursesectionspreferences_7",
+                "value": "{\"indexcollapsed\":[]}"
+            },
+            {
+                "name": "coursesectionspreferences_8",
+                "value": "{\"indexcollapsed\":[36,37]}"
+            },
+            {
+                "name": "drawer-open-block",
+                "value": "0"
+            },
+            {
+                "name": "drawer-open-index",
+                "value": "1"
+            },
+            {
+                "name": "email_bounce_count",
+                "value": "1"
+            },
+            {
+                "name": "email_send_count",
+                "value": "115"
+            },
+            {
+                "name": "filemanager_recentviewmode",
+                "value": "3"
+            },
+            {
+                "name": "filepicker_recentlicense",
+                "value": "unknown"
+            },
+            {
+                "name": "filepicker_recentrepository",
+                "value": "3"
+            },
+            {
+                "name": "filepicker_recentviewmode",
+                "value": "2"
+            },
+            {
+                "name": "ifirst",
+                "value": ""
+            },
+            {
+                "name": "ilast",
+                "value": ""
+            },
+            {
+                "name": "last_time_enrolments_synced",
+                "value": "1755535664"
+            },
+            {
+                "name": "login_failed_count_since_success",
+                "value": "0"
+            },
+            {
+                "name": "tool_usertours_tour_completion_time_3",
+                "value": "1726155309"
+            },
+            {
+                "name": "tool_usertours_tour_completion_time_4",
+                "value": "1725200111"
+            },
+            {
+                "name": "tool_usertours_tour_completion_time_5",
+                "value": "1721396533"
+            },
+            {
+                "name": "userselector_autoselectunique",
+                "value": "0"
+            },
+            {
+                "name": "userselector_preserveselected",
+                "value": "0"
+            },
+            {
+                "name": "_lastloaded",
+                "value": 1755535664
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 7,
+                "fullname": "HÊREZH",
+                "shortname": "atelier Julien"
+            },
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            },
+            {
+                "id": 4,
+                "fullname": "Chorale en breton avec Yves Le Martret",
+                "shortname": "Chorale en breton"
+            },
+            {
+                "id": 3,
+                "fullname": "Chant En Breton : Kan Ha Diskan, Gwerz avec Miss Ninóg",
+                "shortname": "Chant En Breton"
+            },
+            {
+                "id": 6,
+                "fullname": "Cours de démonstration",
+                "shortname": "Démo"
+            },
+            {
+                "id": 5,
+                "fullname": "Bombarde avec Klervi Piel",
+                "shortname": "Bombarde"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "username": "kenan",
+        "firstname": "Kenan",
+        "lastname": "Guernalec",
+        "fullname": "Kenan Guernalec",
+        "email": "kenanguernalec@gmail.com",
+        "department": "",
+        "firstaccess": 1734086578,
+        "lastaccess": 1748870798,
+        "lastcourseaccess": 1748870798,
+        "description": "",
+        "descriptionformat": 1,
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 3,
+                "name": "",
+                "shortname": "editingteacher",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 20,
+        "username": "yvanmartin",
+        "firstname": "Yvan",
+        "lastname": "Martin",
+        "fullname": "Yvan Martin",
+        "email": "y.martin@net-c.com",
+        "department": "",
+        "firstaccess": 1734376427,
+        "lastaccess": 1744656288,
+        "lastcourseaccess": 1744656339,
+        "city": "CHANTEPIE",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 22,
+        "username": "apegi",
+        "firstname": "Jean-Pierre",
+        "lastname": "AUFFRAY",
+        "fullname": "Jean-Pierre AUFFRAY",
+        "email": "auffray.jean-pierre@wanadoo.fr",
+        "department": "",
+        "firstaccess": 1734385682,
+        "lastaccess": 1750693906,
+        "lastcourseaccess": 1750693914,
+        "city": "RENNES",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 23,
+        "username": "ofilangi",
+        "firstname": "Olivier",
+        "lastname": "Filangi",
+        "fullname": "Olivier Filangi",
+        "email": "olivier.filangi@gmail.com",
+        "department": "",
+        "firstaccess": 1735831956,
+        "lastaccess": 1747758914,
+        "lastcourseaccess": 1747758930,
+        "city": "BRUZ",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 24,
+        "username": "catcat",
+        "firstname": "Catherine",
+        "lastname": "FAVREL",
+        "fullname": "Catherine FAVREL",
+        "email": "favrelitass@gmail.com",
+        "department": "",
+        "firstaccess": 1735839455,
+        "lastaccess": 1744661683,
+        "lastcourseaccess": 1744658092,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 25,
+        "username": "maignot",
+        "firstname": "nathalie",
+        "lastname": "maignot",
+        "fullname": "nathalie maignot",
+        "email": "nathalie.maignot@sfr.fr",
+        "department": "",
+        "firstaccess": 1735840903,
+        "lastaccess": 1750160355,
+        "lastcourseaccess": 1750160363,
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 26,
+        "username": "chal35",
+        "firstname": "Michel",
+        "lastname": "CHALOPIN",
+        "fullname": "Michel CHALOPIN",
+        "email": "michel.chalopin@sfr.fr",
+        "department": "",
+        "firstaccess": 1735906594,
+        "lastaccess": 1749997942,
+        "lastcourseaccess": 1749997953,
+        "city": "RENNES",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 27,
+        "username": "yuna",
+        "firstname": "Yuna",
+        "lastname": "Le Bideau",
+        "fullname": "Yuna Le Bideau",
+        "email": "yuna.lebideau@gmail.com",
+        "department": "",
+        "firstaccess": 1735910159,
+        "lastaccess": 1752661632,
+        "lastcourseaccess": 1752660267,
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 28,
+        "username": "marielle",
+        "firstname": "Marielle",
+        "lastname": "PINEAU",
+        "fullname": "Marielle PINEAU",
+        "email": "marielle342@hotmail.com",
+        "department": "",
+        "firstaccess": 1735980574,
+        "lastaccess": 1750607944,
+        "lastcourseaccess": 1750607061,
+        "city": "Melesse",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 29,
+        "username": "alain-y.martin@orange.fr",
+        "firstname": "Alain",
+        "lastname": "Martin",
+        "fullname": "Alain Martin",
+        "email": "alain-y.martin@orange.fr",
+        "department": "",
+        "firstaccess": 1735983374,
+        "lastaccess": 1748932708,
+        "lastcourseaccess": 1748932730,
+        "city": "rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 30,
+        "username": "matthieuf",
+        "firstname": "Matthieu",
+        "lastname": "Furet",
+        "fullname": "Matthieu Furet",
+        "email": "matthieu.furet@laposte.net",
+        "department": "",
+        "firstaccess": 1736007077,
+        "lastaccess": 1749723162,
+        "lastcourseaccess": 1749723163,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 31,
+        "username": "rouxjy",
+        "firstname": "Jean-Yves",
+        "lastname": "Roux",
+        "fullname": "Jean-Yves Roux",
+        "email": "roux.jeanyves@yahoo.fr",
+        "department": "",
+        "firstaccess": 1736082052,
+        "lastaccess": 1750081505,
+        "lastcourseaccess": 1750081522,
+        "city": "Saint-Erblon",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 32,
+        "username": "simon",
+        "firstname": "Simon",
+        "lastname": "Le Pennec",
+        "fullname": "Simon Le Pennec",
+        "email": "slpennec@gmail.com",
+        "department": "",
+        "firstaccess": 1736154508,
+        "lastaccess": 1750962625,
+        "lastcourseaccess": 1750962626,
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 33,
+        "username": "marion.gousse@gmail.com",
+        "firstname": "Marion",
+        "lastname": "Goussé",
+        "fullname": "Marion Goussé",
+        "email": "marion.gousse@gmail.com",
+        "department": "",
+        "firstaccess": 1736189722,
+        "lastaccess": 1748893930,
+        "lastcourseaccess": 1748893790,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 34,
+        "username": "armelle",
+        "firstname": "Armelle",
+        "lastname": "Bescond",
+        "fullname": "Armelle Bescond",
+        "email": "armelle.bescond@laposte.net",
+        "department": "",
+        "firstaccess": 1736425334,
+        "lastaccess": 1750432390,
+        "lastcourseaccess": 1750432423,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 35,
+        "username": "yanngdadgad",
+        "firstname": "yann",
+        "lastname": "gressier",
+        "fullname": "yann gressier",
+        "email": "yanngperma@gmail.com",
+        "department": "",
+        "firstaccess": 1736528262,
+        "lastaccess": 1748975524,
+        "lastcourseaccess": 1748975524,
+        "city": "Lorient",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 36,
+        "username": "bruno.h",
+        "firstname": "Bruno",
+        "lastname": "Hortollary",
+        "fullname": "Bruno Hortollary",
+        "email": "hortobubu@gmail.com",
+        "department": "",
+        "firstaccess": 1736792018,
+        "lastaccess": 1751310287,
+        "lastcourseaccess": 1751307940,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 37,
+        "username": "fabien",
+        "firstname": "Fabien",
+        "lastname": "Mottet",
+        "fullname": "Fabien Mottet",
+        "email": "monsieurmottet@gmail.com",
+        "department": "",
+        "firstaccess": 1736792172,
+        "lastaccess": 1747082013,
+        "lastcourseaccess": 1747082013,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 38,
+        "username": "marie",
+        "firstname": "Marie",
+        "lastname": "Huteau",
+        "fullname": "Marie Huteau",
+        "email": "Mariehuteau97@orange.fr",
+        "department": "",
+        "firstaccess": 1736792249,
+        "lastaccess": 1744135208,
+        "lastcourseaccess": 1744135208,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 39,
+        "username": "aitabdelmalek",
+        "firstname": "ali",
+        "lastname": "aitabdelmalek",
+        "fullname": "ali aitabdelmalek",
+        "email": "ali.aitabdelmalek@univ-rennes2.fr",
+        "department": "",
+        "firstaccess": 1736792524,
+        "lastaccess": 1736859639,
+        "lastcourseaccess": 1736859667,
+        "city": "Saint-Grégoire ",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 40,
+        "username": "mamat56",
+        "firstname": "Matthieu",
+        "lastname": "COUGOULIC",
+        "fullname": "Matthieu COUGOULIC",
+        "email": "matthieu.cougoulic@gmail.com",
+        "department": "",
+        "firstaccess": 1736797586,
+        "lastaccess": 1740218162,
+        "lastcourseaccess": 1738613994,
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 41,
+        "username": "annabelle",
+        "firstname": "Annabelle",
+        "lastname": "Jouquand",
+        "fullname": "Annabelle Jouquand",
+        "email": "annabellejouquand@gmail.com",
+        "department": "",
+        "firstaccess": 1736870202,
+        "lastaccess": 1747070230,
+        "lastcourseaccess": 1747066937,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 42,
+        "username": "thierry",
+        "firstname": "Thierry",
+        "lastname": "Hue",
+        "fullname": "Thierry Hue",
+        "email": "th.hue@laposte.net",
+        "department": "",
+        "firstaccess": 1736872921,
+        "lastaccess": 1749061502,
+        "lastcourseaccess": 1749061522,
+        "city": "Rennes",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 45,
+        "username": "ariane",
+        "firstname": "ariane",
+        "lastname": "puibaraud",
+        "fullname": "ariane puibaraud",
+        "email": "ariane.puibaraud@gmail.com",
+        "department": "",
+        "firstaccess": 1738010623,
+        "lastaccess": 1743422963,
+        "lastcourseaccess": 1743422887,
+        "city": "Saint Erblon ",
+        "country": "FR",
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    },
+    {
+        "id": 46,
+        "username": "alain",
+        "firstname": "Alain",
+        "lastname": "Hervé",
+        "fullname": "Alain Hervé",
+        "email": "alpat.herve@orange.fr",
+        "department": "",
+        "firstaccess": 1739876335,
+        "lastaccess": 1749281489,
+        "lastcourseaccess": 1749281434,
+        "profileimageurlsmall": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f2",
+        "profileimageurl": "https://mooc.ccrennes.bzh/theme/image.php/moove/core/1726161877/u/f1",
+        "roles": [
+            {
+                "roleid": 5,
+                "name": "",
+                "shortname": "student",
+                "sortorder": 0
+            }
+        ],
+        "enrolledcourses": [
+            {
+                "id": 2,
+                "fullname": "Atelier de musique irlandaise",
+                "shortname": "Ateirlande"
+            }
+        ]
+    }
+]

@@ -91,7 +91,7 @@ export function headerViewDisplaySelectionjs(htmlPartId) {
     <ul class="list-unstyled">
       <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=selec">Recherche</a></li>
       <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=selecjs">Liste de personnes</a></li>
-      <!-- <li><a class="dropdown-item" href="${getAppPath()}/ndex.php?uc=crea">Création personne</a></li> -->
+       <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=course">Cours</a></li>
       <!-- <li><a class="dropdown-item" href="${getAppPath()}/index.php?uc=selecv2">Sélection V2</a></li> -->
 
       <hr />

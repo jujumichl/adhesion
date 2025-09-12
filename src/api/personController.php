@@ -92,10 +92,26 @@ function getActivitesWS($pdo ) {
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     // print " Résultats " . json_encode($result) ."</br>";
+        return $result;
 
-    return $result;
 }
 
+/* 
+ * Search personnes
+ */
+function getActivityWS($pdo , $act_id) {
+
+    $stmt = $pdo->prepare('select * from activites  where act_id='.$act_id);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    // print " Résultats " . json_encode($result) ."</br>";
+    if ($result) {
+      // print json_encode($result);
+      return $result;
+    } else 
+      return null;
+
+}
 
 /**************** MODEL ****************************** */
 /* 

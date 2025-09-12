@@ -33,6 +33,11 @@
 
 - Développement intégration HelloAsso
 
+ KkrRoazhon-35
+ 8f317726f5864b4094a9e5046999be65
+ 85jlL1Ns2LC2RtxtVu4HRodT1hDvXgjz
+
+
 - Développement de l'interface historique (V2)
 
 - Développement 1ers tableaux de bord (V2)

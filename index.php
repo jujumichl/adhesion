@@ -50,7 +50,17 @@
             // case 'crea':
             //     print displayNavbar();
             //     print creationController($pdo);
-            //     break;
+            //     break;   
+            case 'course':
+                header('Location: src/course/course.html');
+                break;
+            case 'helloasso':
+                header('Location: src/helloasso/helloasso.html');
+                break;
+
+                break;
+
+            
             case 'integ':
                 print displayNavbar();
                 include './src/integration.php';

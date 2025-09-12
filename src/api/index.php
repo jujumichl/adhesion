@@ -72,7 +72,10 @@ switch ($domain) {
     
     case 'activities':
         require_once('./personController.php');
-        $body=getActivitesWS($pdo);
+        if (isset($uri[$apiIndex+3]))
+          $body=getActivityWS($pdo, $uri[$apiIndex+3],);  
+        else
+            $body=getActivitesWS($pdo);
         require_once('../creation/creationMVC.php');
         break;   
         

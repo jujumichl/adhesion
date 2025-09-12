@@ -1,0 +1,56 @@
+{
+    "order": {
+        "id": 132320899,
+        "date": "2025-05-19T14:56:52.1261896+02:00",
+        "formSlug": "stage-de-gallo",
+        "formType": "Event",
+        "organizationName": "Cercle Celtique de Rennes",
+        "organizationSlug": "cercle-celtique-de-rennes",
+        "organizationType": "Association1901Rig",
+        "organizationIsUnderColucheLaw": false,
+        "formName": "Stage de Gallo",
+        "meta": {
+            "createdAt": "2025-05-19T14:52:20.0820256+02:00",
+            "updatedAt": "2025-05-19T14:56:52.3047864+02:00"
+        },
+        "isAnonymous": false,
+        "isAmountHidden": false
+    },
+    "payer": {
+        "email": "marite.quimbert@hotmail.fr",
+        "country": "FRA",
+        "firstName": "Marité",
+        "lastName": "QUIMBERT"
+    },
+    "payments": [
+        {
+            "cashOutState": "CashedOut",
+            "shareAmount": 2000,
+            "id": 60567699,
+            "amount": 2000,
+            "date": "2025-05-19T14:56:52.1261896+02:00",
+            "paymentMeans": "Card",
+            "installmentNumber": 1,
+            "state": "Authorized",
+            "meta": {
+                "createdAt": "2025-05-19T14:52:20.0820256+02:00",
+                "updatedAt": "2025-06-10T03:34:08.9682322+02:00"
+            },
+            "refundOperations": []
+        }
+    ],
+    "name": "La journée",
+    "user": {
+        "firstName": "Marité",
+        "lastName": "QUIMBERT"
+    },
+    "priceCategory": "Fixed",
+    "ticketUrl": "https://www.helloasso.com/associations/cercle-celtique-de-rennes/evenements/stage-de-gallo/ticket?ticketId=132320899&ag=132320899",
+    "qrCode": "MTMyMzIwODk5OjYzODgzMjYzMTQwMDgyMDI1Ng==",
+    "tierId": 16156097,
+    "id": 132320899,
+    "amount": 2000,
+    "type": "Registration",
+    "initialAmount": 2000,
+    "state": "Processed"
+}

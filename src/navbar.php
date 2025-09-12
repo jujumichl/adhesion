@@ -49,7 +49,7 @@ function displayNavbar(){
       <li><a class="dropdown-item" href="index.php?uc=mooc">horaires animateurs</a></li>
       <hr/>
       <li><a class="dropdown-item" href="index.php?uc=CSV">Intégration fichier CSV</a></li>
-      <li><a class="dropdown-item" href="index.php?uc=integ">IntégrationHelloAsso</a></li>
+      <li><a class="dropdown-item" href="index.php?uc=helloasso">IntégrationHelloAsso</a></li>
       <hr/>
       <li><a class="dropdown-item" href="index.php?uc=mooc">MOOC</a></li>
       <li><a class="dropdown-item" href="index.php?uc=log">Historique</a></li>
