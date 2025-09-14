@@ -38,6 +38,13 @@ switch ($domain) {
             $body=getPersonApi($uri[$apiIndex+3], $pdo);
         }
         break;
+    case 'personbymail':
+        require_once('./personController.php');
+        if (isset($uri[$apiIndex+3])) {
+            require_once('../creation/creationMVC.php');
+            $body=getPersonByMailWS( $pdo,$uri[$apiIndex+3]);
+        }
+        break;
     case 'personSubscriptions':
         require_once('./personController.php');
         if (isset($uri[5])) {
@@ -78,6 +85,23 @@ switch ($domain) {
             $body=getActivitesWS($pdo);
         require_once('../creation/creationMVC.php');
         break;   
+        
+    case 'activitybycode':
+        require_once('./personController.php');
+        if (isset($uri[$apiIndex+3]))
+          $body=getActivityByCodeWS($pdo, $uri[$apiIndex+3],);  
+        
+        break;   
+   case 'checkorderintegration':
+        require_once('./personController.php');      
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+          $body=checkOrderIntegrationApi($pdo, $data);  
+        
+        break;   
+
+
+
         
     default:
         header("HTTP/1.1 404 Not Found");

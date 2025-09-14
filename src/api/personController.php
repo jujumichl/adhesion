@@ -25,10 +25,40 @@ LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_li
          $searchString .'%" OR per_email LIKE  "%'.  $searchString .'%" order by per_nom'); //
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-   
+   if (!$result)
+      return "Not found";
     return $result;
 }
 
+
+/**************** MODEL ****************************** */
+// *** Theses functions gives the data management functions for the API
+/* 
+ * Search personnes
+ */
+function getPersonByMailWS($pdo,$searchString) {
+ 
+//   print 'getSearch';
+    $stmt = $pdo->prepare('
+    select personnes.per_id, per_nom, per_prenom, per_email, per_tel, subscrCOncat, inscrptCOncat from personnes      
+LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS inscrptCOncat from inscriptions 
+       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+       WHERE typeactivite.tyac_famille=1
+       GROUP BY per_id) AS inscrp ON inscrp.per_id= personnes.per_id
+
+LEFT JOIN (select per_id, GROUP_CONCAT(concat(ins_date_inscription, " - ",act_libelle) SEPARATOR  "</br>") AS subscrCOncat from inscriptions 
+       LEFT JOIN activites ON activites.act_id=inscriptions.act_id
+       LEFT JOIN typeactivite ON typeactivite.tyac_id=activites.tyac_id
+       WHERE typeactivite.tyac_famille=2
+       GROUP BY per_id) AS subscr ON subscr.per_id= personnes.per_id
+             where  per_email LIKE  "'.$searchString.'" order by per_nom'); //
+    $stmt->execute();
+    $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+   if (!$result)
+      return false;
+    return $result;
+}
 /**
  * 
  */
@@ -102,6 +132,24 @@ function getActivitesWS($pdo ) {
 function getActivityWS($pdo , $act_id) {
 
     $stmt = $pdo->prepare('select * from activites  where act_id='.$act_id);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    // print " Résultats " . json_encode($result) ."</br>";
+    if ($result) {
+      // print json_encode($result);
+      return $result;
+    } else 
+      return null;
+
+}
+
+
+/* 
+ * Search personnes
+ */
+function getActivityByCodeWS($pdo , $act_key) {
+
+    $stmt = $pdo->prepare('select * from activites  where act_ext_key="'.$act_key.'"');
     $stmt->execute();
     $result = $stmt->fetch();
     // print " Résultats " . json_encode($result) ."</br>";
@@ -195,4 +243,34 @@ function getPersonApi($per_id, $pdo) {
     $stmt->execute();
     $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     return $result;
+  }
+
+
+
+  function checkOrderIntegrationApi ($pdo,$orderJson) {
+    $message="";
+    
+    // *** Check user
+    $user = getPersonByMailWS($pdo,$orderJson['user']['email']);
+      $messageUser="";
+    if (!$user)
+		$messageUser .=  "User not found ";
+    else
+       $messageUser .=  "USer : " .JSON_encode($user) ."\n";
+
+    // *** Check mainactivity
+    $messageActivity=""; 
+	$activity = getActivityByCodeWS($pdo,$orderJson['mainactivity']['form']);
+    if (!$activity )
+		$messageActivity .=  "Activity not found ";
+    else
+      $messageActivity  =  $activity;
+
+
+    // *** send message
+	$message= array(
+  		"User "  =>$messageUser,
+  		"Activity " =>$messageActivity
+	);
+    return $message;
   }
